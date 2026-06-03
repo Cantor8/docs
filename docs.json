@@ -80,35 +80,8 @@
               "enterprise-wallet/auto-batch",
               "enterprise-wallet/configuration",
               "enterprise-wallet/docker",
-              "enterprise-wallet/common-use-cases",
-              {
-                "group": "API Reference",
-                "icon": "gear-api",
-                "pages": [
-                  "enterprise-wallet/api-overview",
-                  "GET /health",
-                  "GET /api/v1/accounts",
-                  "POST /api/v1/accounts",
-                  "GET /api/v1/accounts/{partyId}",
-                  "GET /api/v1/accounts/{partyId}/balance",
-                  "POST /api/v1/transfer",
-                  "POST /api/v1/transfer/batch",
-                  "GET /api/v1/transfer/{partyId}/{commandId}",
-                  "GET /api/v1/transfer/{partyId}",
-                  "GET /api/v1/history/{partyId}",
-                  "POST /api/v1/transaction/sign_and_execute",
-                  "GET /api/v1/command/{partyId}/{commandId}",
-                  "POST /api/v1/usdc_bridge/{partyId}/mint_available",
-                  "POST /api/v1/usdc_bridge/{partyId}/withdraw",
-                  "GET /api/v1/offers/{partyId}",
-                  "POST /api/v1/offers/{partyId}/{offerId}/accept",
-                  "POST /api/v1/transfer/order",
-                  "GET /api/v1/transfer/order/{orderId}",
-                  "POST /api/v1/external/prepare",
-                  "POST /api/v1/external/execute",
-                  "POST /api/v1/external/submit"
-                ]
-              }
+              "enterprise-wallet/docker-compose-deployment.mdx",
+              "enterprise-wallet/common-use-cases"
             ]
           }
         ]

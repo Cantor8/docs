@@ -49,8 +49,7 @@
               "token-factory/build-and-deploy",
               "token-factory/adding-a-new-token",
               "token-factory/security-model",
-              "token-factory/production-checklist",
-              "token-factory/api"
+              "token-factory/production-checklist"
             ]
           },
           {
@@ -85,7 +84,6 @@
               {
                 "group": "API Reference",
                 "icon": "gear-api",
-                "openapi": "https://cantor8.github.io/wallet-api/openapi.yaml",
                 "pages": [
                   "enterprise-wallet/api-overview",
                   "GET /health",
@@ -140,8 +138,7 @@
               "token-factory/build-and-deploy",
               "token-factory/adding-a-new-token",
               "token-factory/security-model",
-              "token-factory/production-checklist",
-              "token-factory/api"
+              "token-factory/production-checklist"
             ]
           },
           {
@@ -183,12 +180,6 @@
             ]
           }
         ]
-      },
-      {
-        "product": "API Reference",
-        "icon": "gear-api",
-        "description": "Swap API",
-        "openapi": "https://api.vectornine.tech/docs"
       }
     ]
   },

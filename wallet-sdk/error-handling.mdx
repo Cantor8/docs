@@ -1,0 +1,67 @@
+---
+title: "Error handling"
+---
+
+SDK methods reject with an error object that includes a stable `code` field. Switch on `err.code` to handle each case.
+
+```js
+try {
+  const { txId } = await c8.send({ /* ... */ });
+} catch (err) {
+  switch (err.code) {
+    case 'USER_REJECTED':       /* ... */ break;
+    case 'INSUFFICIENT_FUNDS':  /* ... */ break;
+    case 'POPUP_BLOCKED':       /* ... */ break;
+    case 'NOT_CONNECTED':       /* ... */ break;
+    // ...
+  }
+}
+```
+
+## Error codes
+
+<AccordionGroup>
+  <Accordion title="USER_REJECTED" icon="user-xmark">
+    The user dismissed the approval popup. Prompt them to retry the action.
+  </Accordion>
+
+  <Accordion title="INSUFFICIENT_FUNDS" icon="coins">
+    The selected holding's balance is too low for the requested transfer. Surface a clear "not enough balance" message to the user.
+  </Accordion>
+
+  <Accordion title="POPUP_BLOCKED" icon="ban">
+    The browser blocked the wallet popup. Make sure `connect()` and `send()` are called from a user gesture (e.g. a button click).
+  </Accordion>
+
+  <Accordion title="NOT_CONNECTED" icon="plug-circle-xmark">
+    The method was called before `connect()`. Call `await c8.connect()` first.
+  </Accordion>
+
+  <Accordion title="INITIALIZATION_FAILED" icon="triangle-exclamation">
+    The provider failed to initialize. Verify your `C8WalletProvider` config (`dappName`, `network`).
+  </Accordion>
+
+  <Accordion title="TRANSFER_PREPARATION_FAILED" icon="circle-exclamation">
+    The wallet could not prepare the transfer. Often indicates invalid `senderPartyId`, `instrumentId`, or `amount`.
+  </Accordion>
+
+  <Accordion title="EXECUTION_FAILED" icon="circle-xmark">
+    The transfer was submitted but failed to execute on the Canton ledger.
+  </Accordion>
+
+  <Accordion title="FAILED_TO_FETCH_TRANSFER_STATUS" icon="rotate-exclamation">
+    Could not retrieve transfer status. Retry, or check connectivity to the Canton network.
+  </Accordion>
+
+  <Accordion title="FETCH_INSTRUMENTS_FAILED" icon="list-ul">
+    `getInstruments()` failed. Verify the wallet is connected and reachable.
+  </Accordion>
+
+  <Accordion title="FETCH_ACCOUNTS_FAILED" icon="address-book">
+    `getAccounts()` failed. Verify the wallet is connected and reachable.
+  </Accordion>
+
+  <Accordion title="CHECK_TX_STATUS_FAILED" icon="magnifying-glass">
+    `checkTxStatusById()` failed. The `txId` may be invalid or the ledger may be temporarily unreachable.
+  </Accordion>
+</AccordionGroup>

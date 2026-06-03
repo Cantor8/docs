@@ -1,0 +1,28 @@
+---
+title: "Networks available"
+sidebarTitle: "Networks"
+---
+
+Pass the target network to `C8WalletProvider` via the `network` option.
+
+<CardGroup cols={2}>
+  <Card title="devnet" icon="flask">
+    Local development and integration testing. Use for all non-production work.
+  </Card>
+
+  <Card title="mainnet" icon="globe">
+    Production Canton network. Real assets — use only for live deployments.
+  </Card>
+</CardGroup>
+
+```js
+const c8 = new C8WalletProvider({
+  dappUrl:  window.location.href,
+  dappName: "My DeFi App",
+  network:  "devnet", // or "mainnet"
+});
+```
+
+<Warning>
+  Always verify you are pointing at the correct network before signing transactions in production.
+</Warning>

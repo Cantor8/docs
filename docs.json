@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Cantor8 Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1E40CC",
+    "light": "#1E40CC",
+    "dark": "#1E40CC"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -18,24 +18,114 @@
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    "products": [
+      {
+        "product": "C8 Products",
+        "pages": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "index",
+              "quickstart",
+              "common-use-cases",
+              "choose-your-path",
+              "choose-your-path-v1",
+              "choose-your-path-v2",
+              "choose-your-path-v3",
+              "choose-your-path-v4"
+            ]
+          },
+          {
+            "group": "Token factory",
+            "icon": "hand-holding-dollar",
+            "pages": [
+              "token-factory/introduction",
+              "token-factory/common-use-cases",
+              "token-factory/architecture",
+              "token-factory/core-contracts",
+              "token-factory/transfer-flows",
+              "token-factory/registry-api",
+              "token-factory/cli",
+              "token-factory/build-and-deploy",
+              "token-factory/adding-a-new-token",
+              "token-factory/security-model",
+              "token-factory/production-checklist",
+              "token-factory/api"
+            ]
+          },
+          {
+            "group": "Wallet SDK",
+            "icon": "wallet",
+            "expanded": false,
+            "pages": [
+              "wallet-sdk/introduction",
+              "wallet-sdk/common-use-cases",
+              "wallet-sdk/overview",
+              "wallet-sdk/core-concepts",
+              "wallet-sdk/installation",
+              "wallet-sdk/quick-start",
+              "wallet-sdk/networks",
+              "wallet-sdk/api-reference",
+              "wallet-sdk/events",
+              "wallet-sdk/error-handling"
+            ]
+          },
+          {
+            "group": "Enterprise wallet",
+            "icon": "bank",
+            "pages": [
+              "enterprise-wallet/introduction",
+              "enterprise-wallet/getting-started",
+              "enterprise-wallet/architecture",
+              "enterprise-wallet/authentication",
+              "enterprise-wallet/auto-batch",
+              "enterprise-wallet/configuration",
+              "enterprise-wallet/docker",
+              "enterprise-wallet/common-use-cases",
+              {
+                "group": "API Reference",
+                "icon": "gear-api",
+                "openapi": "https://cantor8.github.io/wallet-api/openapi.yaml",
+                "pages": [
+                  "enterprise-wallet/api-overview",
+                  "GET /health",
+                  "GET /api/v1/accounts",
+                  "POST /api/v1/accounts",
+                  "GET /api/v1/accounts/{partyId}",
+                  "GET /api/v1/accounts/{partyId}/balance",
+                  "POST /api/v1/transfer",
+                  "POST /api/v1/transfer/batch",
+                  "GET /api/v1/transfer/{partyId}/{commandId}",
+                  "GET /api/v1/transfer/{partyId}",
+                  "GET /api/v1/history/{partyId}",
+                  "POST /api/v1/transaction/sign_and_execute",
+                  "GET /api/v1/command/{partyId}/{commandId}",
+                  "POST /api/v1/usdc_bridge/{partyId}/mint_available",
+                  "POST /api/v1/usdc_bridge/{partyId}/withdraw",
+                  "GET /api/v1/offers/{partyId}",
+                  "POST /api/v1/offers/{partyId}/{offerId}/accept",
+                  "POST /api/v1/transfer/order",
+                  "GET /api/v1/transfer/order/{orderId}",
+                  "POST /api/v1/external/prepare",
+                  "POST /api/v1/external/execute",
+                  "POST /api/v1/external/submit"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "product": "API Reference",
+        "icon": "gear-api",
+        "description": "Swap API",
+        "openapi": "https://api.vectornine.tech/docs"
+      }
+    ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/images/FullColor.png",
+    "dark": "/images/Full_Color.png"
   },
   "navbar": {
     "links": [
@@ -64,9 +154,10 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/cantor8",
+      "linkedin": "https://www.linkedin.com/company/cantor8",
+      "website": "https://www.cantor8.io/"
     }
-  }
+  },
+  "description": "Cantor8 products development kit documentation."
 }

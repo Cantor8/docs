@@ -1,0 +1,36 @@
+---
+title: "Events"
+---
+
+Subscribe to wallet and transaction lifecycle events with `c8.on(event, handler)`.
+
+```js
+c8.on('connected',      (e) => { /* ... */ });
+c8.on('txChanged',      (e) => { /* ... */ });
+```
+
+## Event reference
+
+<ResponseField name="connected" type="event">
+  Fires when the user approves the connection in the popup. No payload.
+</ResponseField>
+
+<ResponseField name="disconnected" type="event">
+  Fires when `disconnect()` is called or the popup is closed. No payload.
+</ResponseField>
+
+<ResponseField name="accountChanged" type="event">
+  Fires when balances or holdings change. Payload: updated account data.
+</ResponseField>
+
+<ResponseField name="txInitiated" type="event">
+  Fires when a transfer is submitted to Canton. Payload: `{ txId: string }`.
+</ResponseField>
+
+<ResponseField name="txChanged" type="event">
+  Fires when a transaction status changes on the ledger. Payload: status update.
+</ResponseField>
+
+<Tip>
+  Always register listeners **before** calling `connect()` to ensure you don't miss the initial `connected` event.
+</Tip>

@@ -1,0 +1,82 @@
+---
+title: "Transfer flows"
+description: "Direct transfers, transfer offers, and atomic settlement allocations — step by step."
+---
+
+Token Factory supports three transfer patterns. The right one is chosen automatically by the registry based on the receiver's state.
+
+<CardGroup cols={3}>
+  <Card title="Direct" icon="bolt">
+    Receiver has `AutoAccept` — holding is created in one transaction.
+  </Card>
+
+  <Card title="Offer" icon="envelope-open">
+    Receiver must accept or reject a `TransferInstruction`.
+  </Card>
+
+  <Card title="Allocation" icon="handshake">
+    Funds locked for atomic settlement or DvP workflows.
+  </Card>
+</CardGroup>
+
+## Direct transfer
+
+Used when the receiver has an `AutoAccept` contract.
+
+```mermaid
+sequenceDiagram
+  participant Sender
+  participant Registry
+  participant Factory
+  participant Ledger
+  Sender->>Registry: POST /registry/transfer-instruction/v1/transfer-factory
+  Registry-->>Sender: factoryId, transferKind=direct, choiceContext
+  Sender->>Factory: exercise TransferFactory_Transfer
+  Factory->>Ledger: archive sender holdings
+  Factory->>Ledger: create receiver Holding
+  Factory->>Ledger: create sender change, if needed
+```
+
+## Transfer offer
+
+Used when the receiver has not opted into auto-accept.
+
+```mermaid
+sequenceDiagram
+  participant Sender
+  participant Receiver
+  participant Registry
+  participant Factory
+  participant Ledger
+  Sender->>Registry: get transfer factory context
+  Registry-->>Sender: factoryId, transferKind=offer, choiceContext
+  Sender->>Factory: exercise TransferFactory_Transfer
+  Factory->>Ledger: create LockedHolding + TransferInstruction
+  Receiver->>Registry: get accept/reject choice context
+  Registry-->>Receiver: choiceContext
+  Receiver->>Ledger: exercise accept or reject
+```
+
+## Allocation and atomic settlement
+
+Allocations reserve funds for settlement workflows such as DvP.
+
+```mermaid
+sequenceDiagram
+  participant Sender
+  participant Receiver
+  participant Executor
+  participant Registry
+  participant Ledger
+  Sender->>Registry: POST /registry/allocation-instruction/v1/allocation-factory
+  Registry-->>Sender: factoryId, choiceContext
+  Sender->>Ledger: create TokenAllocation + SettlementProposal
+  Receiver->>Ledger: accept SettlementProposal
+  Executor->>Registry: get execute-transfer choice context
+  Registry-->>Executor: choiceContext
+  Executor->>Ledger: execute allocation transfer
+```
+
+<Tip>
+  The `transferKind` field returned by the registry tells your client which flow to follow: `self`, `direct`, or `offer`.
+</Tip>

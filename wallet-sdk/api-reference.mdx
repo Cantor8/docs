@@ -1,0 +1,168 @@
+---
+title: "API reference"
+---
+
+## Constructor
+
+Creates a new wallet provider instance.
+
+```ts
+new C8WalletProvider(config)
+```
+
+<ParamField path="dappUrl" type="string">
+  URL of the dApp initiating the connection. Defaults to the current page URL.
+</ParamField>
+
+<ParamField path="dappName" type="string" required>
+  Name of the dApp. Must match the name registered with the wallet.
+</ParamField>
+
+<ParamField path="network" type="string">
+  Canton network to connect to. One of `"devnet"` or `"mainnet"`.
+</ParamField>
+
+---
+
+## connect
+
+Opens the C8 Wallet popup and establishes the `postMessage` channel. The user sees a connection approval screen in the wallet.
+
+```ts
+connect(): Promise<void>
+```
+
+<ResponseField name="returns" type="Promise<void>">
+  Resolves when the user approves the connection.
+</ResponseField>
+
+<Note>
+  Must be called from a user gesture (e.g. button click) to avoid `POPUP_BLOCKED` errors.
+</Note>
+
+---
+
+## disconnect
+
+Closes the wallet popup and tears down the `postMessage` channel. Emits the `disconnected` event.
+
+```ts
+disconnect(): Promise<void>
+```
+
+---
+
+## status
+
+Returns the current connection state.
+
+```ts
+status(): Promise<{ connected: boolean, walletVersion?: string }>
+```
+
+<ResponseField name="connected" type="boolean">
+  Whether the wallet is currently connected.
+</ResponseField>
+
+<ResponseField name="walletVersion" type="string">
+  Version of the connected wallet (only present when connected).
+</ResponseField>
+
+---
+
+## getInstruments
+
+Returns the list of Canton instruments available in the connected wallet.
+
+```ts
+getInstruments(): Promise<InstrumentListPayload>
+
+type InstrumentListPayload = {
+  instruments: Array<{
+    instrumentId: string
+    name: string
+    symbol: string
+  }>
+}
+```
+
+---
+
+## getAccounts
+
+Returns accounts and their holdings. If `instrumentId` is provided, filters to accounts holding that instrument.
+
+```ts
+getAccounts(instrumentId?: string): Promise<AccountListPayload>
+
+type AccountListPayload = {
+  accounts: Array<{
+    partyId: string
+    holdings: Array<{
+      instrumentId: string
+      balance: number
+      balanceUsd: number
+    }>
+  }>
+}
+```
+
+<ParamField path="instrumentId" type="string">
+  Optional. Filters accounts to those holding this instrument.
+</ParamField>
+
+---
+
+## send
+
+Submits a transfer on the Canton ledger. Opens an approval screen in the wallet popup.
+
+```ts
+send(input): Promise<SubmitTransferResultPayload>
+```
+
+<ParamField path="senderPartyId" type="string" required>
+  Canton `partyId` of the sender.
+</ParamField>
+
+<ParamField path="instrumentId" type="string" required>
+  Asset to transfer.
+</ParamField>
+
+<ParamField path="amount" type="number" required>
+  Transfer amount.
+</ParamField>
+
+<ParamField path="receiverPartyId" type="string" required>
+  Canton `partyId` of the recipient.
+</ParamField>
+
+<ParamField path="memo" type="string">
+  Optional text memo attached to the transfer.
+</ParamField>
+
+<ParamField path="metadata" type="Record<string, string>">
+  Optional arbitrary key-value metadata.
+</ParamField>
+
+<ResponseField name="txId" type="string">
+  Transaction ID assigned by the Canton ledger. Use it with `checkTxStatusById`.
+</ResponseField>
+
+---
+
+## checkTxStatusById
+
+Polls the Canton ledger for the current status of a previously submitted transaction.
+
+```ts
+checkTxStatusById(input): Promise<TransferStatusResponsePayload>
+```
+
+<ParamField path="txId" type="string" required>
+  Transaction ID returned by `send()`.
+</ParamField>
+
+<ResponseField name="returns" type="Promise<TransferStatusResponsePayload>">
+  Current ledger status for the given transaction.
+</ResponseField>

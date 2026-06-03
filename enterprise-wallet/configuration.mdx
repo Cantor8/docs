@@ -1,0 +1,150 @@
+---
+title: "Configuration"
+description: "Environment variables for bootstrap, authentication, Auto-Batch, and database."
+---
+
+The bootstrap logic is fully driven by environment variables. Group them as below.
+
+## Core bootstrap
+
+<ParamField path="BACKEND_URL" type="string">
+  Overrides the default validator endpoint.
+</ParamField>
+
+<ParamField path="CLIENT_ID" type="string">
+  Used as the app-name fallback during transfer submission.
+</ParamField>
+
+<ParamField path="WALLET_MNEMONIC" type="string">
+  Initializes the wallet with this BIP39 phrase. Effectively "logs in" to wallets derived from this mnemonic.
+</ParamField>
+
+<ParamField path="WALLET_PASSPHRASE" default="empty string" type="string">
+  Used as the **BIP39 salt**. Defaults to an empty string for compatibility with standard BIP39 wallets (Trust Wallet, Ledger, etc.) that don't use a passphrase by default.
+</ParamField>
+
+## Authentication
+
+<ParamField path="AUTH_TYPE" type="string">
+  Selected Identity Provider. Supported values: `auth0`, `keycloak`, `custom`, `noop`. Use `noop` to disable the authentication layer.
+</ParamField>
+
+<ParamField path="AUTH_AUDIENCE" type="string">
+  Expected `aud` claim in the JWT.
+</ParamField>
+
+<ParamField path="AUTH_ALGOS" type="string">
+  Comma-separated whitelist of accepted JWS asymmetric algorithms. Supported: `RS256`, `RS384`, `RS512`, `ES256`, `ES384`, `ES512`, `EdDSA`, `Ed25519`.
+</ParamField>
+
+### Identity Provider URLs
+
+The set of variables used to derive the JWKS URL depends on `AUTH_TYPE`.
+
+<Tabs>
+  <Tab title="auth0">
+    <ParamField path="IDP_BASE_URL" type="string">
+      The base URL of your IdP.
+    </ParamField>
+  </Tab>
+  <Tab title="keycloak">
+    <ParamField path="IDP_BASE_URL" type="string">
+      The base URL of your IdP.
+    </ParamField>
+
+    <ParamField path="AUTH_REALM" type="string">
+      The OIDC realm used for discovery paths.
+    </ParamField>
+  </Tab>
+  <Tab title="custom">
+    <ParamField path="JWKS_URL" type="string">
+      Custom URL of your IdP — for non-standard paths.
+    </ParamField>
+  </Tab>
+</Tabs>
+
+## Auto-Batch
+
+<ParamField path="AUTO_BATCH_SWITCH" default="false" type="boolean">
+  Enables the background batching engine.
+</ParamField>
+
+<ParamField path="AUTO_BATCH_DB_TYPE" default="in-memory" type="string">
+  Storage backend for batch state. Accepted: `in-memory`, `psql`. Use `psql` for production.
+</ParamField>
+
+<ParamField path="AUTO_BATCH_MAX_SIZE" default="200" type="number">
+  Maximum number of orders per batch.
+</ParamField>
+
+<ParamField path="AUTO_BATCH_INTERVAL" default="1m" type="duration">
+  How long the batching loop waits between batch preparation cycles.
+</ParamField>
+
+<ParamField path="AUTO_BATCH_MONITOR_INTERVAL" default="10s" type="duration">
+  How long the monitoring loop waits between polling cycles for in-flight batches.
+</ParamField>
+
+<ParamField path="AUTO_BATCH_RECOVERY_INTERVAL" default="5s" type="duration">
+  Pause between individual submissions during a recovery pass (prevents ledger spikes).
+</ParamField>
+
+<ParamField path="AUTO_BATCH_RETRY_INTERVAL" default="2s" type="duration">
+  How long the retry loop waits between retry cycles for failed batches.
+</ParamField>
+
+<ParamField path="AUTO_BATCH_MAX_ATTEMPTS" default="3" type="number">
+  Hard ceiling on submission attempts per batch. Once reached, the batch is marked terminal and its orders are released back to the queue.
+</ParamField>
+
+## PostgreSQL connection
+
+<Info>
+  Applies only when `AUTO_BATCH_DB_TYPE=psql`.
+</Info>
+
+<ParamField path="DB_HOST" default="localhost" type="string">
+  Database server hostname.
+</ParamField>
+
+<ParamField path="DB_PORT" default="5432" type="number">
+  Database server port.
+</ParamField>
+
+<ParamField path="DB_NAME" default="wallet_api" type="string">
+  Database name.
+</ParamField>
+
+<ParamField path="DB_USER" default="wallet_user" type="string">
+  Database user.
+</ParamField>
+
+<ParamField path="DB_PASSWORD" default="changeme" type="string">
+  Database password.
+</ParamField>
+
+## Connection pool
+
+<Info>
+  Applies to both `in-memory` and `psql` backends.
+</Info>
+
+<ParamField path="DB_NUM_THREADS" default="50 (psql) / 10 (in-memory)" type="number">
+  Thread pool size for database operations.
+</ParamField>
+
+<ParamField path="DB_MAX_CONNECTIONS" default="50 (psql) / 10 (in-memory)" type="number">
+  Maximum pool connections.
+</ParamField>
+
+<ParamField path="DB_MIN_CONNECTIONS" default="10 (psql) / 2 (in-memory)" type="number">
+  Minimum idle connections kept alive.
+</ParamField>
+
+<ParamField path="DB_CONNECTION_TIMEOUT" default="30000" type="number (ms)">
+  Milliseconds to wait for a connection before timing out.
+</ParamField>
+
+<ParamField path="DB_IDLE_TIMEOUT" default="600000" type="number (ms)">
+  Milliseconds before an idle connection is evicted.
+</ParamField>

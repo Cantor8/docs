@@ -1,0 +1,38 @@
+---
+title: "Getting started"
+description: "Build prerequisites and the two ways to run the service."
+---
+
+To build Enterprise Wallet locally, you must first build the **Wallet SDK** and inject it into the build context. The SDK is a private dependency and is **not published to any public package registry**.
+
+<Info>
+  Build the Wallet SDK from the [wallet-sdk repository](https://github.com/Cantor8/wallet-sdk) and publish it to Maven Local before proceeding.
+</Info>
+
+## Run the service
+
+Once the SDK is built and published to Maven Local, prepare your `.env` file. Then start the server in one of two ways:
+
+<CardGroup cols={2}>
+  <Card title="sbt" icon="code" href="#sbt">
+    Run directly from source for local development.
+  </Card>
+
+  <Card title="Docker" icon="docker" href="/enterprise-wallet/docker">
+    Containerized build and deployment.
+  </Card>
+</CardGroup>
+
+### sbt
+
+```bash
+sbt run
+```
+
+### Docker
+
+See [Docker](/enterprise-wallet/docker) for build prerequisites and `docker compose` instructions.
+
+## Server endpoints
+
+Query `/docs/openapi.yaml` from the running server to see actual endpoints, or browse the API reference.

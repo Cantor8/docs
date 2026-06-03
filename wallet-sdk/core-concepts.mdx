@@ -1,0 +1,48 @@
+---
+title: "Core concepts"
+---
+
+## Canton network
+
+C8 Wallet is built on [Canton](https://www.canton.network/), a privacy-enabled blockchain designed for institutional finance.
+
+<Info>
+  Rather than Ethereum-style addresses, Canton uses:
+
+  - **`partyId`** — string identifier for a participant (account)
+  - **`instrumentId`** — string identifier for a tokenized asset
+
+  Your dApp works with these identifiers throughout the SDK.
+</Info>
+
+## Popup \+ postMessage architecture
+
+The SDK uses two channels to talk to the wallet, depending on the request type:
+
+<CardGroup cols={2}>
+  <Card title="window.postMessage" icon="lock">
+    **Interactive actions** that require user consent, auth, or cryptographic signatures — e.g. connecting an account or signing a transaction.
+  </Card>
+
+  <Card title="HTTP API" icon="cloud-arrow-down">
+    **Read-only data** retrieval that does not require user intervention — e.g. fetching instruments or balances.
+  </Card>
+</CardGroup>
+
+## Instruments and holdings
+
+An **instrument** is a Canton asset type (e.g. a tokenized currency or security). A **holding** is a specific account's balance of that instrument.
+
+The typical flow:
+
+<Steps>
+  <Step title="List instruments">
+    `getInstruments()` — pick an `instrumentId`.
+  </Step>
+  <Step title="List accounts">
+    `getAccounts(instrumentId)` — pick a `partyId` and holding.
+  </Step>
+  <Step title="Submit transfer">
+    `send({ senderPartyId, instrumentId, amount, receiverPartyId })`.
+  </Step>
+</Steps>

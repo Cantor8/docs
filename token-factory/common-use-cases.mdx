@@ -1,0 +1,308 @@
+---
+title: "Common use cases"
+description: "How partners apply C8 Token Factory — what it is, who it's for, and the business value it delivers."
+---
+
+Token Factory helps companies create and move digital assets on Canton. In simple terms: **issue a token, define who can hold it, move it between parties, pause it if needed, and keep a clear record of what happened.**
+
+It combines two parts:
+
+<CardGroup cols={2}>
+  <Card title="C8 Registry" icon="server">
+    Creates and manages tokens.
+  </Card>
+
+  <Card title="Private Transfer Infrastructure" icon="user-lock">
+    Moves tokens privately between approved parties.
+  </Card>
+</CardGroup>
+
+## At a glance
+
+<CardGroup cols={3}>
+  <Card title="Tokenized Asset Issuance" icon="coins" href="#tokenized-asset-issuance">
+  </Card>
+
+  <Card title="Bridged Assets" icon="bridge" href="#bridged-assets">
+  </Card>
+
+  <Card title="Wallet & Payment Flows" icon="wallet" href="#wallet-and-payment-flows">
+  </Card>
+
+  <Card title="Private Transfers" icon="user-secret" href="#private-transfers">
+  </Card>
+
+  <Card title="Atomic Settlement" icon="handshake" href="#atomic-settlement">
+  </Card>
+
+  <Card title="Compliance Controls" icon="shield-halved" href="#compliance-controls">
+  </Card>
+
+  <Card title="Partner-Branded Tokens" icon="tag" href="#partner-branded-tokens">
+  </Card>
+
+  <Card title="Rewards & Rebates" icon="gift" href="#rewards-rebates-and-redemption">
+  </Card>
+
+  <Card title="Multi-Asset Treasury" icon="vault" href="#multi-asset-treasury">
+  </Card>
+</CardGroup>
+
+---
+
+## Tokenized Asset Issuance
+
+<Info>
+  A way to create a digital version of an asset on Canton — fund unit, deposit, security, commodity balance, payment balance, reward, rebate, or any other value a company wants to track and move.
+</Info>
+
+**Why it matters.** Creating a token is not enough. A company also needs rules: who can issue it, who can receive it, when it can move, and what happens if something goes wrong. Token Factory puts those rules into the token workflow.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Banks
+    - Asset managers
+    - Fintechs
+    - Payment companies
+    - Tokenized RWA issuers
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Create a new token from existing templates, set name and decimal precision, deploy, and add it to the registry. Wallets and apps can then discover it and use the registry API to prepare transfers.
+  </Card>
+</CardGroup>
+
+<Check>
+  Faster token launch · less custom smart contract work · built-in controls for mint, burn, freeze, and transfers · easier wallet and partner integration.
+</Check>
+
+---
+
+## Bridged Assets
+
+<Info>
+  A way to represent assets like BTC or ETH inside Canton. `c8BTC` and `c8ETH` are examples.
+</Info>
+
+**Why it matters.** Some companies want to use assets like BTC or ETH in private Canton workflows, without exposing all activity on a public chain.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Custodians
+    - Wallet providers
+    - Treasury teams
+    - Settlement platforms
+    - Crypto asset operators
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Mint a Canton token when the original asset is deposited, and burn it when the asset is withdrawn. The token then moves privately inside Canton.
+  </Card>
+</CardGroup>
+
+<Check>
+  Brings external assets into Canton workflows · keeps transfers private · supports deposit and withdrawal flows · gives operators controls if something needs to be paused or corrected.
+</Check>
+
+---
+
+## Wallet and Payment Flows
+
+<Info>
+  A way for wallets and apps to support Token Factory assets without knowing every contract detail. The registry API tells the wallet what tokens exist and how to prepare a transfer.
+</Info>
+
+**Why it matters.** Wallets need a simple integration path — they should not need to understand every DAML package or token version.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Wallet apps
+    - Payment apps
+    - Partner portals
+    - Internal treasury tools
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    A wallet lists tokens via the registry, then requests transfer context before submitting on Canton. With auto-accept the transfer completes directly; otherwise the receiver gets an offer to accept or reject.
+  </Card>
+</CardGroup>
+
+<Check>
+  Simpler wallet integration · multi-token support through one API pattern · direct transfers when both sides are ready · offer-based transfers when approval is needed.
+</Check>
+
+---
+
+## Private Transfers
+
+<Info>
+  A way to move assets between parties while keeping transaction details visible only to the right participants.
+</Info>
+
+**Why it matters.** In many financial workflows it is not acceptable for everyone to see who is transacting, how much is moving, or what asset is involved. Canton gives privacy at the ledger level — Token Factory uses that for token transfers.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Financial institutions
+    - Trading desks
+    - Payment networks
+    - Treasury teams
+    - Partner ecosystems
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Build apps where approved users send tokens to each other, while only involved parties and approved observers see the details.
+  </Card>
+</CardGroup>
+
+<Check>
+  Keeps sensitive activity private · supports controlled data sharing · makes token movement usable for real financial workflows · reduces the need for manual off-chain coordination.
+</Check>
+
+---
+
+## Atomic Settlement
+
+<Info>
+  A way to lock assets before settlement and only move them when the required steps are complete. Useful for DvP, swaps, collateral movement, and other workflows where both sides need confidence.
+</Info>
+
+**Why it matters.** Settlement risk happens when one side of a transaction completes and the other does not. Token Factory supports allocation flows that reserve assets and then execute, cancel, or withdraw them.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Settlement venues
+    - OTC desks
+    - Treasury teams
+    - Collateral platforms
+    - Swap and exchange products
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Create an allocation, have the receiver accept the settlement, and let an executor complete or cancel the transfer.
+  </Card>
+</CardGroup>
+
+<Check>
+  Reduces settlement risk · safer multi-step transactions · clear state for pending, completed, cancelled, or withdrawn flows · works well for private financial transfers.
+</Check>
+
+---
+
+## Compliance Controls
+
+<Info>
+  Controls for pausing or correcting token activity: global freeze, party freeze, admin burn, migration, and force-burn for locked funds.
+</Info>
+
+**Why it matters.** Real asset systems need a way to react to mistakes, fraud, legal orders, sanctions checks, or operational issues.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Issuers
+    - Compliance teams
+    - Custodians
+    - Regulated platforms
+    - Internal operations teams
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Freeze all activity, freeze one party, burn tokens, or migrate holdings to a newer contract version. Actions are controlled by admin workflows and can include reasons for audit.
+  </Card>
+</CardGroup>
+
+<Check>
+  Safer token operations · better control after launch · easier incident response · compliance controls built into the asset lifecycle.
+</Check>
+
+---
+
+## Partner-Branded Tokens
+
+<Info>
+  A way for partners to launch their own token using the same Token Factory structure.
+</Info>
+
+**Why it matters.** Many partners need a token for their own product, but they should not have to build the full system from zero.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Banks
+    - Fintechs
+    - Payment companies
+    - Loyalty platforms
+    - Enterprise partners
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Copy the token templates, change name and settings, deploy, and add to the registry. The token reuses the same transfer, wallet, freeze, and settlement patterns.
+  </Card>
+</CardGroup>
+
+<Check>
+  Faster partner launches · reusable token setup · same operating model across many tokens · easier support and maintenance.
+</Check>
+
+---
+
+## Rewards, Rebates, and Redemption
+
+<Info>
+  A way to issue credits, rewards, or rebate balances that can later be transferred or redeemed. `rCC` in the repo shows this pattern.
+</Info>
+
+**Why it matters.** Reward and rebate systems often live in normal databases. Token Factory can make them ledger-based, auditable, and transferable.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Loyalty programs
+    - Merchant networks
+    - Rebate programs
+    - Mobile money partners
+    - Ecosystem operators
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Mint reward or rebate tokens, allow users to transfer them, and redeem them through controlled flows.
+  </Card>
+</CardGroup>
+
+<Check>
+  Clear record of issued and redeemed value · easier reconciliation · transferable reward balances · better control over redemption.
+</Check>
+
+---
+
+## Multi-Asset Treasury
+
+<Info>
+  A way to manage several tokenized assets with the same tools and rules.
+</Info>
+
+**Why it matters.** Treasury teams often deal with many asset types. A common system makes it easier to move, reserve, burn, freeze, and reconcile them.
+
+<CardGroup cols={2}>
+  <Card title="Who it's for" icon="users">
+    - Treasury teams
+    - Custodians
+    - Asset platforms
+    - Payment networks
+    - Crypto operations teams
+  </Card>
+
+  <Card title="How partners use it" icon="wrench">
+    Add several tokens to the registry and use the same API and CLI patterns for each one.
+  </Card>
+</CardGroup>
+
+<Check>
+  One model for many assets · less operational complexity · easier reporting and reconciliation · better control over asset movement.
+</Check>
+
+---
+
+## Summary
+
+Token Factory is useful when a company wants to **create a digital asset and actually operate it**.
+
+It helps issue the asset, move it privately, connect it to wallets, reserve it for settlement, and keep control if something needs to be paused, fixed, or upgraded.

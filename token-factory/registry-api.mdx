@@ -1,0 +1,240 @@
+---
+title: "Registry API"
+description: "CIP-0056-compatible API for metadata, transfer context, allocation context, and admin operations."
+---
+
+The registry exposes a **CIP-0056-compatible** API for instrument metadata, transfer context, allocation context, and admin operations.
+
+## Endpoints overview
+
+<CardGroup cols={2}>
+  <Card title="Public API" icon="globe">
+    Default port: **8080**. No authentication by default. Safe to expose to wallet integrations.
+  </Card>
+
+  <Card title="Private admin API" icon="lock">
+    Default port: **8081**. M2M JWT authentication. Keep behind issuer / admin infrastructure.
+  </Card>
+</CardGroup>
+
+Default path prefix:
+
+```text
+/api/{orgPrefix}
+```
+
+For Cantor8 deployments `{orgPrefix}` is usually `c8`.
+
+<Warning>
+  Production deployments should expose only the **public API** to external wallet integrations. The private admin API must stay on an internal network or behind a protected route.
+</Warning>
+
+## Metadata
+
+### List supported instruments
+
+```http
+GET /api/c8/registry/metadata/v1/instruments
+```
+
+Example response:
+
+```json
+{
+  "instruments": [
+    {
+      "id": "c8ETH",
+      "name": "Cantor8 ETH",
+      "symbol": "c8ETH",
+      "decimals": 10,
+      "supportedApis": {
+        "splice-api-token-metadata-v1": 0,
+        "splice-api-token-transfer-instruction-v1": 1,
+        "splice-api-token-allocation-v1": 1,
+        "splice-api-token-allocation-instruction-v1": 0
+      }
+    }
+  ],
+  "nextPageToken": null
+}
+```
+
+### Fetch one instrument
+
+```http
+GET /api/c8/registry/metadata/v1/instruments/c8ETH
+```
+
+### Fetch registry info
+
+```http
+GET /api/c8/registry/metadata/v1/info
+```
+
+## Transfer factory context
+
+Wallets call this endpoint **before exercising** `TransferFactory_Transfer`.
+
+```http
+POST /api/c8/registry/transfer-instruction/v1/transfer-factory
+```
+
+<CodeGroup>
+
+```json Request
+{
+  "choiceArguments": {
+    "transfer": {
+      "sender": "sender-party-id",
+      "receiver": "receiver-party-id",
+      "instrumentId": {
+        "admin": "token-admin-party-id",
+        "id": "c8ETH"
+      },
+      "amount": "10.0",
+      "inputHoldingCids": ["holding-contract-id"],
+      "executeBefore": "2026-06-03T12:00:00Z"
+    }
+  },
+  "excludeDebugFields": true
+}
+```
+
+```json Response
+{
+  "factoryId": "factory-contract-id",
+  "transferKind": "direct",
+  "choiceContext": {
+    "choiceContextData": {
+      "values": {}
+    },
+    "disclosedContracts": []
+  }
+}
+```
+
+</CodeGroup>
+
+### transferKind values
+
+<ResponseField name="self" type="string">
+  Sender and receiver are the same party.
+</ResponseField>
+
+<ResponseField name="direct" type="string">
+  Receiver has an `AutoAccept` contract — holding will be created in one transaction.
+</ResponseField>
+
+<ResponseField name="offer" type="string">
+  Receiver must accept or reject a `TransferInstruction`.
+</ResponseField>
+
+## Transfer choice contexts
+
+For transfer offers, call the matching choice-context endpoint **before** exercising the choice:
+
+```http
+POST /api/c8/registry/transfer-instruction/v1/{transferInstructionId}/choice-contexts/accept
+POST /api/c8/registry/transfer-instruction/v1/{transferInstructionId}/choice-contexts/reject
+POST /api/c8/registry/transfer-instruction/v1/{transferInstructionId}/choice-contexts/withdraw
+```
+
+Request body:
+
+```json
+{ "meta": {} }
+```
+
+## Allocation factory context
+
+Prepare an allocation for atomic settlement.
+
+```http
+POST /api/c8/registry/allocation-instruction/v1/allocation-factory
+```
+
+```json Request
+{
+  "choiceArguments": {
+    "allocation": {
+      "transferLeg": {
+        "sender": "sender-party-id",
+        "receiver": "receiver-party-id",
+        "instrumentId": {
+          "admin": "token-admin-party-id",
+          "id": "c8ETH"
+        },
+        "amount": 10.0
+      },
+      "settlement": {
+        "executor": "executor-party-id",
+        "allocateBefore": "2026-06-03T12:00:00Z",
+        "settleBefore": "2026-06-03T12:30:00Z"
+      }
+    }
+  },
+  "excludeDebugFields": true
+}
+```
+
+Allocation choice-context endpoints:
+
+```http
+POST /api/c8/registry/allocations/v1/{allocationId}/choice-contexts/execute-transfer
+POST /api/c8/registry/allocations/v1/{allocationId}/choice-contexts/withdraw
+POST /api/c8/registry/allocations/v1/{allocationId}/choice-contexts/cancel
+```
+
+## Private admin API
+
+Admin endpoints return choice context for privileged operations. They are intended for issuer / admin infrastructure, **not** public wallet clients.
+
+```http
+POST /api/c8/admin/v1/mint
+POST /api/c8/admin/v1/burn
+POST /api/c8/admin/v1/admin-burn
+POST /api/c8/admin/v1/migrate
+GET  /api/c8/admin/v1/token-config
+POST /api/c8/admin/v1/token-config
+POST /api/c8/admin/v1/token-config/freeze
+POST /api/c8/admin/v1/token-config/unfreeze
+POST /api/c8/admin/v1/token-config/freeze-party
+POST /api/c8/admin/v1/token-config/unfreeze-party
+```
+
+### Example admin payloads
+
+<CodeGroup>
+
+```json Mint
+{
+  "instrumentId": "c8ETH",
+  "recipient": "recipient-party-id",
+  "amount": 100.0
+}
+```
+
+```json Burn
+{
+  "instrumentId": "c8ETH",
+  "holdingCids": ["holding-contract-id"],
+  "amount": 50.0
+}
+```
+
+```json Admin burn
+{
+  "instrumentId": "c8ETH",
+  "holdingCids": ["holding-contract-id"],
+  "amount": 50.0,
+  "reason": "Compliance action"
+}
+```
+
+```json Freeze party
+{
+  "party": "party-id-to-freeze"
+}
+```
+
+</CodeGroup>

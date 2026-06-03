@@ -1,0 +1,72 @@
+---
+title: "Choose your path — v1 Decision cards"
+sidebarTitle: "v1 — Decision cards"
+description: "Pick the right Cantor8 product for your team in 30 seconds."
+---
+
+Three products, three jobs. Pick the one that matches what you're building.
+
+<CardGroup cols={3}>
+  <Card title="Wallet SDK" icon="plug" horizontal href="/wallet-sdk/introduction">
+    **You're building a dApp** that needs Canton wallet connectivity.
+  </Card>
+
+  <Card title="Enterprise Wallet" icon="building-columns" horizontal href="/enterprise-wallet/common-use-cases">
+    **You're an institution** holding and moving Canton assets at scale.
+  </Card>
+
+  <Card title="Token Factory" icon="coins" horizontal href="/token-factory/common-use-cases">
+    **You're an issuer** launching a token, stablecoin, or RWA on Canton.
+  </Card>
+</CardGroup>
+
+---
+
+## Wallet SDK
+
+<CardGroup cols={2}>
+  <Card title="Choose if…" icon="circle-check">
+    - You're a DeFi, payments, or trading dApp
+    - You need users to connect a wallet and approve actions
+    - You don't want to build auth, signing, or ledger plumbing
+  </Card>
+
+  <Card title="Skip if…" icon="circle-xmark">
+    - You need to **issue** assets → Token Factory
+    - You need **institutional custody** → Enterprise Wallet
+  </Card>
+</CardGroup>
+
+## Enterprise Wallet
+
+<CardGroup cols={2}>
+  <Card title="Choose if…" icon="circle-check">
+    - You're a bank, fund, custodian, or treasury team
+    - You need role-based controls and approval policies
+    - You hold multi-asset balances at scale
+  </Card>
+
+  <Card title="Skip if…" icon="circle-xmark">
+    - You're an end-user dApp → Wallet SDK
+    - You're creating a new token → Token Factory
+  </Card>
+</CardGroup>
+
+## Token Factory
+
+<CardGroup cols={2}>
+  <Card title="Choose if…" icon="circle-check">
+    - You're issuing a stablecoin, security, or RWA
+    - You need mint, burn, transfer, and registry controls
+    - You don't want to write DAML or maintain a token registry
+  </Card>
+
+  <Card title="Skip if…" icon="circle-xmark">
+    - You only need to **hold** existing assets → Enterprise Wallet
+    - You only need to **connect** users to a wallet → Wallet SDK
+  </Card>
+</CardGroup>
+
+<Tip>
+  Many teams use **two or three** of these together — e.g. an issuer uses Token Factory to launch an asset, Enterprise Wallet to hold treasury, and Wallet SDK to give end users access.
+</Tip>

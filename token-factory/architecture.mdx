@@ -1,0 +1,34 @@
+---
+title: "Architecture"
+description: "How Token Factory's DAML contracts, registry, and CLI fit together."
+---
+
+Token Factory is split into three layers: **DAML contracts**, the **registry API**, and **CLI / deployment tooling**.
+
+## System diagram
+
+```mermaid
+flowchart LR
+  Wallet["Wallet or client app"] --> PublicAPI["Registry public API"]
+  Issuer["Issuer / admin backend"] --> PrivateAPI["Registry private API"]
+  PublicAPI --> Ledger["Canton Ledger API"]
+  PrivateAPI --> Ledger
+  CLI["c8t CLI"] --> Ledger
+  Ledger --> Holding["Holding packages"]
+  Ledger --> Rules["Rules packages"]
+  Rules --> Common["token-common"]
+  Rules --> Business["token-business"]
+```
+
+## Two-layer DAML model
+
+| Layer | Purpose | Upgrade behavior |
+| --- | --- | --- |
+| **Holding packages** | Define token identity and balance contracts (`Holding`, `LockedHolding`, `AutoAccept`). | **Stable.** Users own these contracts — deployed holding packages should not change casually. |
+| **Rules packages** | Define operations: factory choices, transfers, allocations, freeze checks, mint, burn, migration. | **Upgradeable per token.** |
+| `token-common` | Shared validation, decimal precision, freeze checks. | Shared dependency. |
+| `token-business` | Shared settlement, merge/split, allocation, and `TokenOps` abstractions. | Shared dependency. |
+
+<Info>
+  Each token has its own holding/rules pair. This gives **type-level isolation**: a `c8BTC` holding cannot accidentally be used in a `c8ETH` operation.
+</Info>

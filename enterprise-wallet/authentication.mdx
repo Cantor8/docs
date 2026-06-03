@@ -1,0 +1,74 @@
+---
+title: "Authentication"
+description: "OIDC-compliant security layer with dual-layer in-memory caching."
+---
+
+The service implements a configurable, **OIDC-compliant security layer** designed for Zero-Trust environments.
+
+## Operational modes
+
+Authentication is treated as a toggleable effect. The mode is determined strictly by the `AUTH_TYPE` environment variable.
+
+<CardGroup cols={2}>
+  <Card title="Strict Mode" icon="lock">
+    `auth0` · `keycloak` · `custom`
+
+    The service acts as a gatekeeper. All protected endpoints require a valid `Bearer` token in the `Authorization` header.
+  </Card>
+
+  <Card title="Guest Mode" icon="lock-open">
+    `noop`
+
+    The security layer defaults to a no-op provider, permitting all requests without validation.
+  </Card>
+</CardGroup>
+
+## Performance and caching
+
+To maintain sub-millisecond overhead, the validation logic avoids synchronous round-trips to the Identity Provider on every request. Instead, it uses a **dual-layer in-memory strategy**.
+
+<CardGroup cols={2}>
+  <Card title="L1 — Session cache" icon="bolt">
+    Once a JWT is cryptographically verified, its valid state is cached until the token's natural expiration (`exp` claim). Subsequent requests with the same token **bypass signature verification entirely**.
+  </Card>
+
+  <Card title="L2 — JWKS cache" icon="key">
+    Public keys (JSON Web Key Set) needed for verification are cached long-term and refreshed only if a token references an unknown Key ID (`kid`) — handling key rotation automatically.
+  </Card>
+</CardGroup>
+
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gatekeeper
+    participant L1 as L1 Cache<br/>(JWT, Sessions)
+    participant L2 as L2 Cache<br/>(JWKS)
+    participant IdP as Identity Provider
+
+    Client->>Gatekeeper: HTTP GET (Bearer Token)
+
+    Note right of Gatekeeper: Layer 1: Session Check
+    Gatekeeper->>L1: Get(Token)
+
+    alt Cache Hit (Fast Path)
+        L1-->>Gatekeeper: Valid Session
+    else Cache Miss (Slow Path)
+        Note right of Gatekeeper: Layer 2: Key Lookup
+        Gatekeeper->>Gatekeeper: Verify Header
+        Gatekeeper->>L2: GetKey(kid)
+
+        opt Key Missing (Rotation)
+            L2->>IdP: Fetch JWKS
+            IdP-->>L2: Public Keys
+        end
+
+        L2-->>Gatekeeper: Public Key
+        Gatekeeper->>Gatekeeper: Verify Signature & Claims
+        Gatekeeper->>L1: Put(Token, Session, TTL=exp)
+        L1-->>Gatekeeper: Valid Session
+    end
+
+    Gatekeeper-->>Client: 200 OK
+```

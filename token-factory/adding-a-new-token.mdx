@@ -1,0 +1,59 @@
+---
+title: "Adding a new token"
+description: "Create a new token from the holding and rules templates."
+---
+
+Token Factory ships templates for adding a new token end to end.
+
+<Steps>
+  <Step title="Copy the holding template">
+    Copy `contracts/token-holding-template` to a new holding package path.
+  </Step>
+  <Step title="Copy the rules template">
+    Copy `contracts/token-rules-template` to a new rules package path.
+  </Step>
+  <Step title="Rename modules">
+    Replace template module names with the new token name.
+  </Step>
+  <Step title="Set ID and precision">
+    Set the token ID and decimal precision in the holding module.
+  </Step>
+  <Step title="Build packages">
+    Build the holding and rules packages with `dpm build`.
+  </Step>
+  <Step title="Deploy DARs">
+    Deploy the generated DARs to the target environment.
+  </Step>
+  <Step title="Create the factory">
+    Create the factory contract via `./c8t create-factory`.
+  </Step>
+  <Step title="Update registry config">
+    Add the token to the registry token config JSON for the target environment.
+  </Step>
+</Steps>
+
+## Registry token entry
+
+A registry entry must specify:
+
+<CardGroup cols={2}>
+  <Card title="Identity" icon="id-card">
+    `id` · `name` · `symbol` · `decimals`
+  </Card>
+
+  <Card title="Parties" icon="users">
+    `admin` · `validator`
+  </Card>
+
+  <Card title="Factory" icon="industry">
+    `factory.contractId` · `factory.templateId`
+  </Card>
+
+  <Card title="Optional" icon="plus">
+    `autoAcceptTemplateId` (for direct transfers) · `supportedApis`
+  </Card>
+</CardGroup>
+
+<Warning>
+  Do not publish production party IDs, contract blobs, secrets, or environment-specific private configuration in public docs.
+</Warning>

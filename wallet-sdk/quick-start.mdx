@@ -1,0 +1,67 @@
+---
+title: "Quick start"
+---
+
+Get from zero to a signed Canton transfer in three steps.
+
+<Steps>
+  <Step title="Initialize the provider">
+    Create a `C8WalletProvider` instance with your dApp metadata and target network.
+
+    ```js
+    const c8 = new C8WalletProvider({
+      dappUrl:  window.location.href,
+      dappName: "My DeFi App",
+      network:  "devnet"   // "devnet" | "mainnet"
+    });
+    ```
+
+    <Tip>
+      `dappName` must match the name your dApp is registered under in the wallet.
+    </Tip>
+  </Step>
+  <Step title="Subscribe to events">
+    Listen for connection and transaction lifecycle events.
+
+    ```js
+    c8.on('connected',       (e) => console.log('Connected', e));
+    c8.on('disconnected',    (e) => console.log('Disconnected', e));
+    c8.on('accountChanged',  (e) => console.log('Balance changed', e));
+    c8.on('txInitiated',     (e) => console.log('TX initiated', e));
+    c8.on('txChanged',       (e) => console.log('TX changed', e));
+    ```
+
+    See the [Events reference](/wallet-sdk/events) for the full list.
+  </Step>
+  <Step title="Connect and run a transfer">
+    Open the wallet popup, pick an instrument and account, then submit a transfer.
+
+    ```js
+    await c8.connect();
+    
+    // Fetch available instruments (Canton tokens / assets)
+    const { instruments } = await c8.getInstruments();
+    const instrumentId = instruments[0]?.instrumentId;
+    
+    // Fetch accounts for that instrument
+    const { accounts } = await c8.getAccounts(instrumentId);
+    const senderPartyId        = accounts[0]?.partyId;
+    const senderHoldingInstrId = accounts[0]?.holdings[0]?.instrumentId ?? instrumentId;
+    
+    // Submit a transfer
+    const { txId } = await c8.send({
+      senderPartyId,
+      instrumentId: senderHoldingInstrId,
+      amount:          1.23,
+      receiverPartyId: 'Party::Receiver',
+      // memo and metadata are optional — see API reference
+    });
+    
+    console.log('Transaction submitted:', txId);
+    ```
+
+    <Check>
+      You received a `txId` — the transfer is now on the Canton ledger. Use [`checkTxStatusById`](/wallet-sdk/api-reference#checktxstatusbyid-input-promise-transferstatusresponsepayload) to poll its status.
+    </Check>
+  </Step>
+</Steps>

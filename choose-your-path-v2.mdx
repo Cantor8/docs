@@ -1,0 +1,46 @@
+---
+title: "Choose your path — v2 Question flow"
+sidebarTitle: "v2 — Question flow"
+description: "Answer one question and find the right Cantor8 product."
+---
+
+Answer one question — we'll point you to the right product.
+
+## What are you trying to do?
+
+<AccordionGroup>
+  <Accordion title="I'm building an application and need users to connect a wallet" defaultOpen icon="plug">
+    You want **Wallet SDK**.
+
+    A drop-in integration layer that lets your dApp connect users to C8 Wallet, request approvals, and submit Canton transactions — without managing keys, auth, or ledger plumbing.
+
+    <Card title="Go to Wallet SDK →" icon="arrow-right" href="/wallet-sdk/introduction">
+    </Card>
+  </Accordion>
+
+  <Accordion title="I'm an institution and need to hold and move Canton assets at scale" icon="building-columns">
+    You want **Enterprise Wallet**.
+
+    Multi-party custody and operations for banks, funds, custodians, and treasury teams. Role-based controls, approval policies, multi-asset balances, and audit-ready logging.
+
+    <Card title="Go to Enterprise Wallet →" icon="arrow-right" href="/enterprise-wallet/common-use-cases">
+    </Card>
+  </Accordion>
+
+  <Accordion title="I'm launching a token, stablecoin, or tokenized asset on Canton" icon="coins">
+    You want **Token Factory**.
+
+    A ready-made issuance layer for stablecoins, securities, RWAs, and loyalty assets. Mint, burn, transfer, and registry controls without writing DAML or maintaining infrastructure.
+
+    <Card title="Go to Token Factory →" icon="arrow-right" href="/token-factory/common-use-cases">
+    </Card>
+  </Accordion>
+
+  <Accordion title="I'm doing more than one of the above" icon="layer-group">
+    Many teams use multiple products together. Common combinations:
+
+    - **Issuer:** Token Factory (issue) \+ Enterprise Wallet (treasury) \+ Wallet SDK (end-user access)
+    - **dApp \+ institutional users:** Wallet SDK (UX) \+ Enterprise Wallet (custody for institutional accounts)
+    - **Asset manager:** Enterprise Wallet (custody) \+ Token Factory (issue fund units)
+  </Accordion>
+</AccordionGroup>

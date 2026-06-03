@@ -1,0 +1,37 @@
+---
+title: "Cantor8 Enterprise Wallet"
+sidebarTitle: "Introduction"
+description: "High-level HTTP API for wallet operations on the Canton Network, designed for institutional workflows."
+---
+
+Cantor8 Enterprise Wallet (`wallet-api`) is a **Scala-based service** that provides a high-level HTTP API for wallet operations on the Canton Network. It wraps the [Wallet SDK](https://github.com/Cantor8/wallet-sdk/) to communicate securely with the [Wallet Backend](https://github.com/Cantor8/wallet-backend/) (Canton Ledger).
+
+It is built for institutions that need a hardened, OIDC-secured, high-throughput wallet service backing their treasury, settlement, or custody workflows — without owning the underlying ledger plumbing.
+
+## What you'll find here
+
+<CardGroup cols={2}>
+  <Card title="Getting started" icon="rocket" href="/enterprise-wallet/getting-started">
+    Run the service locally or via Docker.
+  </Card>
+
+  <Card title="Architecture" icon="sitemap" href="/enterprise-wallet/architecture">
+    Service structure, layers, and startup sequence.
+  </Card>
+
+  <Card title="Authentication" icon="shield-halved" href="/enterprise-wallet/authentication">
+    OIDC-compliant security layer with dual-layer caching.
+  </Card>
+
+  <Card title="Auto-Batch" icon="layer-group" href="/enterprise-wallet/auto-batch">
+    Optional background engine that aggregates transfers for high throughput.
+  </Card>
+
+  <Card title="Configuration" icon="sliders" href="/enterprise-wallet/configuration">
+    Environment variables, IdP setup, and database tuning.
+  </Card>
+
+  <Card title="Docker" icon="docker" href="/enterprise-wallet/docker">
+    Build and run the service in containers.
+  </Card>
+</CardGroup>

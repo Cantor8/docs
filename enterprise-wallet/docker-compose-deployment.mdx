@@ -32,6 +32,28 @@ You will also need the following on the deployment host:
   If the mnemonic phrase is lost, C8 cannot recover accounts or funds.
 </Warning>
 
+## Deployment flow
+
+The full deployment is a five-step sequence. Each step is described in detail below.
+
+<Steps>
+  <Step title="Generate a BIP39 mnemonic">
+    Create the 24-word phrase that backs the self-custodial wallet.
+  </Step>
+  <Step title="Create the environment file">
+    Define `WALLET_MNEMONIC`, `CLIENT_ID`, backend URLs, and auth/batch settings in `.env`.
+  </Step>
+  <Step title="Prepare Docker Compose">
+    Fill in the C8-provided image in `docker-compose-client.yml`.
+  </Step>
+  <Step title="Deploy">
+    Start the container with the CloudWatch logging parameters.
+  </Step>
+  <Step title="Verify the deployment">
+    Open Swagger UI and confirm the API is reachable.
+  </Step>
+</Steps>
+
 ## 1. Generate a BIP39 mnemonic
 
 Generate a random 24-word BIP39 mnemonic phrase.

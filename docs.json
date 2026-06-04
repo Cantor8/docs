@@ -27,7 +27,6 @@
             "pages": [
               "index",
               "quickstart",
-              "choose-your-path",
               "choose-your-path-v1"
             ]
           },
@@ -115,6 +114,11 @@
     {
       "source": "/wallet-sdk/overview",
       "destination": "/wallet-sdk/introduction",
+      "permanent": true
+    },
+    {
+      "source": "/choose-your-path",
+      "destination": "/choose-your-path-v1",
       "permanent": true
     }
   ]

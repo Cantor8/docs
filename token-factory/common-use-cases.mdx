@@ -52,9 +52,9 @@ It combines two parts:
 
 ## Tokenized Asset Issuance
 
-<Info>
+<Check>
   A way to create a digital version of an asset on Canton — fund unit, deposit, security, commodity balance, payment balance, reward, rebate, or any other value a company wants to track and move.
-</Info>
+</Check>
 
 **Why it matters.** Creating a token is not enough. A company also needs rules: who can issue it, who can receive it, when it can move, and what happens if something goes wrong. Token Factory puts those rules into the token workflow.
 
@@ -68,7 +68,9 @@ It combines two parts:
   </Card>
 
   <Card title="How partners use it" icon="wrench">
-    Create a new token from existing templates, set name and decimal precision, deploy, and add it to the registry. Wallets and apps can then discover it and use the registry API to prepare transfers.
+    Create a new token from existing templates, set name and decimal precision, deploy, and add it to the registry. 
+
+    Wallets and apps can then discover it and use the registry API to prepare transfers.
   </Card>
 </CardGroup>
 
@@ -81,7 +83,7 @@ It combines two parts:
 ## Bridged Assets
 
 <Info>
-  A way to represent assets like BTC or ETH inside Canton. `c8BTC` and `c8ETH` are examples.
+  A way to represent assets like BTC or ETH inside Canton.
 </Info>
 
 **Why it matters.** Some companies want to use assets like BTC or ETH in private Canton workflows, without exposing all activity on a public chain.
@@ -96,7 +98,9 @@ It combines two parts:
   </Card>
 
   <Card title="How partners use it" icon="wrench">
-    Mint a Canton token when the original asset is deposited, and burn it when the asset is withdrawn. The token then moves privately inside Canton.
+    Mint a Canton token when the original asset is deposited, and burn it when the asset is withdrawn. 
+
+    The token then moves privately inside Canton.
   </Card>
 </CardGroup>
 
@@ -123,7 +127,9 @@ It combines two parts:
   </Card>
 
   <Card title="How partners use it" icon="wrench">
-    A wallet lists tokens via the registry, then requests transfer context before submitting on Canton. With auto-accept the transfer completes directly; otherwise the receiver gets an offer to accept or reject.
+    A wallet lists tokens via the registry, then requests transfer context before submitting on Canton. 
+
+    With auto-accept the transfer completes directly; otherwise the receiver gets an offer to accept or reject.
   </Card>
 </CardGroup>
 
@@ -207,7 +213,9 @@ It combines two parts:
   </Card>
 
   <Card title="How partners use it" icon="wrench">
-    Freeze all activity, freeze one party, burn tokens, or migrate holdings to a newer contract version. Actions are controlled by admin workflows and can include reasons for audit.
+    Freeze all activity, freeze one party, burn tokens, or migrate holdings to a newer contract version. 
+
+    Actions are controlled by admin workflows and can include reasons for audit.
   </Card>
 </CardGroup>
 
@@ -235,7 +243,9 @@ It combines two parts:
   </Card>
 
   <Card title="How partners use it" icon="wrench">
-    Copy the token templates, change name and settings, deploy, and add to the registry. The token reuses the same transfer, wallet, freeze, and settlement patterns.
+    Copy the token templates, change name and settings, deploy, and add to the registry. 
+
+    The token reuses the same transfer, wallet, freeze, and settlement patterns.
   </Card>
 </CardGroup>
 

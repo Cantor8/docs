@@ -36,23 +36,6 @@
             ]
           },
           {
-            "group": "Token factory",
-            "icon": "hand-holding-dollar",
-            "pages": [
-              "token-factory/introduction",
-              "token-factory/common-use-cases",
-              "token-factory/architecture",
-              "token-factory/core-contracts",
-              "token-factory/transfer-flows",
-              "token-factory/registry-api",
-              "token-factory/cli",
-              "token-factory/build-and-deploy",
-              "token-factory/adding-a-new-token",
-              "token-factory/security-model",
-              "token-factory/production-checklist"
-            ]
-          },
-          {
             "group": "Wallet SDK",
             "icon": "wallet",
             "expanded": false,
@@ -64,6 +47,7 @@
               "wallet-sdk/installation",
               "wallet-sdk/networks",
               "wallet-sdk/api-reference",
+              "wallet-sdk/transfer-types",
               "wallet-sdk/events",
               "wallet-sdk/error-handling"
             ]
@@ -78,6 +62,15 @@
               "enterprise-wallet/auto-batch",
               "enterprise-wallet/configuration",
               "enterprise-wallet/docker-compose-deployment"
+            ]
+          },
+          {
+            "group": "Token factory",
+            "icon": "hand-holding-dollar",
+            "pages": [
+              "token-factory/introduction",
+              "token-factory/common-use-cases",
+              "token-factory/integration"
             ]
           }
         ]

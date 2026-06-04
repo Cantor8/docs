@@ -1,0 +1,72 @@
+---
+title: "Transfer types"
+sidebarTitle: "Transfer types"
+description: "Standard transfers supported out of the box and custom transaction types via C8."
+---
+
+## Standard transfers
+
+Out of the box, the SDK supports connecting a Canton wallet, resolving instruments and accounts, and submitting transfers between parties. This covers the majority of DeFi use cases: payments, settlements, and asset movement across Canton participants.
+
+## Custom transaction types
+
+Canton's smart contract model (DAML) allows for arbitrarily complex workflows — multi-party agreements, conditional transfers, bespoke financial instruments. If your application requires transaction types beyond standard transfers, the SDK can be extended to support them. This involves aligning on your contract and workflow requirements with the Cantor8 team, who will implement the corresponding support on the C8 backend.
+
+### `signAndExecute` — arbitrary contracts
+
+The SDK exposes a low-level method that lets your dApp sign and execute any DAML command supported by the connected wallet — including custom templates and choices defined for your integration.
+
+```ts
+signAndExecute(input: {
+  note: string;
+  partyId: string;
+  commandId: string;
+  commandsJson: string;
+  disclosedContracts: string;
+}): Promise<void>;
+```
+
+**Parameters**
+
+| Field | Description |
+| --- | --- |
+| `note` | Human-readable note shown to the user in the wallet UI. |
+| `partyId` | The party submitting the command. |
+| `commandId` | Unique idempotency key for this submission (e.g. a UUID). |
+| `commandsJson` | JSON-serialized array of DAML commands (`CreateCommand`, `ExerciseCommand`, etc.). |
+| `disclosedContracts` | Contracts disclosed to the participant to authorize the command. |
+
+### Example
+
+Submitting a `CreateCommand` for a custom template:
+
+```ts
+const onSignAndExecuteClick = async () => {
+  const input = {
+    note: signAndExecuteMessage ?? "Hello from Cantor8 Wallet Connect SDK Demo",
+    partyId: selectedAccount,
+    commandId: crypto.randomUUID(),
+    commandsJson: JSON.stringify([
+      {
+        CreateCommand: {
+          templateId: "#splice-wallet:Splice.Wall..pprovalProposal",
+          createArguments: {
+            receiver: "9acf24..49ce9d",
+            provider: "cantor8-digik-1::122..77f",
+            expectedDso: "DSO::122..1a",
+          },
+        },
+      },
+    ]),
+    disclosedContracts: "",
+  };
+
+  c8.signAndExecute(input).catch((e) =>
+    console.log("error signing and executing", e, e.data)
+  );
+};
+```
+
+<Card title="Discuss custom integration" icon="envelope" href="mailto:integrations@cantor8.io?subject=Wallet%20SDK%20custom%20transaction%20types">
+  Contact the C8 team at [**integrations@cantor8.io**](mailto:integrations@cantor8.io) to scope custom transaction support for your application.
+</Card>

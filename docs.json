@@ -75,7 +75,8 @@
   },
   "logo": {
     "light": "/images/FullColor.png",
-    "dark": "/images/FullColor.png"
+    "dark": "/images/FullColor.png",
+    "href": "https://www.cantor8.io/"
   },
   "navbar": {
     "links": [

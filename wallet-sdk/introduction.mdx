@@ -6,6 +6,12 @@ description: "Lightweight SDK for integrating the C8 Wallet into dApps on Canton
 
 C8 Wallet SDK is built for DeFi applications running on the Canton network that need a ready-made wallet layer. It connects your dApp to the C8 Wallet through a secure popup and `postMessage` channel, handling auth, account resolution, transfer submission, and status polling out of the box.
 
+## How it works
+
+At the core of the SDK is `C8WalletProvider`. It owns the full wallet lifecycle — connection, instrument and account resolution, transfer submission, and status polling — so dApp developers don't have to deal with Canton-specific cryptography or direct ledger communication.
+
+All wallet interaction happens in a separate, secure popup window and communicates with your dApp through the browser's native `postMessage` API, keeping signing keys isolated from the application context.
+
 <CardGroup cols={2}>
   <Card title="Quick start" icon="rocket" href="/wallet-sdk/quick-start">
     Connect a wallet and submit your first transfer in 3 steps.

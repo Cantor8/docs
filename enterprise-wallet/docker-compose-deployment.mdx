@@ -195,3 +195,14 @@ The exact value will be provided during integration.
 - Use `AUTH_TYPE=noop` only in controlled environments.
 - Prefer IdP-backed API authentication for production deployments.
 - Rotate integration credentials according to your organization security policy.
+
+## Try it on DevNet
+
+Want to try the wallet before going to production? You can point it at the C8 DevNet environment.
+
+1. In your `.env`, set the following URLs:
+   ```bash .env
+   BACKEND_URL=https://wallet-backend.dev.digik.cantor8.tech/api
+   IDENTITY_SERVICE_URL=https://id.dev.digik.cantor8.tech
+   ```
+2. On DevNet, you don't need a signup coupon to register new accounts — just omit the `coupon` parameter when creating accounts through the API.

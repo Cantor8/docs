@@ -59,10 +59,9 @@
             "pages": [
               "wallet-sdk/introduction",
               "wallet-sdk/common-use-cases",
-              "wallet-sdk/overview",
+              "wallet-sdk/quick-start",
               "wallet-sdk/core-concepts",
               "wallet-sdk/installation",
-              "wallet-sdk/quick-start",
               "wallet-sdk/networks",
               "wallet-sdk/api-reference",
               "wallet-sdk/events",
@@ -121,5 +120,12 @@
       "website": "https://www.cantor8.io/"
     }
   },
-  "description": "Cantor8 products development kit documentation."
+  "description": "Cantor8 products development kit documentation.",
+  "redirects": [
+    {
+      "source": "/wallet-sdk/overview",
+      "destination": "/wallet-sdk/introduction",
+      "permanent": true
+    }
+  ]
 }

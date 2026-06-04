@@ -20,7 +20,55 @@ Three products, three jobs. Pick the one that matches what you're building.
   </Card>
 </CardGroup>
 
+## Not sure which fits? Start by role
+
+<CardGroup cols={2}>
+  <Card title="dApp developer" icon="plug" href="/wallet-sdk/introduction">
+    Building a DeFi, payments, or trading application that needs wallet connectivity.
+
+    **Start here if you want to:**
+
+    - Let users connect a Canton wallet
+    - Request approvals and submit transfers
+    - Skip building auth, signing, or ledger plumbing
+  </Card>
+
+  <Card title="Institutional operator" icon="building-columns" href="/enterprise-wallet/common-use-cases">
+    Bank, fund, custodian, broker, or treasury team operating on Canton.
+
+    **Start here if you want to:**
+
+    - Hold and move multi-asset balances at scale
+    - Apply role-based controls and approval policies
+    - Maintain audit-ready logging and reporting
+  </Card>
+
+  <Card title="Asset issuer" icon="coins" href="/token-factory/common-use-cases">
+    Issuing a stablecoin, security, RWA, or loyalty asset on Canton.
+
+    **Start here if you want to:**
+
+    - Define and configure a Canton-native asset
+    - Control mint, burn, transfer, and registry
+    - Skip writing DAML or running issuance infrastructure
+  </Card>
+
+  <Card title="Solution architect" icon="compass" href="#by-goal">
+    Evaluating Cantor8 for an enterprise use case.
+
+    **Start here if you need to:**
+
+    - Understand how the products fit together
+    - Map a workflow to one or more products
+    - Compare options before committing
+  </Card>
+</CardGroup>
+
 ---
+
+## Decide product by product
+
+Still on the fence? Here's a closer look at each product — when it's the right fit, and when you should pick a different one.
 
 ## Wallet SDK
 
@@ -67,6 +115,50 @@ Three products, three jobs. Pick the one that matches what you're building.
   </Card>
 </CardGroup>
 
-<Tip>
-  Many teams use **two or three** of these together — e.g. an issuer uses Token Factory to launch an asset, Enterprise Wallet to hold treasury, and Wallet SDK to give end users access.
-</Tip>
+## By goal
+
+Looking for a specific outcome? Jump straight to the right starting page.
+
+| I want to… | Start here |
+| --- | --- |
+| Connect users to a Canton wallet from my dApp | [Wallet SDK — Introduction](/wallet-sdk/introduction) |
+| Let users approve and sign Canton transfers | [Wallet SDK — Quick start](/wallet-sdk/quick-start) |
+| Hold and operate institutional Canton balances | [Enterprise Wallet — Common use cases](/enterprise-wallet/common-use-cases) |
+| Apply approval policies and role-based controls | [Enterprise Wallet — Common use cases](/enterprise-wallet/common-use-cases) |
+| Launch a new stablecoin, security, or RWA | [Token Factory — Common use cases](/token-factory/common-use-cases) |
+| Manage mint, burn, and registry for a token | [Token Factory — Common use cases](/token-factory/common-use-cases) |
+| Combine issuance, custody, and end-user access | See [Combining products](#combining-products) |
+
+## Combining products
+
+Most teams use **more than one** Cantor8 product. Common combinations:
+
+<CardGroup cols={2}>
+  <Card title="Issuer stack" icon="layer-group">
+    **Token Factory** to issue → **Enterprise Wallet** to hold treasury → **Wallet SDK** to give end users access.
+  </Card>
+
+  <Card title="dApp with institutional users" icon="users">
+    **Wallet SDK** for the user experience → **Enterprise Wallet** as the custody backend for institutional accounts.
+  </Card>
+
+  <Card title="Asset manager" icon="chart-pie">
+    **Enterprise Wallet** for custody → **Token Factory** to issue fund units or share classes.
+  </Card>
+
+  <Card title="Payment operator" icon="money-bill-transfer">
+    **Enterprise Wallet** for settlement balances → **Wallet SDK** for the merchant or partner UI.
+  </Card>
+</CardGroup>
+
+## Getting help
+
+<CardGroup cols={2}>
+  <Card title="Talk to the team" icon="comments" href="https://cantor8.io/">
+    Reach out to discuss your use case and the right product mix.
+  </Card>
+
+  <Card title="Read the product docs" icon="book-open" href="/wallet-sdk/introduction">
+    Jump into Wallet SDK, Enterprise Wallet, or Token Factory documentation.
+  </Card>
+</CardGroup>

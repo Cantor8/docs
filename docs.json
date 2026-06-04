@@ -80,6 +80,7 @@
               "enterprise-wallet/auto-batch",
               "enterprise-wallet/configuration",
               "enterprise-wallet/docker",
+              "enterprise-wallet/docker-compose-deployment",
               "enterprise-wallet/common-use-cases"
             ]
           }

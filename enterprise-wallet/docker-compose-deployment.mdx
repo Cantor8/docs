@@ -8,17 +8,23 @@ This guide explains how to deploy C8 Enterprise Wallet with Docker Compose.
 
 ## Before you begin
 
-You need:
+To get started, share the following with the C8 team:
 
-- Docker and Docker Compose installed on the deployment host
+- Your DockerHub username
+
+The C8 team will then provide:
+
 - Access to the C8 DockerHub repository
-- Integration credentials provided by C8:
+- Integration credentials:
   - `client_id`
   - `access_key_id`
   - `secret_access_key`
-- A generated 24-word BIP39 mnemonic phrase
+- A coupon code for MainNet registration
 
-To receive DockerHub access, share your DockerHub username with the C8 team.
+You will also need the following on the deployment host:
+
+- Docker Compose
+- A 24-word BIP39 mnemonic phrase that you generate yourself (see [Generate a BIP39 mnemonic](#1-generate-a-bip39-mnemonic) below)
 
 <Warning>
   **Self-custody notice.** C8 Enterprise Wallet is self-custodial. You must generate and securely store the wallet mnemonic phrase during deployment.

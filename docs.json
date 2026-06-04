@@ -74,7 +74,6 @@
             "icon": "bank",
             "pages": [
               "enterprise-wallet/introduction",
-              "enterprise-wallet/getting-started",
               "enterprise-wallet/common-use-cases",
               "enterprise-wallet/authentication",
               "enterprise-wallet/auto-batch",

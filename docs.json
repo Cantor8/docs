@@ -79,9 +79,7 @@
               "enterprise-wallet/authentication",
               "enterprise-wallet/auto-batch",
               "enterprise-wallet/configuration",
-              "enterprise-wallet/docker-compose-deployment",
-              "enterprise-wallet/architecture",
-              "enterprise-wallet/docker"
+              "enterprise-wallet/docker-compose-deployment"
             ]
           }
         ]

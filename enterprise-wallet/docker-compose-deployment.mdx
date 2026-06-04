@@ -54,6 +54,8 @@ Create a `.env` file next to `docker-compose-client.yml`:
 WALLET_MNEMONIC=<mnemonic>
 CLIENT_ID=<client_id>
 BACKEND_URL=https://wallet-backend.main.digik.cantor8.tech/api
+IDENTITY_SERVICE_URL=https://id.cantor8.tech
+SCANNER_API_BASE_URL=https://scanner-ledger-history-server.main.digik.cantor8.tech
 AUTH_TYPE=noop
 AUTO_BATCH_SWITCH=false
 AUTO_BATCH_DB_TYPE=in-memory
@@ -147,6 +149,8 @@ The exact value will be provided during integration.
 | `WALLET_MNEMONIC` | 24-word BIP39 mnemonic used by the self-custodial wallet |
 | `CLIENT_ID` | Client identifier provided by C8 |
 | `BACKEND_URL` | C8 wallet backend API URL |
+| `IDENTITY_SERVICE_URL` | C8 identity service URL |
+| `SCANNER_API_BASE_URL` | C8 scanner / ledger history server URL |
 | `AUTH_TYPE` | API authentication mode. `noop` disables authentication |
 | `AUTO_BATCH_SWITCH` | Enables or disables auto-batching |
 | `AUTO_BATCH_DB_TYPE` | Auto-batching storage type, for example `in-memory` |

@@ -4,9 +4,21 @@ sidebarTitle: "Introduction"
 description: "High-level HTTP API for wallet operations on the Canton Network, designed for institutional workflows."
 ---
 
-Cantor8 Enterprise Wallet (`wallet-api`) is a **Scala-based service** that provides a high-level HTTP API for wallet operations on the Canton Network. It wraps the [Wallet SDK](https://github.com/Cantor8/wallet-sdk/) to communicate securely with the [Wallet Backend](https://github.com/Cantor8/wallet-backend/) (Canton Ledger).
+Cantor8 Enterprise Wallet is a **Scala-based service** that provides a high-level HTTP API designed for wallet operations and secure communications with the Canton Ledger.
 
 It is built for institutions that need a hardened, OIDC-secured, high-throughput wallet service backing their treasury, settlement, or custody workflows — without owning the underlying ledger plumbing.
+
+## Overview
+
+C8 Enterprise Wallet provides:
+
+- Support for any token standard enabled on the C8 backend
+- Pre-approval for incoming token-standard transactions with 1-step transfer
+- Automated UTXO management
+- Auto-batching with in-memory or PostgreSQL storage
+- USDC Bridge support
+- Optional API authentication through Keycloak or Auth0
+- Self-custodial wallet operation
 
 ## What you'll find here
 
@@ -15,8 +27,8 @@ It is built for institutions that need a hardened, OIDC-secured, high-throughput
     Run the service locally or via Docker.
   </Card>
 
-  <Card title="Architecture" icon="sitemap" href="/enterprise-wallet/architecture">
-    Service structure, layers, and startup sequence.
+  <Card title="Common use cases" icon="list-check" href="/enterprise-wallet/common-use-cases">
+    How partners apply C8 Enterprise Wallet and the value it delivers.
   </Card>
 
   <Card title="Authentication" icon="shield-halved" href="/enterprise-wallet/authentication">
@@ -31,7 +43,7 @@ It is built for institutions that need a hardened, OIDC-secured, high-throughput
     Environment variables, IdP setup, and database tuning.
   </Card>
 
-  <Card title="Docker" icon="docker" href="/enterprise-wallet/docker">
+  <Card title="Docker compose deployment" icon="docker" href="enterprise-wallet/docker-compose-deployment">
     Build and run the service in containers.
   </Card>
 </CardGroup>

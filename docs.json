@@ -75,13 +75,13 @@
             "pages": [
               "enterprise-wallet/introduction",
               "enterprise-wallet/getting-started",
-              "enterprise-wallet/architecture",
+              "enterprise-wallet/common-use-cases",
               "enterprise-wallet/authentication",
               "enterprise-wallet/auto-batch",
               "enterprise-wallet/configuration",
-              "enterprise-wallet/docker",
               "enterprise-wallet/docker-compose-deployment",
-              "enterprise-wallet/common-use-cases"
+              "enterprise-wallet/architecture",
+              "enterprise-wallet/docker"
             ]
           }
         ]

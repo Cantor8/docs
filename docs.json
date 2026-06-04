@@ -75,7 +75,7 @@
   },
   "logo": {
     "light": "/images/FullColor.png",
-    "dark": "/images/Full_Color.png"
+    "dark": "/images/FullColor.png"
   },
   "navbar": {
     "links": [
@@ -86,8 +86,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Cantor8.io",
+      "href": "https://www.cantor8.io/"
     }
   },
   "contextual": {

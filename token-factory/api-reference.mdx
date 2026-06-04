@@ -1,0 +1,495 @@
+---
+title: "API reference"
+sidebarTitle: "API reference"
+description: "Token App REST API — admin operations, data queries, status, and health checks."
+---
+
+The Token App exposes a REST API for administering tokens (mint, burn), querying historical data (mints, burns, holdings), and inspecting service status and health.
+
+All secured endpoints require an HTTP `Bearer` token in the `Authorization` header:
+
+```http
+Authorization: Bearer <token>
+```
+
+The code examples below assume two environment variables:
+
+```bash
+export BASE_URL="https://<your-token-app-host>"
+export TOKEN="<your-bearer-token>"
+```
+
+## Admin
+
+Write operations against the ledger. Both endpoints accept an idempotent `command_id` — repeating the same `command_id` won't submit twice.
+
+### `POST /api/admin/mint`
+
+Mint new units of an instrument to a recipient party.
+
+<ParamField body="command_id" type="string" required>
+  Client-supplied idempotency key for the ledger submit.
+</ParamField>
+
+<ParamField body="instrument_id" type="string" required>
+  Instrument to mint.
+</ParamField>
+
+<ParamField body="party_id" type="string" required>
+  Recipient party id.
+</ParamField>
+
+<ParamField body="amount" type="number | string" required>
+  Amount to mint. Accepts a number or a decimal string.
+</ParamField>
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST "$BASE_URL/api/admin/mint" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "command_id": "mint-2025-01-01-001",
+    "instrument_id": "rCC",
+    "party_id": "alice::122...",
+    "amount": "100.0"
+  }'
+```
+
+```ts TypeScript
+const res = await fetch(`${baseUrl}/api/admin/mint`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    command_id: "mint-2025-01-01-001",
+    instrument_id: "rCC",
+    party_id: "alice::122...",
+    amount: "100.0",
+  }),
+});
+
+const data = await res.json();
+```
+
+```python Python
+import requests
+
+res = requests.post(
+    f"{base_url}/api/admin/mint",
+    headers={"Authorization": f"Bearer {token}"},
+    json={
+        "command_id": "mint-2025-01-01-001",
+        "instrument_id": "rCC",
+        "party_id": "alice::122...",
+        "amount": "100.0",
+    },
+)
+data = res.json()
+```
+
+</CodeGroup>
+
+<CodeGroup>
+
+```json 200 OK
+{
+  "command_id": "mint-2025-01-01-001",
+  "status": "submitted"
+}
+```
+
+```json 422 Validation Error
+{
+  "detail": [
+    {
+      "loc": ["body", "amount"],
+      "msg": "value is not a valid decimal",
+      "type": "value_error"
+    }
+  ]
+}
+```
+
+</CodeGroup>
+
+### `POST /api/admin/burn`
+
+Burn units of an instrument held by a party.
+
+<ParamField body="command_id" type="string" required>
+  Client- or system-assigned id for the ledger submit.
+</ParamField>
+
+<ParamField body="instrument_id" type="string" required>
+  Instrument to burn.
+</ParamField>
+
+<ParamField body="party_id" type="string" required>
+  Party whose tokens will be burned (holder or subject).
+</ParamField>
+
+<ParamField body="amount" type="number | string" required>
+  Amount to burn.
+</ParamField>
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST "$BASE_URL/api/admin/burn" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "command_id": "burn-2025-01-01-001",
+    "instrument_id": "rCC",
+    "party_id": "alice::122...",
+    "amount": "10.0"
+  }'
+```
+
+```ts TypeScript
+const res = await fetch(`${baseUrl}/api/admin/burn`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    command_id: "burn-2025-01-01-001",
+    instrument_id: "rCC",
+    party_id: "alice::122...",
+    amount: "10.0",
+  }),
+});
+
+const data = await res.json();
+```
+
+```python Python
+import requests
+
+res = requests.post(
+    f"{base_url}/api/admin/burn",
+    headers={"Authorization": f"Bearer {token}"},
+    json={
+        "command_id": "burn-2025-01-01-001",
+        "instrument_id": "rCC",
+        "party_id": "alice::122...",
+        "amount": "10.0",
+    },
+)
+data = res.json()
+```
+
+</CodeGroup>
+
+```json 200 OK
+{
+  "command_id": "burn-2025-01-01-001",
+  "status": "submitted"
+}
+```
+
+## Data
+
+Read-only queries against the confirmed history captured by the token monitor. All endpoints support pagination via `limit` and `offset` query parameters and optional filtering by `party_id` and `instrument_id`.
+
+### `GET /data/admin/mints`
+
+List confirmed mint records.
+
+<ParamField query="party_id" type="string">
+  Filter by recipient party id.
+</ParamField>
+
+<ParamField query="instrument_id" type="string">
+  Filter by instrument id.
+</ParamField>
+
+<ParamField query="limit" default="100" type="integer">
+  Page size. Range: 1–1000.
+</ParamField>
+
+<ParamField query="offset" default="0" type="integer">
+  Pagination offset (≥0).
+</ParamField>
+
+<CodeGroup>
+
+```bash cURL
+curl -G "$BASE_URL/data/admin/mints" \
+  -H "Authorization: Bearer $TOKEN" \
+  --data-urlencode "instrument_id=rCC" \
+  --data-urlencode "limit=100"
+```
+
+```ts TypeScript
+const params = new URLSearchParams({ instrument_id: "rCC", limit: "100" });
+const res = await fetch(`${baseUrl}/data/admin/mints?${params}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+const data = await res.json();
+```
+
+```python Python
+import requests
+
+res = requests.get(
+    f"{base_url}/data/admin/mints",
+    headers={"Authorization": f"Bearer {token}"},
+    params={"instrument_id": "rCC", "limit": 100},
+)
+data = res.json()
+```
+
+</CodeGroup>
+
+```json 200 OK
+[
+  {
+    "command_id": "mint-2025-01-01-001",
+    "created_at": "2025-01-01T00:00:00Z",
+    "party_id": "alice::122...",
+    "instrument_id": "rCC",
+    "update_id": "1220abc...",
+    "amount": "100.0"
+  }
+]
+```
+
+### `GET /data/admin/burns`
+
+List confirmed burn records. Same query parameters as `/data/admin/mints`.
+
+<CodeGroup>
+
+```bash cURL
+curl -G "$BASE_URL/data/admin/burns" \
+  -H "Authorization: Bearer $TOKEN" \
+  --data-urlencode "instrument_id=rCC" \
+  --data-urlencode "limit=100"
+```
+
+```ts TypeScript
+const params = new URLSearchParams({ instrument_id: "rCC", limit: "100" });
+const res = await fetch(`${baseUrl}/data/admin/burns?${params}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+const data = await res.json();
+```
+
+```python Python
+import requests
+
+res = requests.get(
+    f"{base_url}/data/admin/burns",
+    headers={"Authorization": f"Bearer {token}"},
+    params={"instrument_id": "rCC", "limit": 100},
+)
+data = res.json()
+```
+
+</CodeGroup>
+
+```json 200 OK
+[
+  {
+    "command_id": "burn-2025-01-01-001",
+    "created_at": "2025-01-01T00:00:00Z",
+    "party_id": "alice::122...",
+    "instrument_id": "rCC",
+    "update_id": "1220def...",
+    "amount": "10.0"
+  }
+]
+```
+
+### `GET /data/admin/holdings`
+
+Return a snapshot of on-ledger holdings from the latest monitor scan.
+
+<ParamField query="party_id" type="string">
+  Filter by owner party id.
+</ParamField>
+
+<ParamField query="instrument_id" type="string">
+  Filter by instrument id.
+</ParamField>
+
+<ParamField query="limit" default="100000" type="integer">
+  Page size. Range: 1–100000.
+</ParamField>
+
+<ParamField query="offset" default="0" type="integer">
+  Pagination offset (≥0).
+</ParamField>
+
+<CodeGroup>
+
+```bash cURL
+curl -G "$BASE_URL/data/admin/holdings" \
+  -H "Authorization: Bearer $TOKEN" \
+  --data-urlencode "instrument_id=rCC"
+```
+
+```ts TypeScript
+const params = new URLSearchParams({ instrument_id: "rCC" });
+const res = await fetch(`${baseUrl}/data/admin/holdings?${params}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+const data = await res.json();
+```
+
+```python Python
+import requests
+
+res = requests.get(
+    f"{base_url}/data/admin/holdings",
+    headers={"Authorization": f"Bearer {token}"},
+    params={"instrument_id": "rCC"},
+)
+data = res.json()
+```
+
+</CodeGroup>
+
+```json 200 OK
+{
+  "scan": {
+    "scanned_at": "2025-01-01T00:00:00Z"
+  },
+  "total": 1,
+  "holdings": [
+    {
+      "holding_cid": "0042...",
+      "party_id": "alice::122...",
+      "instrument_id": "rCC",
+      "amount": "90.0",
+      "locked": false
+    }
+  ]
+}
+```
+
+The `locked` flag is `true` when a non-expired lock blocks spending (for example, an in-flight transfer).
+
+## Status
+
+### `GET /status`
+
+Return the latest cached snapshot from the token-monitor loop (no live ledger query). Includes per-token stats (supply, holders, concentration, module-specific fields) and monitor/queue operational stats.
+
+Each section carries the time it was last refreshed; `updated_at` is the overall freshness. Fields that don't apply to a token — or aren't available yet — are omitted. The snapshot is only populated while monitoring is enabled; otherwise `tokens` is empty.
+
+<CodeGroup>
+
+```bash cURL
+curl "$BASE_URL/status" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+```ts TypeScript
+const res = await fetch(`${baseUrl}/status`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+const data = await res.json();
+```
+
+```python Python
+import requests
+
+res = requests.get(
+    f"{base_url}/status",
+    headers={"Authorization": f"Bearer {token}"},
+)
+data = res.json()
+```
+
+</CodeGroup>
+
+```json 200 OK
+{
+  "updated_at": "2025-01-01T00:00:00Z",
+  "tokens": {
+    "rCC": {
+      "total_supply": "1000.0",
+      "total_locked_supply": "10.0",
+      "unique_holders": 42,
+      "top_holder_share": "0.18",
+      "supply_concentration_hhi": "0.07",
+      "updated_at": "2025-01-01T00:00:00Z"
+    }
+  },
+  "operational": {
+    "updated_at": "2025-01-01T00:00:00Z",
+    "monitor": {
+      "last_success_at": "2025-01-01T00:00:00Z",
+      "age_seconds": 2.1,
+      "last_scan_duration_seconds": 0.4,
+      "poll_interval_seconds": 5,
+      "last_scan_holdings": 42,
+      "cycles_total": 12345,
+      "cycle_errors_total": 0,
+      "monitoring_enabled": true
+    },
+    "subscriptions": [
+      {
+        "name": "self-redeem",
+        "queue_depth": 0,
+        "queue_maxsize": 1024,
+        "dropped_batches_total": 0
+      }
+    ],
+    "modules": {}
+  }
+}
+```
+
+Key per-token fields:
+
+| Field | Description |
+| --- | --- |
+| `total_supply` | Total amount in circulation across all active holdings (spendable \+ locked), summed from the latest on-ledger scan. |
+| `total_locked_supply` | Portion of `total_supply` currently locked (e.g. in-flight transfer) and not spendable. |
+| `unique_holders` | Number of distinct owner parties holding at least one active holding. |
+| `top_holder_share` | Fraction of `total_supply` held by the single largest holder (0–1). |
+| `supply_concentration_hhi` | Herfindahl–Hirschman Index of supply across holders. `1.0` = one holder owns everything; `~1/unique_holders` = evenly distributed. |
+
+## Health and metrics
+
+Unauthenticated operational endpoints for orchestration and monitoring.
+
+### `GET /healthz`
+
+Liveness probe. Returns `200 OK` when the service is up.
+
+```bash cURL
+curl "$BASE_URL/healthz"
+```
+
+### `GET /metrics`
+
+Returns service metrics in JSON.
+
+```bash cURL
+curl "$BASE_URL/metrics"
+```
+
+## Error responses
+
+Validation errors are returned as `422 Unprocessable Entity`:
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "amount"],
+      "msg": "value is not a valid number",
+      "type": "value_error"
+    }
+  ]
+}
+```

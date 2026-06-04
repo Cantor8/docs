@@ -27,11 +27,9 @@
             "pages": [
               "index",
               "quickstart",
-              "common-use-cases",
               "choose-your-path",
               "choose-your-path-v1",
               "choose-your-path-v2",
-              "choose-your-path-v3",
               "choose-your-path-v4"
             ]
           },
@@ -70,7 +68,8 @@
             "pages": [
               "token-factory/introduction",
               "token-factory/common-use-cases",
-              "token-factory/integration"
+              "token-factory/integration",
+              "token-factory/api-reference"
             ]
           }
         ]

@@ -1,0 +1,93 @@
+---
+title: "Onboarding and operations"
+description: "The managed path from Canton validator registration to production operations with C8."
+---
+
+C8 Validator as a Service is built around a simple operating model: C8 handles the validator infrastructure lifecycle while the partner focuses on the business workflow that depends on Canton connectivity.
+
+The exact sequence may vary by partner, network requirements, and deployment scope, but the process generally follows the stages below.
+
+## Operating model
+
+Partners can always choose to run their own Canton validator node in their own infrastructure. That path gives maximum internal control, but it also requires the partner to own DevOps, monitoring, release updates, traffic management, and operational support.
+
+With C8 Validator as a Service, C8 takes responsibility for the technical setup and ongoing operation of the validator environment.
+
+<CardGroup cols={2}>
+  <Card title="Partner-managed" icon="user-gear">
+    The partner runs the validator in its own infrastructure and owns updates, monitoring, traffic, and incident response.
+  </Card>
+
+  <Card title="C8-managed" icon="server">
+    C8 prepares, deploys, monitors, updates, and operates the validator as part of the managed service.
+  </Card>
+</CardGroup>
+
+## Onboarding flow
+
+<Steps>
+  <Step title="Confirm validator scope">
+    C8 and the partner confirm the target network, expected usage, operating requirements, and whether the validator supports a wallet, token, settlement, or custom workflow.
+  </Step>
+  <Step title="Prepare isolated environment">
+    C8 creates an isolated infrastructure environment for the partner validator and configures the required deployment baseline.
+  </Step>
+  <Step title="Complete registration steps">
+    C8 supports the registration process and collects the technical details required for network access.
+  </Step>
+  <Step title="Submit IPs for allowlisting">
+    Because Canton is a permissioned network, C8 submits the required IP information to the Foundation for whitelist approval.
+  </Step>
+  <Step title="Deploy and validate the node">
+    C8 deploys the validator, verifies connectivity, checks service health, and confirms the node is ready for partner workflows.
+  </Step>
+  <Step title="Move into managed operations">
+    After launch, C8 manages monitoring, alerts, updates, traffic handling, and ongoing infrastructure support.
+  </Step>
+</Steps>
+
+## Operational responsibilities
+
+The managed service is designed to cover the validator responsibilities that usually require a dedicated infrastructure team.
+
+- **Release management** — applying required updates and keeping the validator aligned with network expectations.
+- **Monitoring and alerting** — tracking node health, service availability, and operational signals.
+- **Traffic management** — ensuring the validator can handle expected network and partner traffic patterns.
+- **Environment isolation** — separating partner validator infrastructure from other operational environments.
+- **Production support** — responding to issues and coordinating follow-up where network or infrastructure dependencies are involved.
+
+## Partner responsibilities
+
+The partner remains responsible for the business and product workflows that use the validator.
+
+This typically includes:
+
+- Defining the product or institutional workflow that depends on Canton
+- Providing required business and registration information
+- Confirming expected usage patterns and operational requirements
+- Integrating applications, wallets, token services, or back-office systems with the C8 stack
+- Managing end-user, compliance, and business process requirements outside the validator infrastructure layer
+
+## Production readiness
+
+Before a validator is considered ready for production use, C8 verifies the core operational requirements.
+
+<Check>
+  The node should be deployed in the isolated environment, registered for the target network, allowlisted where required, monitored, and connected to the partner workflow that depends on it.
+</Check>
+
+The final go-live timing depends on infrastructure readiness, partner inputs, and completion of external network access steps such as allowlisting.
+
+## When to contact C8
+
+Contact the C8 team when your product or institution needs Canton validator connectivity and you want C8 to manage the setup and operation path.
+
+<CardGroup cols={2}>
+  <Card title="Discuss validator scope" icon="compass" href="mailto:integrations@cantor8.io">
+    Share the target network, product workflow, and expected launch timeline.
+  </Card>
+
+  <Card title="Plan production launch" icon="rocket" href="mailto:integrations@cantor8.io">
+    Coordinate registration, allowlisting, infrastructure setup, and operational readiness.
+  </Card>
+</CardGroup>

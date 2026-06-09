@@ -68,6 +68,16 @@
               "token-factory/integration",
               "token-factory/api-reference"
             ]
+          },
+          {
+            "group": "Validator as a Service",
+            "icon": "server",
+            "expanded": true,
+            "pages": [
+              "validator-as-a-service/introduction",
+              "validator-as-a-service/common-use-cases",
+              "validator-as-a-service/onboarding-and-operations"
+            ]
           }
         ]
       }

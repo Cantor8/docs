@@ -34,7 +34,7 @@ signAndExecute(input: {
 | `partyId` | The party submitting the command. |
 | `commandId` | Unique idempotency key for this submission (e.g. a UUID). |
 | `commandsJson` | JSON-serialized array of DAML commands (`CreateCommand`, `ExerciseCommand`, etc.). |
-| `disclosedContracts` | Contracts disclosed to the participant to authorize the command. |
+| `disclosedContracts` | JSON-serialized array of Contracts disclosed to the participant to authorize the command. |
 
 ### Example
 
@@ -65,6 +65,20 @@ const onSignAndExecuteClick = async () => {
     console.log("error signing and executing", e, e.data)
   );
 };
+```
+
+Example of `disclosed_contracts` payload:
+
+```json
+"disclosed_contracts":
+[
+    {
+        "templateId": "167da4910b0..c93056f2f3bcd",
+        "contractId": "0060.77887563880cd00",
+        "createdEventBlob": "CgMyLjES7wY..Wk/eLGNgpQNGrdDxjiLIpmGdEB4=",
+        "synchronizerId": "global-domain::1220be58..881bb471a"
+    }
+],
 ```
 
 <Card title="Discuss custom integration" icon="envelope" href="mailto:integrations@cantor8.io?subject=Wallet%20SDK%20custom%20transaction%20types">

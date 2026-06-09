@@ -12,25 +12,45 @@ c8.on('txChanged',      (e) => { /* ... */ });
 ## Event reference
 
 <ResponseField name="connected" type="event">
-  Fires when the user approves the connection in the popup. No payload.
+  Fires when the user approves the connection in the popup. Payload: `{ meta?: Json }`.
 </ResponseField>
 
 <ResponseField name="disconnected" type="event">
-  Fires when `disconnect()` is called or the popup is closed. No payload.
+  Fires when `disconnect()` is called or the popup is closed. Payload: `{ reason?: string, meta?: Json }`.
 </ResponseField>
 
 <ResponseField name="accountChanged" type="event">
-  Fires when balances or holdings change. Payload: updated account data.
+  Fires when balances or holdings change. Payload: `{ accounts: AccountInfoPayload[], meta?: Json }`.
 </ResponseField>
 
 <ResponseField name="txInitiated" type="event">
-  Fires when a transfer is submitted to Canton. Payload: `{ txId: string }`.
+  Fires when a transaction request is initiated. Payload: `{ txId?: string, meta?: Json }`.
 </ResponseField>
 
 <ResponseField name="txChanged" type="event">
-  Fires when a transaction status changes on the ledger. Payload: status update.
+  Fires when a transaction's completion status updates. Payload: `{ txId: string, status: "pending" | "confirmed" | "failed" | string, meta?: Json }`.
+</ResponseField>
+
+<ResponseField name="themeChanged" type="event">
+  Fires when the wallet interface changes its UI display theme. Payload: `{ theme: "dark" | "light", meta?: Json }`.
+</ResponseField>
+
+<ResponseField name="operationCanceled" type="event">
+  Fires when an action or modal interface is explicitly rejected by the user. Payload: `{ reason: string, meta?: Json }`.
 </ResponseField>
 
 <Tip>
   Always register listeners **before** calling `connect()` to ensure you don't miss the initial `connected` event.
 </Tip>
+
+## Unsubscribing from events
+
+The `on()` method returns an unsubscribe function. Call it to remove the listener.
+
+```js
+const unsubscribe = c8.on("connected", (event) => {
+  console.log("Connected", event);
+});
+
+unsubscribe();
+```

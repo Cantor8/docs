@@ -2,6 +2,22 @@
 title: "API reference"
 ---
 
+## Public API: `C8WalletProvider`
+
+| Method | Parameters | Return Type |
+| --- | --- | --- |
+| `connect()` | None | `Promise<void>` |
+| `disconnect()` | None | `Promise<void>` |
+| `status()` | None | `Promise<{ connected: boolean; walletVersion?: string }>` |
+| `getInstruments()` | None | `Promise<InstrumentListPayload>` |
+| `getAccounts()` | `instrumentId?: string` | `Promise<AccountListPayload>` |
+| `send()` | `input: SendInput` | `Promise<SubmitTransferResultPayload>` |
+| `signAndExecute()` | `input: SignAndExecuteInput` | `Promise<void>` |
+| `checkTxStatusById()` | `input: { txId: string }` | `Promise<TransferStatusResponsePayload>` |
+| `on()` | `event: T, cb: Listener<C8EventByType<T>>` | `() => boolean` |
+
+---
+
 ## Constructor
 
 Creates a new wallet provider instance.
@@ -147,6 +163,58 @@ send(input): Promise<SubmitTransferResultPayload>
 
 <ResponseField name="txId" type="string">
   Transaction ID assigned by the Canton ledger. Use it with `checkTxStatusById`.
+</ResponseField>
+
+---
+
+## signAndExecute
+
+Signs and executes an arbitrary DAML command via the connected wallet. Use this for custom templates and choices beyond standard transfers. See [Transfer types](/wallet-sdk/transfer-types) for the full example.
+
+```ts
+signAndExecute(input): Promise<void>
+```
+
+<ParamField path="note" type="string" required>
+  Human-readable note shown to the user in the wallet UI.
+</ParamField>
+
+<ParamField path="partyId" type="string" required>
+  The party submitting the command.
+</ParamField>
+
+<ParamField path="commandId" type="string" required>
+  Unique idempotency key for this submission (e.g. a UUID).
+</ParamField>
+
+<ParamField path="commandsJson" type="string" required>
+  JSON-serialized array of DAML commands (`CreateCommand`, `ExerciseCommand`, etc.).
+</ParamField>
+
+<ParamField path="disclosedContracts" type="string" required>
+  JSON-serialized array of contracts disclosed to the participant to authorize the command.
+</ParamField>
+
+---
+
+## on
+
+Subscribes to a wallet event. Returns an unsubscribe function. See [Events](/wallet-sdk/events) for the full event reference.
+
+```ts
+on<T extends C8EventType>(event: T, cb: Listener<C8EventByType<T>>): () => boolean
+```
+
+<ParamField path="event" type="string" required>
+  Event type to subscribe to (e.g. `"connected"`, `"txChanged"`).
+</ParamField>
+
+<ParamField path="cb" type="Listener" required>
+  Callback invoked with the typed event payload.
+</ParamField>
+
+<ResponseField name="returns" type="() => boolean">
+  Unsubscribe function. Call it to remove the listener.
 </ResponseField>
 
 ---

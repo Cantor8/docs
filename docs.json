@@ -27,7 +27,7 @@
             "pages": [
               "index",
               "quickstart",
-              "choose-your-path-v1"
+              "choose-your-path"
             ]
           },
           {
@@ -77,7 +77,8 @@
               "validator-as-a-service/introduction",
               "validator-as-a-service/common-use-cases",
               "validator-as-a-service/onboarding-and-operations"
-            ]
+            ],
+            "hidden": true
           }
         ]
       }
@@ -128,8 +129,8 @@
       "permanent": true
     },
     {
-      "source": "/choose-your-path",
-      "destination": "/choose-your-path-v1",
+      "source": "/choose-your-path-v1",
+      "destination": "/choose-your-path",
       "permanent": true
     }
   ]

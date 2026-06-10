@@ -1,0 +1,158 @@
+---
+title: "Choose your path"
+sidebarTitle: "Choose your path"
+description: "Pick the right Cantor8 product for your team in 30 seconds."
+---
+
+Three products, three jobs. Pick the one that matches what you're building.
+
+<CardGroup cols={3}>
+  <Card title="Wallet SDK" icon="plug" horizontal href="/wallet-sdk/introduction">
+    **You're building a dApp** that needs Canton wallet connectivity.
+  </Card>
+
+  <Card title="Enterprise Wallet" icon="building-columns" horizontal href="/enterprise-wallet/common-use-cases">
+    **You're an institution** holding and moving Canton assets at scale.
+  </Card>
+
+  <Card title="Token Factory" icon="coins" horizontal href="/token-factory/common-use-cases">
+    **You're an issuer** launching a token, stablecoin, or RWA on Canton.
+  </Card>
+</CardGroup>
+
+## Not sure which fits? Start by role
+
+<CardGroup cols={2}>
+  <Card title="dApp developer" icon="plug" href="/wallet-sdk/introduction">
+    Building a DeFi, payments, or trading application that needs wallet connectivity.
+
+    **Start here if you want to:**
+
+    - Let users connect a Canton wallet
+    - Request approvals and submit transfers
+    - Skip building auth, signing, or ledger plumbing
+  </Card>
+
+  <Card title="Institutional operator" icon="building-columns" href="/enterprise-wallet/common-use-cases">
+    Bank, fund, custodian, broker, or treasury team operating on Canton.
+
+    **Start here if you want to:**
+
+    - Hold and move multi-asset balances at scale
+    - Apply role-based controls and approval policies
+    - Maintain audit-ready logging and reporting
+  </Card>
+
+  <Card title="Asset issuer" icon="coins" href="/token-factory/common-use-cases">
+    Issuing a stablecoin, security, RWA, or loyalty asset on Canton.
+
+    **Start here if you want to:**
+
+    - Define and configure a Canton-native asset
+    - Control mint, burn, transfer, and registry
+    - Skip writing DAML or running issuance infrastructure
+  </Card>
+
+  <Card title="Solution architect" icon="compass" href="#by-goal">
+    Evaluating Cantor8 for an enterprise use case.
+
+    **Start here if you need to:**
+
+    - Understand how the products fit together
+    - Map a workflow to one or more products
+    - Compare options before committing
+  </Card>
+</CardGroup>
+
+---
+
+## Decide product by product
+
+Still on the fence? Here's a closer look at each product — when it's the right fit, and when you should pick a different one.
+
+## Wallet SDK
+
+<CardGroup cols={2}>
+  <Card title="Choose if…" icon="circle-check">
+    - You're a DeFi, payments, or trading dApp
+    - You need users to connect a wallet and approve actions
+    - You don't want to build auth, signing, or ledger plumbing
+  </Card>
+
+  <Card title="Skip if…" icon="circle-xmark">
+    - You need to **issue** assets → Token Factory
+    - You need **institutional custody** → Enterprise Wallet
+  </Card>
+</CardGroup>
+
+## Enterprise Wallet
+
+<CardGroup cols={2}>
+  <Card title="Choose if…" icon="circle-check">
+    - You're a bank, fund, custodian, or treasury team
+    - You need role-based controls and approval policies
+    - You hold multi-asset balances at scale
+  </Card>
+
+  <Card title="Skip if…" icon="circle-xmark">
+    - You're an end-user dApp → Wallet SDK
+    - You're creating a new token → Token Factory
+  </Card>
+</CardGroup>
+
+## Token Factory
+
+<CardGroup cols={2}>
+  <Card title="Choose if…" icon="circle-check">
+    - You're issuing a stablecoin, security, or RWA
+    - You need mint, burn, transfer, and registry controls
+    - You don't want to write DAML or maintain a token registry
+  </Card>
+
+  <Card title="Skip if…" icon="circle-xmark">
+    - You only need to **hold** existing assets → Enterprise Wallet
+    - You only need to **connect** users to a wallet → Wallet SDK
+  </Card>
+</CardGroup>
+
+## By goal
+
+Looking for a specific outcome? Jump straight to the right starting page.
+
+| I want to… | Start here |
+| --- | --- |
+| Connect users to a Canton wallet from my dApp | [Wallet SDK — Introduction](/wallet-sdk/introduction) |
+| Let users approve and sign Canton transfers | [Wallet SDK — Quick start](/wallet-sdk/quick-start) |
+| Hold and operate institutional Canton balances | [Enterprise Wallet — Common use cases](/enterprise-wallet/common-use-cases) |
+| Apply approval policies and role-based controls | [Enterprise Wallet — Common use cases](/enterprise-wallet/common-use-cases) |
+| Launch a new stablecoin, security, or RWA | [Token Factory — Common use cases](/token-factory/common-use-cases) |
+| Manage mint, burn, and registry for a token | [Token Factory — Common use cases](/token-factory/common-use-cases) |
+| Combine issuance, custody, and end-user access | See [Combining products](#combining-products) |
+
+## Combining products
+
+Most teams use **more than one** Cantor8 product. Common combinations:
+
+<CardGroup cols={2}>
+  <Card title="Issuer stack" icon="layer-group">
+    **Token Factory** to issue → **Enterprise Wallet** to hold treasury → **Wallet SDK** to give end users access.
+  </Card>
+
+  <Card title="dApp with institutional users" icon="users">
+    **Wallet SDK** for the user experience → **Enterprise Wallet** as the custody backend for institutional accounts.
+  </Card>
+
+  <Card title="Asset manager" icon="chart-pie">
+    **Enterprise Wallet** for custody → **Token Factory** to issue fund units or share classes.
+  </Card>
+
+  <Card title="Payment operator" icon="money-bill-transfer">
+    **Enterprise Wallet** for settlement balances → **Wallet SDK** for the merchant or partner UI.
+  </Card>
+</CardGroup>
+
+## Getting help
+
+<Card title="Talk to the C8 team" icon="envelope" href="mailto:integrations@cantor8.io">
+  Reach out at [**integrations@cantor8.io**](mailto:integrations@cantor8.io) to discuss your use case, get credentials, or scope a custom integration.
+</Card>

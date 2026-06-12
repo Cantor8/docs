@@ -77,8 +77,7 @@
               "validator-as-a-service/introduction",
               "validator-as-a-service/common-use-cases",
               "validator-as-a-service/onboarding-and-operations"
-            ],
-            "hidden": true
+            ]
           }
         ]
       }

@@ -1,5 +1,6 @@
 ---
 title: "Error handling"
+description: "Handle wallet connection, approval, data, and transaction errors."
 ---
 
 SDK methods reject with an error object that includes a stable `code` field. Switch on `err.code` to handle each case.
@@ -30,7 +31,7 @@ try {
   </Accordion>
 
   <Accordion title="POPUP_BLOCKED" icon="ban">
-    The browser blocked the wallet popup. Make sure `connect()` and `send()` are called from a user gesture (e.g. a button click).
+    The browser blocked the wallet popup. Call interactive methods such as `connect()`, `send()`, `createSwapOffer()`, `signMessage()`, and `signAndExecute()` from a user gesture such as a button click.
   </Accordion>
 
   <Accordion title="NOT_CONNECTED" icon="plug-circle-xmark">

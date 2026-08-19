@@ -1,20 +1,100 @@
 ---
-title: "Transfer types"
-sidebarTitle: "Transfer types"
-description: "Standard transfers supported out of the box and custom transaction types via C8."
+title: "Transactions and signing"
+sidebarTitle: "Transactions and signing"
+description: "Submit transfers, create multi-leg DvP swap offers, sign messages, and execute custom DAML commands."
 ---
 
 ## Standard transfers
 
 Out of the box, the SDK supports connecting a Canton wallet, resolving instruments and accounts, and submitting transfers between parties. This covers the majority of DeFi use cases: payments, settlements, and asset movement across Canton participants.
 
-## Custom transaction types
+## Multi-leg swap offers
 
-Canton's smart contract model (DAML) allows for arbitrarily complex workflows — multi-party agreements, conditional transfers, bespoke financial instruments. If your application requires transaction types beyond standard transfers, the SDK can be extended to support them. This involves aligning on your contract and workflow requirements with the Cantor8 team, who will implement the corresponding support on the C8 backend.
+A multi-leg swap offer describes everything two parties agree to exchange in one coordinated settlement flow. Instead of submitting independent transfers, the creator defines the assets each side must provide, the intended receivers, and the settlement deadline in a single offer.
 
-### `signAndExecute` — arbitrary contracts
+This structure supports simple token-for-token swaps and exchanges with multiple assets on either side. A common use case is **Delivery versus Payment (DvP)**: one party delivers a tokenized asset while the other provides the corresponding payment.
 
-The SDK exposes a low-level method that lets your dApp sign and execute any DAML command supported by the connected wallet — including custom templates and choices defined for your integration.
+<Info>
+  DvP reduces settlement risk by coordinating delivery and payment. For example, the creator can deliver five tokenized bonds while the acceptor pays 100 units of a cash instrument under the same swap terms.
+</Info>
+
+The offer contains three groups of legs:
+
+| Leg group | Purpose |
+| --- | --- |
+| `creatorLegs` | Assets the creator provides to the specified receivers. |
+| `acceptorLegs` | Assets the acceptor must provide to the specified receivers. |
+| `creatorTransferLegs` | Additional direct transfers the creator includes in the settlement. Use an empty array when none are required. |
+
+Each leg identifies its receiver, instrument, decimal amount, and unique leg ID. `settleBefore` sets the settlement deadline, and `acceptorPartyId` restricts who can accept the offer.
+
+`createSwapOffer()` submits the offer for wallet approval and returns its transaction ID. It does not accept or settle the offer; those steps happen through the subsequent wallet and settlement flow.
+
+```ts
+const { txId } = await c8.createSwapOffer({
+  partyId: "Creator::1220...",
+  commandId: crypto.randomUUID(), // Optional
+  swap: {
+    swapId: crypto.randomUUID(),
+    acceptorPartyId: "Acceptor::1220...",
+    creatorLegs: [
+      {
+        receiver: "Acceptor::1220...",
+        instrument: {
+          admin: "USD-Admin::1220...",
+          id: "USD-Instrument::1220...",
+        },
+        amount: "100.00",
+        legId: "creator-usd-leg",
+        reason: "USD side of the swap",
+      },
+    ],
+    acceptorLegs: [
+      {
+        receiver: "Creator::1220...",
+        instrument: {
+          admin: "Bond-Admin::1220...",
+          id: "Bond-Instrument::1220...",
+        },
+        amount: "5",
+        legId: "acceptor-bond-leg",
+      },
+    ],
+    creatorTransferLegs: [],
+    settleBefore: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    meta: {
+      orderType: "rfq",
+    },
+  },
+});
+
+console.log("Swap offer submitted:", txId);
+```
+
+`partyId` is the creator. `acceptorPartyId` is the only party allowed to accept the offer. Use decimal strings for leg amounts and an ISO 8601 timestamp for `settleBefore`.
+
+## Message signing
+
+Use `signMessage()` to request a wallet signature for an application message. Pass a party ID when a specific account must sign it.
+
+```ts
+const signature = await c8.signMessage(
+  "Accept order 8e2f7c8a",
+  "Signer::1220...",
+);
+
+console.log("Wallet signature:", signature);
+```
+
+Call `signMessage()` from a user gesture because it opens the wallet approval popup.
+
+## Sign and execute custom DAML commands
+
+Use `signAndExecute()` when your transaction is not covered by a high-level SDK method such as `send()` or `createSwapOffer()`. It lets your dApp submit custom operations against DAML templates and choices supported by the connected wallet.
+
+Your dApp builds one or more DAML commands, such as `CreateCommand` or `ExerciseCommand`, and serializes them into `commandsJson`. The wallet displays the supplied `note`, asks the selected party to approve the operation, signs the command set, and submits it for execution.
+
+This method is intended for custom contract workflows implemented for your integration. Use a unique `commandId` for each submission and include any disclosed contracts required to authorize the commands.
 
 ```ts
 signAndExecute(input: {
@@ -80,6 +160,10 @@ Example of `disclosed_contracts` payload:
     }
 ],
 ```
+
+## Custom transaction types
+
+Canton's smart contract model (DAML) allows for arbitrarily complex workflows — multi-party agreements, conditional transfers, bespoke financial instruments. If your application requires transaction types beyond standard transfers, the SDK can be extended to support them. This involves aligning on your contract and workflow requirements with the Cantor8 team, who will implement the corresponding support on the C8 backend.
 
 <Card title="Discuss custom integration" icon="envelope" href="mailto:integrations@cantor8.io?subject=Wallet%20SDK%20custom%20transaction%20types">
   Contact the C8 team at [**integrations@cantor8.io**](mailto:integrations@cantor8.io) to scope custom transaction support for your application.

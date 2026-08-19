@@ -1,5 +1,6 @@
 ---
 title: "API reference"
+description: "Reference for the C8WalletProvider API in C8 Wallet SDK."
 ---
 
 ## Public API: `C8WalletProvider`
@@ -12,6 +13,8 @@ title: "API reference"
 | `getInstruments()` | None | `Promise<InstrumentListPayload>` |
 | `getAccounts()` | `instrumentId?: string` | `Promise<AccountListPayload>` |
 | `send()` | `input: SendInput` | `Promise<SubmitTransferResultPayload>` |
+| `createSwapOffer()` | `input: CreateSwapOfferInput` | `Promise<SubmitTransferResultPayload>` |
+| `signMessage()` | `message: string, partyId?: string` | `Promise<string>` |
 | `signAndExecute()` | `input: SignAndExecuteInput` | `Promise<void>` |
 | `checkTxStatusById()` | `input: { txId: string }` | `Promise<TransferStatusResponsePayload>` |
 | `on()` | `event: T, cb: Listener<C8EventByType<T>>` | `() => boolean` |
@@ -27,7 +30,7 @@ new C8WalletProvider(config)
 ```
 
 <ParamField path="dappUrl" type="string">
-  URL of the dApp initiating the connection. Defaults to the current page URL.
+  URL of the dApp initiating the connection. Defaults to the current page origin.
 </ParamField>
 
 <ParamField path="dappName" type="string" required>
@@ -35,7 +38,7 @@ new C8WalletProvider(config)
 </ParamField>
 
 <ParamField path="network" type="string">
-  Canton network to connect to. One of `"devnet"` or `"mainnet"`.
+  Canton network to connect to. Use `"devnet"`, `"testmainnet"`, or `"mainnet"`. Defaults to `"mainnet"`.
 </ParamField>
 
 ---
@@ -53,7 +56,7 @@ connect(): Promise<void>
 </ResponseField>
 
 <Note>
-  Must be called from a user gesture (e.g. button click) to avoid `POPUP_BLOCKED` errors.
+  Call interactive methods from a user gesture, such as a button click, to avoid `POPUP_BLOCKED` errors.
 </Note>
 
 ---
@@ -113,7 +116,13 @@ getAccounts(instrumentId?: string): Promise<AccountListPayload>
 
 type AccountListPayload = {
   accounts: Array<{
+    accountName?: string
     partyId: string
+    publicKey: string
+    validator: {
+      id: string
+      name: string
+    }
     holdings: Array<{
       instrumentId: string
       balance: number
@@ -126,6 +135,22 @@ type AccountListPayload = {
 <ParamField path="instrumentId" type="string">
   Optional. Filters accounts to those holding this instrument.
 </ParamField>
+
+<ResponseField name="accountName" type="string">
+  Optional display name for the account.
+</ResponseField>
+
+<ResponseField name="partyId" type="string">
+  Canton party identifier for the account.
+</ResponseField>
+
+<ResponseField name="publicKey" type="string">
+  Public key associated with the account.
+</ResponseField>
+
+<ResponseField name="validator" type="ValidatorInfo">
+  Validator assigned to the account as `{ id: string, name: string }`.
+</ResponseField>
 
 ---
 
@@ -167,9 +192,87 @@ send(input): Promise<SubmitTransferResultPayload>
 
 ---
 
+## createSwapOffer
+
+Creates a multi-leg swap offer and opens the wallet approval UI. Amounts in swap legs are decimal strings.
+
+```ts
+createSwapOffer(input: {
+  partyId: string;
+  swap: MultiLegSwapSpecRequest;
+  commandId?: string;
+}): Promise<SubmitTransferResultPayload>
+```
+
+<ParamField path="partyId" type="string" required>
+  Party creating the swap offer.
+</ParamField>
+
+<ParamField path="commandId" type="string">
+  Optional idempotency key for the submission.
+</ParamField>
+
+<ParamField path="swap.swapId" type="string" required>
+  Unique identifier for the swap.
+</ParamField>
+
+<ParamField path="swap.acceptorPartyId" type="string" required>
+  Party allowed to accept the swap.
+</ParamField>
+
+<ParamField path="swap.creatorLegs" type="SwapLegRequest[]" required>
+  Assets the creator provides. Each leg contains `receiver`, `instrument`, `amount`, `legId`, and an optional `reason`.
+</ParamField>
+
+<ParamField path="swap.acceptorLegs" type="SwapLegRequest[]" required>
+  Assets the acceptor provides. Each leg uses the same shape as a creator leg.
+</ParamField>
+
+<ParamField path="swap.creatorTransferLegs" type="SwapTransferLegRequest[]" required>
+  Additional transfer legs supplied by the creator. Pass an empty array when the swap has none.
+</ParamField>
+
+<ParamField path="swap.settleBefore" type="string" required>
+  ISO 8601 timestamp after which the swap can no longer settle.
+</ParamField>
+
+<ParamField path="swap.meta" type="Record<string, string>" required>
+  Application metadata for the swap. Pass an empty object when you have no metadata.
+</ParamField>
+
+<ResponseField name="txId" type="string">
+  Transaction ID assigned after the wallet submits the swap offer.
+</ResponseField>
+
+See [Multi-leg swap offers](/wallet-sdk/transfer-types#multi-leg-swap-offers) for a complete example.
+
+---
+
+## signMessage
+
+Asks the wallet to sign an arbitrary string. You can bind the request to a specific account by passing its party ID.
+
+```ts
+signMessage(message: string, partyId?: string): Promise<string>
+```
+
+<ParamField path="message" type="string" required>
+  Message to show in the wallet approval UI and sign.
+</ParamField>
+
+<ParamField path="partyId" type="string">
+  Optional party whose account should sign the message.
+</ParamField>
+
+<ResponseField name="returns" type="Promise<string>">
+  Signature string returned by the wallet.
+</ResponseField>
+
+---
+
 ## signAndExecute
 
-Signs and executes an arbitrary DAML command via the connected wallet. Use this for custom templates and choices beyond standard transfers. See [Transfer types](/wallet-sdk/transfer-types) for the full example.
+Signs and executes custom DAML commands via the connected wallet. Use this for templates, choices, and contract workflows beyond the SDK's high-level methods. See [Transactions and signing](/wallet-sdk/transfer-types#sign-and-execute-custom-daml-commands) for the full example.
 
 ```ts
 signAndExecute(input): Promise<void>

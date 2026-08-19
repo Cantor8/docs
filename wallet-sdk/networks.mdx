@@ -1,27 +1,34 @@
 ---
 title: "Networks available"
 sidebarTitle: "Networks"
+description: "Configure the devnet, test mainnet, or mainnet wallet environment."
 ---
 
 Pass the target network to `C8WalletProvider` via the `network` option.
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card title="devnet" icon="flask">
-    Local development and integration testing. Use for all non-production work.
+    Development environment for integration testing with non-production assets.
+  </Card>
+
+  <Card title="testmainnet" icon="vial">
+    Test wallet environment backed by the mainnet-compatible API.
   </Card>
 
   <Card title="mainnet" icon="globe">
-    Production Canton network. Real assets — use only for live deployments.
+    Production Canton network for live deployments and real assets.
   </Card>
 </CardGroup>
 
-```js
+```ts
 const c8 = new C8WalletProvider({
-  dappUrl:  window.location.href,
-  dappName: "My DeFi App",
-  network:  "devnet", // or "mainnet"
+  dappUrl: window.location.href,
+  dappName: "My_DeFi_App",
+  network: "devnet",
 });
 ```
+
+If you omit `network`, the SDK connects to `mainnet`.
 
 <Warning>
   Always verify you are pointing at the correct network before signing transactions in production.

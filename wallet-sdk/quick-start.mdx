@@ -1,5 +1,6 @@
 ---
 title: "Quick start"
+description: "Connect C8 Wallet and submit a Canton transfer."
 ---
 
 Get from zero to a signed Canton transfer in three steps.
@@ -8,35 +9,41 @@ Get from zero to a signed Canton transfer in three steps.
   <Step title="Initialize the provider">
     Create a `C8WalletProvider` instance with your dApp metadata and target network.
 
-    ```js
+    ```ts
+    import { C8WalletProvider } from "@cantor8/wallet-connect-sdk";
+
     const c8 = new C8WalletProvider({
-      dappUrl:  window.location.href,
-      dappName: "My DeFi App",
-      network:  "devnet"   // "devnet" | "mainnet"
+      dappUrl: window.location.href,
+      dappName: "My_DeFi_App",
+      network: "devnet", // "devnet" | "testmainnet" | "mainnet"
     });
     ```
 
     <Tip>
       `dappName` must match the name your dApp is registered under in the wallet.
     </Tip>
+
+    <Warning>
+      The provider uses `mainnet` when you omit `network`. Set it explicitly during development.
+    </Warning>
   </Step>
   <Step title="Subscribe to events">
     Listen for connection and transaction lifecycle events.
 
-    ```js
-    c8.on('connected',       (e) => console.log('Connected', e));
-    c8.on('disconnected',    (e) => console.log('Disconnected', e));
-    c8.on('accountChanged',  (e) => console.log('Balance changed', e));
-    c8.on('txInitiated',     (e) => console.log('TX initiated', e));
-    c8.on('txChanged',       (e) => console.log('TX changed', e));
+    ```ts
+    c8.on("connected", (event) => console.log("Connected", event));
+    c8.on("disconnected", (event) => console.log("Disconnected", event));
+    c8.on("accountChanged", (event) => console.log("Balance changed", event));
+    c8.on("txInitiated", (event) => console.log("Transaction initiated", event));
+    c8.on("txChanged", (event) => console.log("Transaction changed", event));
     ```
 
     See the [Events reference](/wallet-sdk/events) for the full list.
   </Step>
   <Step title="Connect and run a transfer">
-    Open the wallet popup, pick an instrument and account, then submit a transfer.
+    Connect to the wallet, pick an instrument and account, then submit a transfer.
 
-    ```js
+    ```ts
     await c8.connect();
     
     // Fetch available instruments (Canton tokens / assets)
@@ -53,15 +60,15 @@ Get from zero to a signed Canton transfer in three steps.
       senderPartyId,
       instrumentId: senderHoldingInstrId,
       amount:          1.23,
-      receiverPartyId: 'Party::Receiver',
-      // memo and metadata are optional — see API reference
+      receiverPartyId: "Party::Receiver",
+      // memo and metadata are optional. See the API reference.
     });
     
-    console.log('Transaction submitted:', txId);
+    console.log("Transaction submitted:", txId);
     ```
 
     <Check>
-      You received a `txId` — the transfer is now on the Canton ledger. Use [`checkTxStatusById`](/wallet-sdk/api-reference#checktxstatusbyid-input-promise-transferstatusresponsepayload) to poll its status.
+      You received a `txId` — the transfer is now on the Canton ledger. Use [`checkTxStatusById`](/wallet-sdk/api-reference#checktxstatusbyid) to poll its status.
     </Check>
   </Step>
 </Steps>

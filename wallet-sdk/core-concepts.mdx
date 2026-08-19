@@ -1,5 +1,6 @@
 ---
 title: "Core concepts"
+description: "Understand Canton identifiers, wallet transports, instruments, and account data."
 ---
 
 ## Canton network
@@ -31,7 +32,22 @@ The SDK uses two channels to talk to the wallet, depending on the request type:
 
 ## Instruments and holdings
 
-An **instrument** is a Canton asset type (e.g. a tokenized currency or security). A **holding** is a specific account's balance of that instrument.
+An **instrument** is a Canton asset type, such as a tokenized currency or security. A **holding** is a specific account's balance of that instrument.
+
+Each account also includes its public key and validator:
+
+```ts
+type AccountInfoPayload = {
+  accountName?: string;
+  partyId: string;
+  publicKey: string;
+  validator: {
+    id: string;
+    name: string;
+  };
+  holdings: AccountInfoHolding[];
+};
+```
 
 The typical flow:
 

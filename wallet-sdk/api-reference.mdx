@@ -11,6 +11,8 @@ description: "Reference for the C8WalletProvider API in C8 Wallet SDK."
 | `disconnect()` | None | `Promise<void>` |
 | `status()` | None | `Promise<{ connected: boolean; walletVersion?: string }>` |
 | `getInstruments()` | None | `Promise<InstrumentListPayload>` |
+| `getActiveContracts()` | `input?: GetActiveContractsInput` | `Promise<ActiveContractsPayload>` |
+| `getLedgerUpdates()` | `input?: GetLedgerUpdatesInput` | `Promise<LedgerUpdatesPayload>` |
 | `getAccounts()` | `instrumentId?: string` | `Promise<AccountListPayload>` |
 | `send()` | `input: SendInput` | `Promise<SubmitTransferResultPayload>` |
 | `createSwapOffer()` | `input: CreateSwapOfferInput` | `Promise<SubmitTransferResultPayload>` |
@@ -104,6 +106,132 @@ type InstrumentListPayload = {
   }>
 }
 ```
+
+---
+
+## getActiveContracts
+
+Returns active contracts visible to the connected account. You can filter the Scanner active contract set by template or interface.
+
+```ts
+getActiveContracts(input?: GetActiveContractsInput): Promise<ActiveContractsPayload>
+```
+
+<ParamField path="partyId" type="string">
+  Account party ID. Defaults to the connected primary account. Direct provider requests can only use the primary account.
+</ParamField>
+
+<ParamField path="templateIds" type="string[]">
+  Template IDs to include.
+</ParamField>
+
+<ParamField path="interfaceIds" type="string[]">
+  Interface IDs to include.
+</ParamField>
+
+<ParamField path="activeAtOffset" type="string">
+  Nonnegative signed 64-bit ledger offset for a point-in-time snapshot. Pass the offset as a decimal string.
+</ParamField>
+
+<ParamField path="includeCreatedEventBlob" type="boolean">
+  Whether each contract should include its Base64-encoded created-event blob. Defaults to `false`.
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum number of rows to return. Must be a positive 32-bit integer. Defaults to `10000`.
+</ParamField>
+
+<ParamField path="paginated" type="boolean">
+  Whether Scanner should order rows by contract ID for pagination. Defaults to `true`.
+</ParamField>
+
+<ParamField path="after" type="string">
+  Contract ID after which Scanner should return rows. Pass the previous contract ID unchanged.
+</ParamField>
+
+<ResponseField name="returns" type="Promise<ActiveContractsPayload>">
+  An array of Scanner contract rows.
+</ResponseField>
+
+```ts
+const contracts = await c8.getActiveContracts({
+  templateIds: ["package-id:Module:Template"],
+  includeCreatedEventBlob: true,
+  limit: 10000,
+});
+
+console.log("Active contracts:", contracts);
+```
+
+---
+
+## getLedgerUpdates
+
+Returns one page of ledger updates visible to the connected account. Use the returned cursor to request the next page with the same filters.
+
+```ts
+getLedgerUpdates(input?: GetLedgerUpdatesInput): Promise<LedgerUpdatesPayload>
+```
+
+<ParamField path="partyId" type="string">
+  Account party ID. Defaults to the connected primary account. Direct provider requests can only use the primary account.
+</ParamField>
+
+<ParamField path="templateIds" type="string[]">
+  Template IDs to include.
+</ParamField>
+
+<ParamField path="cursor" type="string">
+  Cursor returned as `nextCursor` by the previous request. Pass it unchanged.
+</ParamField>
+
+<ParamField path="eventType" type='"created" | "exercised"'>
+  Event type to include.
+</ParamField>
+
+<ParamField path="consuming" type="boolean">
+  Whether to include consuming or non-consuming exercise events.
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum number of nodes to return. Must be from `1` through `1000`. Defaults to `500`.
+</ParamField>
+
+<ResponseField name="nodes" type="LedgerNode[]">
+  Ledger nodes in this page.
+</ResponseField>
+
+<ResponseField name="nextCursor" type="string">
+  Cursor for the next page, when more updates are available.
+</ResponseField>
+
+<ResponseField name="bounds" type="{ floorOffset: number; headOffset: number }">
+  Scanner's retained offset range, when available.
+</ResponseField>
+
+<ResponseField name="gap" type="{ fromOffset: number; toOffset: number; reason?: string }">
+  Lost history detected before or within the requested range, when present.
+</ResponseField>
+
+<ResponseField name="complete" type="boolean">
+  Whether this page reached Scanner's current fetch frontier. New updates can arrive later.
+</ResponseField>
+
+```ts
+const filters = {
+  templateIds: ["package-id:Module:Template"],
+  limit: 500,
+};
+
+const page = await c8.getLedgerUpdates(filters);
+const nextPage = page.nextCursor
+  ? await c8.getLedgerUpdates({ ...filters, cursor: page.nextCursor })
+  : undefined;
+```
+
+<Note>
+  An empty page can still return a new cursor. If `gap` is present, the result does not represent complete ledger history.
+</Note>
 
 ---
 

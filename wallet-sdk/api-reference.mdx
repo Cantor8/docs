@@ -10,6 +10,7 @@ description: "Reference for the C8WalletProvider API in C8 Wallet SDK."
 | `connect()` | None | `Promise<void>` |
 | `disconnect()` | None | `Promise<void>` |
 | `status()` | None | `Promise<{ connected: boolean; walletVersion?: string }>` |
+| `getContractsSetupState()` | `partyId?: string` | `Promise<PartyContractSetupResponse>` |
 | `getInstruments()` | None | `Promise<InstrumentListPayload>` |
 | `getActiveContracts()` | `input?: GetActiveContractsInput` | `Promise<ActiveContractsPayload>` |
 | `getLedgerUpdates()` | `input?: GetLedgerUpdatesInput` | `Promise<LedgerUpdatesPayload>` |
@@ -18,7 +19,7 @@ description: "Reference for the C8WalletProvider API in C8 Wallet SDK."
 | `createSwapOffer()` | `input: CreateSwapOfferInput` | `Promise<SubmitTransferResultPayload>` |
 | `signMessage()` | `message: string, partyId?: string` | `Promise<string>` |
 | `signAndExecute()` | `input: SignAndExecuteInput` | `Promise<void>` |
-| `checkTxStatusById()` | `input: { txId: string }` | `Promise<TransferStatusResponsePayload>` |
+| `checkTxStatusById()` | `input: { txId: string; partyId?: string }` | `Promise<TransferStatusResponsePayload>` |
 | `on()` | `event: T, cb: Listener<C8EventByType<T>>` | `() => boolean` |
 
 ---
@@ -88,6 +89,50 @@ status(): Promise<{ connected: boolean, walletVersion?: string }>
 <ResponseField name="walletVersion" type="string">
   Version of the connected wallet (only present when connected).
 </ResponseField>
+
+---
+
+## getContractsSetupState
+
+Returns the connected account's registration and validator-managed contract setup transactions, including all statuses.
+
+```ts
+getContractsSetupState(partyId?: string): Promise<PartyContractSetupResponse>
+
+interface PartyContractSetupResponse {
+  partyId: string;
+  contracts: ContractSetupItem[];
+}
+
+interface ContractSetupItem {
+  id: number;
+  code: string;
+  partyId: string;
+  commandId: string;
+  contractId: string | null;
+  status: string;
+  submittedAt: string | null;
+  completedAt: string | null;
+}
+```
+
+<ParamField path="partyId" type="string">
+  Connected account to query. Defaults to the primary account. The popup provider rejects an unknown party ID before sending a backend request.
+</ParamField>
+
+<ResponseField name="partyId" type="string">
+  Party whose contract setup state you requested.
+</ResponseField>
+
+<ResponseField name="contracts" type="ContractSetupItem[]">
+  Setup transactions with their contract code, command ID, status, and contract ID. The contract ID and timestamps can be `null`. Status strings come from the backend.
+</ResponseField>
+
+After you connect, the popup provider queries the selected account's backend with its stored token. If your saved session lacks `validator.backendApiUrl` or an account token, disconnect and reconnect.
+
+<Note>
+  This response replaces the deprecated `RegisterStatusResponse`. Read the `contracts` array instead of the old `is...` flags. Embedded wallet hosts must return `PartyContractSetupResponse` for this RPC.
+</Note>
 
 ---
 
@@ -460,6 +505,10 @@ checkTxStatusById(input): Promise<TransferStatusResponsePayload>
 
 <ParamField path="txId" type="string" required>
   Transaction ID returned by `send()`.
+</ParamField>
+
+<ParamField path="partyId" type="string">
+  Optional connected account whose backend and token the popup provider uses to check the transaction. Defaults to the primary account.
 </ParamField>
 
 <ResponseField name="returns" type="Promise<TransferStatusResponsePayload>">

@@ -21,9 +21,9 @@
     "products": [
       {
         "product": "C8 Products",
-        "pages": [
+        "products": [
           {
-            "group": "Getting Started",
+            "product": "Getting Started",
             "pages": [
               "index",
               "quickstart",
@@ -31,9 +31,8 @@
             ]
           },
           {
-            "group": "Wallet SDK",
+            "product": "Wallet SDK",
             "icon": "wallet",
-            "expanded": false,
             "pages": [
               "wallet-sdk/introduction",
               "wallet-sdk/common-use-cases",
@@ -48,7 +47,7 @@
             ]
           },
           {
-            "group": "Enterprise wallet",
+            "product": "Enterprise wallet",
             "icon": "bank",
             "pages": [
               "enterprise-wallet/introduction",
@@ -60,7 +59,7 @@
             ]
           },
           {
-            "group": "Token Factory",
+            "product": "Token Factory",
             "icon": "hand-holding-dollar",
             "pages": [
               "token-factory/introduction",
@@ -92,9 +91,8 @@
             ]
           },
           {
-            "group": "Validator as a Service",
+            "product": "Validator as a Service",
             "icon": "server",
-            "expanded": true,
             "pages": [
               "validator-as-a-service/introduction",
               "validator-as-a-service/common-use-cases",

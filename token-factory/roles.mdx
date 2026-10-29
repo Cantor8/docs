@@ -1,0 +1,102 @@
+---
+title: "Roles"
+sidebarTitle: "Roles"
+description: "Understand who authorizes each action, how to separate duties, and what Cantor8 can see."
+keywords: ["Token Factory", "Canton", "roles"]
+icon: "users"
+---
+
+Every action on an instrument is authorized by a party. A party is an identity on the ledger. You control an action by holding that party's key.
+
+<Note>
+You hold every party that can mint, burn, pause, freeze, seize, or post activity markers. Cantor8's party is an observer. It can see the instrument, and it has no authority to do any of those things.
+</Note>
+
+How you arrange your parties is your decision. The roles below can sit on one party or on several. A key can require one approver or many: an HSM, a quorum, or your own wallet policy. The ledger sees the party. Your signing policy decides who may use it.
+
+Token App submits. A party you control authorizes that submission. The Registry returns the choice context and does not submit.
+
+## The parties
+
+| Role               | What it authorizes                                                                                                                                                                | Who controls it                                              |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Admin              | Creates the factory's instruments. Pauses an instrument, freezes a party, freezes all of its instruments, and authorizes compliance burn and seizure. Signatory of every holding. | You                                                          |
+| Issuer             | Mints and burns. Mint and burn amounts must match the instrument's decimal precision.                                                                                             | You                                                          |
+| Operator           | Submits day-to-day mint and burn when you give that duty its own party, separate from the issuer.                                                                                 | You                                                          |
+| Treasury           | Holds the standing mint delegation, so the issuer can mint to your own books without a fresh signature each time. Can also pre-approve incoming transfers.                        | You                                                          |
+| Featured-app party | Co-signs the factory when rewards are in scope. Holds the network featured-app right and posts activity markers.                                                                  | You                                                          |
+| Validator party    | Co-signs creation of the factory. Proposes seizure of funds locked in a pending transfer or allocation. The admin approves.                                                       | You. Optionally Cantor8, and then only for this co-signature |
+| Observer           | Sees the factory, instruments, holdings, and activity. Has no choices on them.                                                                                                    | Cantor8. Read only                                           |
+| Holder             | Owns a holding. Authorizes a transfer of that holding. Accepts or rejects an offer.                                                                                               | Your users, and the party you designate as treasury          |
+
+A holding is signed by the admin and the owner. Observers listed on it can read it. Creating the holding needs the owner's authority: either the owner signs that mint, or a mint delegation they signed earlier supplies it.
+
+## What you control
+
+Parties you hold authorize:
+
+- creating and updating the instrument
+- every mint and every burn
+- pause, freeze, compliance burn, and seizure
+- activity markers, and which party is paid
+
+During launch, Cantor8 sends you the command. You submit it on your participant. The keys stay in your custody. [Launch](/token-factory/launch) is that sequence.
+
+You choose the shape:
+
+| Arrangement                          | What you get                                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| One party for every role you control | One key covers mint, pause, freeze, and markers                                                              |
+| A party per duty                     | Issuance, emergency stop, treasury, and rewards can each have their own key                                  |
+| Several approvers on a party         | The ledger still sees one party. Your HSM, quorum, or wallet requires more than one approval before it signs |
+
+The validator is a second authorization on the factory: it co-signs creation, and it proposes seizure of funds locked in a pending transfer. You hold that key too, unless you ask Cantor8 to operate the validator. In that optional arrangement Cantor8's validator key can do those two things, and it cannot mint, burn, pause, or freeze.
+
+The observer is the read role. Cantor8 names a party as observer at creation, and the Registry reads as that party.
+
+Name that party in the original factory. Holdings record their observers when they are created, so the Registry sees each holding from the moment it exists.
+
+## The treasury's consent
+
+The treasury signs one standing consent. It can include three things:
+
+| Consent          | Effect                                                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Mint delegation  | The issuer mints to the treasury. The treasury signed once.                                                                    |
+| Auto-accept      | Transfers to the treasury complete in one transaction. Used when holders send the instrument back to be burned.                |
+| Split delegation | An operator may split or merge the treasury's holdings. Housekeeping for balance management. Leave it unset until you need it. |
+
+The party you designate as treasury signs this consent. It can be created in the bootstrap transaction. See [Launch](/token-factory/launch).
+
+Minting to anyone else works the same way. That party signs a mint delegation, and the issuer can then mint to them. Holders who receive the instrument by transfer do not need a mint delegation.
+
+The treasury, or any recipient, can revoke its mint delegation.
+
+## Separate duties
+
+Give a role its own party when a policy requires a separate key. Each party is hosted and keyed on its own. Typical separations:
+
+| Split                                  | Why                                                                                                                                       |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Issuer separate from admin             | Issuance is a daily operation. Pause and freeze stay with a different key.                                                                |
+| Operator separate from issuer          | The issuer signs an issuer delegation. The operator then submits mint and burn under that delegation, and the issuer key stays offline.   |
+| Treasury separate from issuer          | The balance you issue into is a different party from the party that mints. The treasury's mint delegation is the consent that joins them. |
+| Featured-app party separate from admin | Reward rights and marker posting sit with the party that holds the featured-app right, which may already exist for another application.   |
+
+When the featured-app party is a different party from the admin, both of them authorize factory creation.
+
+<Info>
+The validator stays a distinct party in every setup. Collapsing the validator into the admin removes the second authorization on seizure of locked funds.
+</Info>
+
+## What each side is responsible for
+
+| Responsibility                                                          | You                                                    | Cantor8                                                              |
+| ----------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------- |
+| Custody of the admin, issuer, operator, treasury, and featured-app keys | You                                                    |                                                                      |
+| Operating the participant that hosts those parties                      | You                                                    | When you ask Cantor8 to operate the participant. The keys stay yours |
+| Validator key and validator participant                                 | You                                                    | Only if you ask Cantor8 to operate the validator                     |
+| Observer party, and reading the ledger for the Registry                 |                                                        | Cantor8. Read only                                                   |
+| Suite DAR and release notes                                             | You vet the file on every participant that will submit | Cantor8 publishes the file                                           |
+| Token App, its database, and its identity provider                      | Yes                                                    | Cantor8 publishes the image and the Helm chart                       |
+| Public Registry URL                                                     |                                                        | Cantor8                                                              |

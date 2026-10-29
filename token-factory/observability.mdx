@@ -1,0 +1,98 @@
+---
+title: "Observability"
+sidebarTitle: "Observability"
+description: "Monitor health, supply, ledger activity, and marker processing with actionable signals."
+keywords: ["Token Factory", "Canton", "observability"]
+icon: "chart-line"
+---
+
+You monitor Token App. It is the process you run. Cantor8 monitors the Registry. You see Token App's calls to it fail or slow down.
+
+Logs are JSON lines on stdout. Health, status, and metrics are HTTP on port 8002.
+
+| Endpoint       | Auth         | Use                                                                       |
+| -------------- | ------------ | ------------------------------------------------------------------------- |
+| `GET /healthz` | None         | Liveness. The chart probes this                                           |
+| `GET /metrics` | None         | Prometheus scrape. Keep it on the cluster network                         |
+| `GET /status`  | Bearer token | Last monitor cycle, supply, and queue depths, without a live ledger query |
+
+Set `monitoring.serviceMonitor.enabled` to have the chart create a Prometheus Operator `ServiceMonitor` for `/metrics`. The scrape interval in the chart default is 15 seconds.
+
+The monitor reads holdings on a poll, default 300 seconds (`monitoring.tokenMetricsPollIntervalSeconds`). `/status` and the supply gauges update when a cycle succeeds. A stale success timestamp means those numbers have stopped moving, and so has every background job the monitor drives.
+
+## Resources
+
+|                       | CPU    | Memory                               |
+| --------------------- | ------ | ------------------------------------ |
+| Token App request     | 2      | 10 GiB                               |
+| Token App limit       | 4      | 16 GiB                               |
+| Database Cantor8 runs | 2 vCPU | 1 GiB, 20 GiB storage, PostgreSQL 14 |
+
+<Warning>
+Keep the Token App memory request when the process must catch up on ledger history. Activity markers and the holdings scan are what consume it. Run one replica.
+</Warning>
+
+The pod listens on 8002. Startup allows a long first boot (the chart waits up to about five minutes) because the process migrates its database and opens the ledger stream before it is ready.
+
+## Token App signals
+
+Alert on these. Names are the Prometheus metric names.
+
+| Signal                                              | Alert when                                                                                                                                                               |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `up` from the `/healthz` probe, or the probe itself | The pod is unready, restarting, or failing liveness                                                                                                                      |
+| `token_app_monitor_last_success_timestamp_seconds`  | `time() -` this value is more than a small multiple of the poll interval. At the default 300 second poll, a cycle older than about 15 minutes means the loop has stopped |
+| `token_app_monitor_cycle_errors_total`              | The rate is above zero                                                                                                                                                   |
+| `token_app_monitor_dropped_batches_total`           | The rate is above zero. A consumer queue is full and holdings snapshots are being discarded                                                                              |
+| `token_op_errors_total`                             | Mint or burn failures, labeled `instrument` and `operation` (`mint` or `burn`)                                                                                           |
+| `token_app_token_factory_request_total`             | Responses to the Registry that are not successes, labeled `operation` and `status`                                                                                       |
+| `token_app_ledger_request_total`                    | Ledger calls that are not successes                                                                                                                                      |
+| Container memory                                    | Usage approaches the 16 GiB limit during catch-up or steady state                                                                                                        |
+| Restarts                                            | Any restart. The process is a single writer; a crash pauses markers until it resumes from its cursor                                                                     |
+
+Supply and flow, for dashboards rather than pages:
+
+| Metric                                                            | Meaning                                          |
+| ----------------------------------------------------------------- | ------------------------------------------------ |
+| `token_app_token_circulating_supply{instrument}`                  | Spendable plus locked, from the last scan        |
+| `token_app_token_holdings{instrument}`                            | Number of holding contracts                      |
+| `token_app_token_holders{instrument}`                             | Distinct owners                                  |
+| `token_flow_supply_total{instrument,operation}`                   | Amount minted or burned by successful calls      |
+| `token_flow_holdings_total{instrument,operation}`                 | Holdings created or burned by those calls        |
+| `token_app_request_total` and `token_app_request_latency_seconds` | Inbound API rate and latency, by path and status |
+| `token_app_monitor_scan_duration_seconds`                         | How long the last scan took                      |
+
+`/status` reports the same supply figures plus `top_holder_share`, `supply_concentration_hhi`, and `operational.monitor` (`last_success_at`, `age_seconds`, `last_scan_duration_seconds`, `poll_interval_seconds`, `cycles_total`, `cycle_errors_total`). Prefer the timestamp metric for the page. Use `/status` when a person wants the snapshot.
+
+## Activity-marker signals
+
+Enable these alerts when `fa_markers` is on. Generation and distribution are in [Rewards](/token-factory/rewards).
+
+| Signal                                                                                                       | Alert when                                                                          |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| `token_app_fa_markers_ledger_lag_offsets`                                                                    | Lag stays high after catch-up should have finished. The cursor is behind the ledger |
+| `token_app_fa_markers_cursor_offset`                                                                         | It stops advancing while the ledger is moving                                       |
+| `token_app_fa_markers_pending_txs`, `token_app_fa_markers_resolved_txs`, `token_app_fa_markers_batching_txs` | A queue grows across several batch intervals. Pricing or posting is stuck           |
+| `token_app_fa_markers_batches_total{outcome="failed"}`                                                       | Posts are failing. Reserved weight stays reserved until the command is reconciled   |
+| `token_app_fa_markers_errors_total`                                                                          | Any job error rate. Labels are `job` and `operation`                                |
+| `token_app_fa_markers_job_cycle_seconds`                                                                     | A job's cycle time approaches its interval                                          |
+
+`GET /data/fa_markers/v2/status` is the same queues for a person: pending, resolved, batching, and the last batch. Use it to confirm an alert. Use the metrics to fire the alert.
+
+<Tip>
+A marker delay of one batch interval (default 10 minutes) is the design. An alert on lag or on failed batches is the fault. An alert on "no batch in the last interval" fires during quiet periods when there was no qualifying activity, so key that page off failures and lag, and use batch counters as a dashboard.
+</Tip>
+
+## The Registry, from Token App
+
+Your view of the Registry is `token_app_token_factory_request_total` and the latency histogram `token_app_token_factory_request_latency_seconds`. A rise in failures there, with your participant healthy, is a Registry or credential problem. A rise in `token_app_ledger_request_total` failures, with the Registry healthy, is your participant.
+
+## A healthy launch check
+
+After [Launch](/token-factory/launch) step 4:
+
+- `/healthz` is ok and the pod has been ready longer than one monitor interval
+- `token_app_monitor_last_success_timestamp_seconds` is within one interval of now
+- the treasury mint increased `token_flow_supply_total` and `token_app_token_circulating_supply` for that instrument
+- `token_op_errors_total` is flat
+- if markers are on, the cursor is advancing and `token_app_fa_markers_batches_total` shows no failed outcome from the test activity

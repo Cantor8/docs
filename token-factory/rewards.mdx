@@ -1,0 +1,101 @@
+---
+title: "Rewards"
+sidebarTitle: "Rewards"
+description: "Configure featured-app activity markers, beneficiaries, and reward tracking."
+keywords: ["Token Factory", "Canton", "rewards"]
+icon: "gift"
+---
+
+Activity rewards are the public Canton featured-app program. Holdings activity on your instrument is recorded as activity markers, except activity submitted by participants ("venues") you exclude. The network pays the beneficiaries named on the markers you post.
+
+This is separate from minting the instrument. You can launch and operate an instrument with rewards turned off. Turn them on by running Token App's `fa_markers` module and holding a featured-app right.
+
+<Note>
+On a private synchronizer the instrument still issues and transfers. Markers pay out when the featured-app right lives on a network that runs this program. A private synchronizer does not, by itself, pay them.
+</Note>
+
+## What you hold
+
+| Piece                | Who provides it                                                           | Where it is configured                       |
+| -------------------- | ------------------------------------------------------------------------- | -------------------------------------------- |
+| Featured-app party   | You. The party you assign to that role                                    | `config.featuredApp.partyId`                 |
+| Featured-app right   | The network, held by that party                                           | `config.featuredApp.featuredAppRight`        |
+| Batched-marker proxy | Created for that party; read it from the participant that hosts the party | `config.featuredApp.batchedMarkersProxy`     |
+| Beneficiary          | You. The party you want paid for this instrument                          | `config.instruments[].beneficiaries.default` |
+| Synchronizer id      | The domain you launched on                                                | `faMarkers.synchronizerId`                   |
+| Canton Scan URL      | Public mainnet endpoints are the chart default                            | `config.scanApiBaseUrls`                     |
+
+The ledger user needs `CanActAs` for the featured-app party, because that party signs every marker batch.
+
+## How a marker is produced
+
+Token App watches the ledger as your admin and looks for holdings activity on your instruments: transfers, pre-approved transfers, and settlements. Each of those creates or archives a holding, so the watch is on holdings rather than on one transfer API.
+
+```mermaid
+flowchart LR
+  tx["Holder activity"] --> price["Price the traffic"]
+  price --> skip["Skip excluded venues"]
+  skip --> queue["Queue the weight"]
+  queue --> post["Post a marker batch"]
+  post --> pay["Network pays beneficiaries"]
+```
+
+| Stage     | What happens                                                                                                                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Watch     | A durable cursor follows your participant's ledger stream                                                                                                                          |
+| Price     | Canton Scan returns the traffic the transaction consumed. Weight is derived from that cost                                                                                         |
+| Exclude   | Transactions submitted by a participant in `excludedVenues` are recorded and earn nothing. Use this for activity you generated yourself                                            |
+| Attribute | The transaction's weight is split equally across the instruments it touched, then assigned to each instrument's beneficiary                                                        |
+| Batch     | Weight is posted when a batch reaches at least 1.0 and the batch interval has elapsed. The chart default interval is 10 minutes. A batch is capped, default 5000                   |
+| Post      | The featured-app party submits the batch on your participant                                                                                                                       |
+| Pay       | The network pays the beneficiary parties from the markers. Token App records the weight it posted. The network's later payment is the network's ledger, visible to the beneficiary |
+
+Weight for one transaction is capped before it enters a batch, so a single large transaction cannot dominate a batch. Weight that does not fit in this batch waits for the next one.
+
+If a submission's outcome is unknown, Token App keeps those transactions reserved and reconciles them from the command result. It does not release them and post the same weight again.
+
+## Who is paid
+
+`beneficiaries.default` is the party credited when no finer split applies.
+
+You may also map an application name to a party:
+
+```yaml
+beneficiaries:
+  default: "<your-party>"
+  wallet-a: "<wallet-a-party>"
+```
+
+When a qualifying transaction carries a recognised application name, that instrument's share is credited to the mapped party. Several recognised applications split that instrument's share equally. An unrecognised name falls through to `default`.
+
+A transaction that touches two of your instruments splits its weight in half, then applies each instrument's own map. The same beneficiary is combined into one credit.
+
+<Info>
+Set `default` whenever `fa_markers` is enabled. A missing default fails attribution for that instrument.
+</Info>
+
+## What you can track
+
+All of these require the Token App bearer token, except the Prometheus metrics.
+
+| Source                                       | What it tells you                                                                 |
+| -------------------------------------------- | --------------------------------------------------------------------------------- |
+| `GET /data/fa_markers/v2/txs`                | Finalized activity: included, excluded, or timed out, with weight and beneficiary |
+| `GET /data/fa_markers/v2/txs/{update_id}`    | One transaction                                                                   |
+| `GET /data/fa_markers/v2/batches`            | Marker batches and whether each post confirmed                                    |
+| `GET /data/fa_markers/v2/batches/{batch_id}` | One batch                                                                         |
+| `GET /data/fa_markers/v2/status`             | Queue depth and the latest batch                                                  |
+| `GET /status`                                | Monitor freshness, shared with issuance                                           |
+| `GET /metrics`                               | Rates and lag for alerting. [Observability](/token-factory/observability)                 |
+
+Use the v2 data routes. The unversioned routes are the previous shape and advertise v2 as their successor.
+
+The figures you reconcile against are the weight Token App posted and the beneficiary on each transaction. The network payment to that party is the confirmation that a posted marker was paid. Track both: posted weight in Token App, received rewards on the beneficiary's own account.
+
+## Operating notes
+
+- Run one Token App process. Two processes will both move the cursor and can both post.
+- Catch-up after downtime walks the ledger from the stored cursor. The memory request in the chart exists for that walk. Leave it in place.
+- List your own participant in `excludedVenues` when markers should leave out activity submitted there, including your own mints and burns. With an empty list, that activity is included.
+- The featured-app party and the admin may be the same party. Exclusion is about which participant submitted the transaction, not about which party holds the featured-app right.
+- A Scan outage delays pricing. Transactions stay queued and are priced when Scan answers. They are not dropped on the first failure.

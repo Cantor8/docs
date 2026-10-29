@@ -60,13 +60,35 @@
             ]
           },
           {
-            "group": "Token factory",
+            "group": "Token Factory",
             "icon": "hand-holding-dollar",
             "pages": [
               "token-factory/introduction",
-              "token-factory/common-use-cases",
-              "token-factory/integration",
-              "token-factory/api-reference"
+              {
+                "group": "Understand the design",
+                "pages": [
+                  "token-factory/roles",
+                  "token-factory/architecture",
+                  "token-factory/authentication"
+                ]
+              },
+              {
+                "group": "Launch",
+                "pages": [
+                  "token-factory/launch",
+                  "token-factory/deployment",
+                  "token-factory/evaluation"
+                ]
+              },
+              {
+                "group": "Operate",
+                "pages": [
+                  "token-factory/operations",
+                  "token-factory/rewards",
+                  "token-factory/compliance",
+                  "token-factory/observability"
+                ]
+              }
             ]
           },
           {
@@ -130,6 +152,26 @@
     {
       "source": "/choose-your-path-v1",
       "destination": "/choose-your-path",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory",
+      "destination": "/token-factory/introduction",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory/common-use-cases",
+      "destination": "/token-factory/evaluation",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory/integration",
+      "destination": "/token-factory/launch",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory/api-reference",
+      "destination": "/token-factory/operations",
       "permanent": true
     }
   ]

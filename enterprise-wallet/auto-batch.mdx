@@ -1,6 +1,7 @@
 ---
 title: "Auto-Batch"
 description: "Optional background engine that aggregates transfers into batched ledger submissions for high throughput."
+icon: "layer-group"
 ---
 
 Auto-Batch is an optional background feature that automatically aggregates pending transfer orders into batched ledger submissions. Instead of one interactive transaction per transfer, up to `AUTO_BATCH_MAX_SIZE` transfers for the same party are collapsed into a single submission — significantly improving throughput under load.

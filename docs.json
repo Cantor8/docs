@@ -12,6 +12,7 @@
     "products": [
       {
         "product": "Getting Started",
+        "icon": "rocket",
         "pages": [
           "index",
           "quickstart",

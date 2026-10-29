@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1320" viewBox="0 0 1200 1320" role="img" aria-labelledby="title desc">
+<title id="title">Authentication flow</title><desc id="desc">Ten messages in order. 1. Your service to Your identity provider: Client credentials. 2. Your identity provider to Your service: Token for the Token App audience. 3. Your service to Token App: Mint, Authorization Bearer. 4. Token App to Registry identity provider: Client credentials. 5. Registry identity provider to Token App: Token for the Registry admin audience. 6. Token App to Registry: Choice context. 7. Registry to Token App: Context. 8. Token App to Your identity provider: Client credentials for the ledger user. 9. Your identity provider to Token App: Ledger token. 10. Token App to Your participant: Submit as your admin.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="return" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect width="1200" height="1320" rx="20" fill="#0B1124"/>
+<rect x="36" y="30" width="12" height="12" rx="0" fill="#1E40CC"/>
+<rect x="48" y="18" width="12" height="12" rx="0" fill="#1E40CC"/>
+<rect x="48" y="42" width="12" height="12" rx="0" fill="#1E40CC"/>
+<rect x="60" y="30" width="12" height="12" rx="0" fill="#1E40CC"/>
+<rect x="72" y="18" width="12" height="12" rx="0" fill="#1E40CC"/>
+<rect x="72" y="42" width="12" height="12" rx="0" fill="#1E40CC"/>
+<text x="100" y="40" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="650" text-anchor="start" letter-spacing="1.7">CANTOR8  /  TOKEN FACTORY</text>
+<text x="36" y="93" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="30" font-weight="650" text-anchor="start" letter-spacing="0">Authentication flow</text>
+<text x="36" y="120" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start" letter-spacing="0">Each hop has its own credential.</text>
+<rect x="28" y="241" width="1144" height="92" rx="10" fill="#111C35"/>
+<rect x="28" y="433" width="1144" height="92" rx="10" fill="#111C35"/>
+<rect x="28" y="625" width="1144" height="92" rx="10" fill="#111C35"/>
+<rect x="28" y="817" width="1144" height="92" rx="10" fill="#111C35"/>
+<rect x="28" y="1009" width="1144" height="92" rx="10" fill="#111C35"/>
+<path d="M136 224 V1230" fill="none" stroke="#2A3D64" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M328 224 V1230" fill="none" stroke="#2A3D64" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M520 224 V1230" fill="none" stroke="#2A3D64" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M712 224 V1230" fill="none" stroke="#2A3D64" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M904 224 V1230" fill="none" stroke="#2A3D64" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M1096 224 V1230" fill="none" stroke="#2A3D64" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<g id="actor-S" data-label="Your service">
+<rect x="52" y="148" width="168" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="136" y="192" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">Your service</text>
+</g>
+<g id="actor-I" data-label="Your identity provider">
+<rect x="244" y="148" width="168" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="328" y="181" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">Your identity</text>
+<text x="328" y="203" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">provider</text>
+</g>
+<g id="actor-T" data-label="Token App">
+<rect x="436" y="148" width="168" height="76" rx="10" fill="#1E40CC"/>
+<text x="520" y="192" fill="#FFFFFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">Token App</text>
+</g>
+<g id="actor-RI" data-label="Registry identity provider">
+<rect x="628" y="148" width="168" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="712" y="181" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">Registry identity</text>
+<text x="712" y="203" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">provider</text>
+</g>
+<g id="actor-R" data-label="Registry">
+<rect x="820" y="148" width="168" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="904" y="192" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">Registry</text>
+</g>
+<g id="actor-P" data-label="Your participant">
+<rect x="1012" y="148" width="168" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="1096" y="192" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" letter-spacing="0">Your participant</text>
+</g>
+<g id="message-1" data-from="S" data-to="I" data-kind="-&gt;&gt;" data-label="Client credentials">
+<rect x="40" y="295" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="315" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">1</text>
+<text x="232.0" y="291" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Client credentials</text>
+<path d="M136 310 H328" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="message-2" data-from="I" data-to="S" data-kind="--&gt;&gt;" data-label="Token for the Token App audience">
+<rect x="40" y="391" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="411" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">2</text>
+<text x="232.0" y="366" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Token for the Token</text>
+<text x="232.0" y="387" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">App audience</text>
+<path d="M328 406 H136" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6" marker-end="url(#return)"/>
+</g>
+<g id="message-3" data-from="S" data-to="T" data-kind="-&gt;&gt;" data-label="Mint, Authorization Bearer">
+<rect x="40" y="487" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="507" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">3</text>
+<text x="328.0" y="483" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Mint, Authorization Bearer</text>
+<path d="M136 502 H520" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="message-4" data-from="T" data-to="RI" data-kind="-&gt;&gt;" data-label="Client credentials">
+<rect x="40" y="583" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="603" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">4</text>
+<text x="616.0" y="579" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Client credentials</text>
+<path d="M520 598 H712" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="message-5" data-from="RI" data-to="T" data-kind="--&gt;&gt;" data-label="Token for the Registry admin audience">
+<rect x="40" y="679" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="699" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">5</text>
+<text x="616.0" y="654" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Token for the Registry</text>
+<text x="616.0" y="675" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">admin audience</text>
+<path d="M712 694 H520" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6" marker-end="url(#return)"/>
+</g>
+<g id="message-6" data-from="T" data-to="R" data-kind="-&gt;&gt;" data-label="Choice context">
+<rect x="40" y="775" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="795" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">6</text>
+<text x="712.0" y="771" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Choice context</text>
+<path d="M520 790 H904" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="message-7" data-from="R" data-to="T" data-kind="--&gt;&gt;" data-label="Context">
+<rect x="40" y="871" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="891" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">7</text>
+<text x="712.0" y="867" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Context</text>
+<path d="M904 886 H520" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6" marker-end="url(#return)"/>
+</g>
+<g id="message-8" data-from="T" data-to="I" data-kind="-&gt;&gt;" data-label="Client credentials for the ledger user">
+<rect x="40" y="967" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="987" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">8</text>
+<text x="424.0" y="942" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Client credentials for</text>
+<text x="424.0" y="963" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">the ledger user</text>
+<path d="M520 982 H328" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="message-9" data-from="I" data-to="T" data-kind="--&gt;&gt;" data-label="Ledger token">
+<rect x="40" y="1063" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="1083" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">9</text>
+<text x="424.0" y="1059" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Ledger token</text>
+<path d="M328 1078 H520" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6" marker-end="url(#return)"/>
+</g>
+<g id="message-10" data-from="T" data-to="P" data-kind="-&gt;&gt;" data-label="Submit as your admin">
+<rect x="40" y="1159" width="30" height="30" rx="8" fill="#1B2D55"/>
+<text x="55" y="1179" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="650" text-anchor="middle" letter-spacing="0">10</text>
+<text x="808.0" y="1155" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle" letter-spacing="0">Submit as your admin</text>
+<path d="M520 1174 H1096" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<path d="M40 1278 H88" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="100" y="1283" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" letter-spacing="0">Request / submission</text>
+<path d="M300 1278 H348" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6" marker-end="url(#return)"/>
+<text x="360" y="1283" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" letter-spacing="0">Token / context response</text>
+<text x="1160" y="1283" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" letter-spacing="0">Read from top to bottom</text>
+</svg>

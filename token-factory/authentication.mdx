@@ -8,26 +8,8 @@ icon: "key"
 
 Each hop has its own credential. A credential authorizes that hop and no other. Identity providers are Keycloak-compatible OIDC: client credentials for services, and bearer tokens for callers of Token App. The token endpoint is `{base}/realms/{realm}/protocol/openid-connect/token`.
 
-```mermaid
-sequenceDiagram
-  participant S as Your service
-  participant I as Your identity provider
-  participant T as Token App
-  participant RI as Registry identity provider
-  participant R as Registry
-  participant P as Your participant
-
-  S->>I: Client credentials
-  I-->>S: Token for the Token App audience
-  S->>T: Mint, Authorization Bearer
-  T->>RI: Client credentials
-  RI-->>T: Token for the Registry admin audience
-  T->>R: Choice context
-  R-->>T: Context
-  T->>I: Client credentials for the ledger user
-  I-->>T: Ledger token
-  T->>P: Submit as your admin
-```
+<img className="block dark:hidden" src="/images/token-factory/authentication-flow-light.svg" alt="Ten messages in order. 1. Your service to Your identity provider: Client credentials. 2. Your identity provider to Your service: Token for the Token App audience. 3. Your service to Token App: Mint, Authorization Bearer. 4. Token App to Registry identity provider: Client credentials. 5. Registry identity provider to Token App: Token for the Registry admin audience. 6. Token App to Registry: Choice context. 7. Registry to Token App: Context. 8. Token App to Your identity provider: Client credentials for the ledger user. 9. Your identity provider to Token App: Ledger token. 10. Token App to Your participant: Submit as your admin." />
+<img className="hidden dark:block" src="/images/token-factory/authentication-flow-dark.svg" alt="Ten messages in order. 1. Your service to Your identity provider: Client credentials. 2. Your identity provider to Your service: Token for the Token App audience. 3. Your service to Token App: Mint, Authorization Bearer. 4. Token App to Registry identity provider: Client credentials. 5. Registry identity provider to Token App: Token for the Registry admin audience. 6. Token App to Registry: Choice context. 7. Registry to Token App: Context. 8. Token App to Your identity provider: Client credentials for the ledger user. 9. Your identity provider to Token App: Ledger token. 10. Token App to Your participant: Submit as your admin." />
 
 Wallets take a different path. A wallet calls the Registry public API with no credential, receives a choice context, and submits on the holder's participant. The holder's party authorizes that submission. The public API discloses the contracts the wallet needs. It does not grant the admin, the issuer, or the validator.
 

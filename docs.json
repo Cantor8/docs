@@ -9,9 +9,9 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "products": [
+    "anchors": [
       {
-        "product": "Getting Started",
+        "anchor": "Getting Started",
         "icon": "rocket",
         "pages": [
           "index",
@@ -20,7 +20,7 @@
         ]
       },
       {
-        "product": "Wallet SDK",
+        "anchor": "Wallet SDK",
         "icon": "wallet",
         "pages": [
           "wallet-sdk/introduction",
@@ -36,7 +36,7 @@
         ]
       },
       {
-        "product": "Token Factory",
+        "anchor": "Token Factory",
         "icon": "hand-holding-dollar",
         "pages": [
           "token-factory/introduction",
@@ -68,7 +68,7 @@
         ]
       },
       {
-        "product": "Validator as a Service",
+        "anchor": "Validator as a Service",
         "icon": "server",
         "pages": [
           "validator-as-a-service/introduction",
@@ -77,7 +77,7 @@
         ]
       },
       {
-        "product": "Enterprise Wallet",
+        "anchor": "Enterprise Wallet",
         "icon": "bank",
         "pages": [
           "enterprise-wallet/introduction",
@@ -88,31 +88,7 @@
           "enterprise-wallet/docker-compose-deployment"
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Wallet SDK",
-          "icon": "wallet",
-          "href": "/wallet-sdk/introduction"
-        },
-        {
-          "anchor": "Token Factory",
-          "icon": "hand-holding-dollar",
-          "href": "/token-factory/introduction"
-        },
-        {
-          "anchor": "Validator as a Service",
-          "icon": "server",
-          "href": "/validator-as-a-service/introduction"
-        },
-        {
-          "anchor": "Enterprise Wallet",
-          "icon": "bank",
-          "href": "/enterprise-wallet/introduction"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/images/FullColor.png",

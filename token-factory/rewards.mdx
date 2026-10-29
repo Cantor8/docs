@@ -31,14 +31,8 @@ The ledger user needs `CanActAs` for the featured-app party, because that party 
 
 Token App watches the ledger as your admin and looks for holdings activity on your instruments: transfers, pre-approved transfers, and settlements. Each of those creates or archives a holding, so the watch is on holdings rather than on one transfer API.
 
-```mermaid
-flowchart LR
-  tx["Holder activity"] --> price["Price the traffic"]
-  price --> skip["Skip excluded venues"]
-  skip --> queue["Queue the weight"]
-  queue --> post["Post a marker batch"]
-  post --> pay["Network pays beneficiaries"]
-```
+<img className="block dark:hidden" src="/images/token-factory/rewards-flow-light.svg" alt="Holder activity → Price the traffic → Skip excluded venues → Queue the weight → Post a marker batch → Network pays beneficiaries." />
+<img className="hidden dark:block" src="/images/token-factory/rewards-flow-dark.svg" alt="Holder activity → Price the traffic → Skip excluded venues → Queue the weight → Post a marker batch → Network pays beneficiaries." />
 
 | Stage     | What happens                                                                                                                                                                       |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

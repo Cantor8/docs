@@ -1,0 +1,172 @@
+---
+title: "Launch"
+sidebarTitle: "Launch"
+description: "Prepare your instrument and complete four steps from bootstrap to a verified launch."
+keywords: ["Token Factory", "Canton", "launch"]
+icon: "rocket"
+---
+
+This is the path to a live instrument on which you hold every acting party. Cantor8's party is the observer. You decide whether those acting roles are one party or several, and what must approve each signature. You submit your part on your participant.
+
+## Prerequisites
+
+Have these in place before the steps. [Architecture](/token-factory/architecture) is the placement map. [Roles](/token-factory/roles) is the party arrangement.
+
+### Placement
+
+| Decision         | Options                                                               |
+| ---------------- | --------------------------------------------------------------------- |
+| Synchronizer     | Public Canton, or a private synchronizer (yours, Cantor8's, or joint) |
+| Validator party  | Your validator, or a Cantor8-operated validator                       |
+| Parties that act | Yours, on your participant. You choose one party or several           |
+
+Write down the synchronizer id and the observer party Cantor8 names. Bootstrap, the Registry, and Token App use that synchronizer id. The observer is named in the bootstrap transaction.
+
+### Instrument
+
+One instrument needs a record you and Cantor8 both sign off before bootstrap:
+
+| Field           | Rule                                                                              |
+| --------------- | --------------------------------------------------------------------------------- |
+| Ticker          | Stable id. Unique for this admin, including after retirement                      |
+| Name and symbol | What wallets display                                                              |
+| Decimals        | Integer from 0 to 10. Fixed at creation. Every later amount is checked against it |
+| Transferable    | On: holders can transfer and allocate. Off: the instrument moves by mint and burn |
+| Issuer          | A party you control                                                               |
+
+One admin can issue further instruments later, on the same factory, by the same kind of signed step. Each new ticker is agreed the same way.
+
+### Parties
+
+Allocate the parties that will act, on your participant. Which roles share a party, and how many approvers a key requires, is the decision in [Roles](/token-factory/roles).
+
+The validator's participant must know those parties before bootstrap. Allocating them on your node is the first half; making them visible to the validator is the second. Cantor8 confirms that visibility when Cantor8 operates the validator.
+
+If you want network rewards, the featured-app party must already hold, or be ready to hold, a featured-app right on the network that pays rewards. That right is a network contract. It is separate from the suite DAR.
+
+### Credentials
+
+On your identity provider:
+
+| Client                          | Used by                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| Ledger user, client credentials | Token App, which submits mint, burn, pause, freeze, and activity markers |
+| Token App audience              | Your services that call Token App                                        |
+
+Grant the ledger user `CanActAs` and `CanReadAs` for every party Token App will submit as: admin, issuer, and featured-app. That may be one party or several.
+
+Cantor8 issues the Registry admin client to you. You store it as a cluster secret. You do not put it in the values file.
+
+### Suite DAR
+
+Cantor8 sends one suite package and its release notes. Upload and vet that file, with its dependencies, on:
+
+- your participant
+- the validator's participant
+- every participant that will submit a transfer or allocation of the instrument
+
+<Warning>
+A holder cannot complete a transfer from a participant that has not vetted the package. Vetting is per participant. Cantor8's delivery of the file does not vet it for you.
+</Warning>
+
+Keep the file and the release notes. The next release is vetted the same way, on the same participants, before you use it. Holdings already created remain.
+
+### Rewards, if you want them
+
+Skip this to launch issuance and transfer only. For rewards, have the featured-app right, the batched-marker proxy, the beneficiary for the instrument, and the synchronizer id. [Rewards](/token-factory/rewards) explains them. They go into the Token App configuration when you deploy.
+
+## The steps
+
+Four steps. At the end you can mint through Token App, a wallet can transfer, and you have paused and unpaused once through Token App.
+
+| Step                            | Result                                                                             |
+| ------------------------------- | ---------------------------------------------------------------------------------- |
+| 1. Bootstrap the factory        | The factory, the instruments, and the treasury mint delegation exist on the ledger |
+| 2. Cantor8 lists the instrument | The public Registry URL shows the instrument                                       |
+| 3. Deploy Token App             | Token App is ready in your network                                                 |
+| 4. Prove the path               | A mint, a wallet transfer, and a pause have succeeded                              |
+
+<Steps>
+<Step title="Bootstrap the factory">
+
+Cantor8 prepares a validator offer. The offer names the admin, the featured-app party, the observer, and the instruments from the agreed record.
+
+You review the offer and accept it on your participant, as the parties the offer names. That acceptance creates, in one transaction:
+
+- the factory
+- the freeze configuration
+- the instrument directory
+- each instrument
+
+When the featured-app party is your admin party, your acceptance covers both. When it is a different party, that party authorizes the same acceptance.
+
+When you operate the validator yourself, you submit the offer and the acceptance. Cantor8 still prepares them from the agreed record.
+
+If a step stops halfway, resume the same command. Accepting twice does not create a second factory. A command you were sent earlier can expire; ask for a replacement rather than replaying a stale one.
+
+#### When the roles are different parties
+
+Each party signs its own consent before the factory exists: the featured-app party, the issuer, and the treasury. The admin then submits one transaction that consumes those consents and creates the factory, the instruments, and the treasury delegation together. Cantor8 sends one command per party. Each party submits its own.
+
+#### Treasury mint delegation
+
+Include it in the acceptance when the offer carries the treasury consent. Otherwise create it as the next transaction: the treasury consents, and the issuer can mint to it from then on.
+
+The consent can also pre-approve transfers to the treasury, so a transfer back for a burn settles in one transaction.
+
+Create it at launch even when the treasury is your own party. A batch mint requires a mint delegation for every recipient. A single mint to a different party requires one too, unless that party signs the mint itself. A single mint to your own party is the one case the submitting party already satisfies, because it is both the issuer and the recipient.
+
+</Step>
+
+<Step title="Cantor8 lists the instrument">
+
+Wallets see an instrument when the Registry lists it.
+
+Cantor8 adds the factory, the instruments, the parties, and the observer to the Registry, and sends you the public base URL. That URL answers the metadata and transfer routes in [Operations](/token-factory/operations).
+
+Confirm from outside your network:
+
+- the instrument appears on the metadata API
+- the observer can see a holding once one exists
+
+The observer named at bootstrap is the party the Registry reads as. Holdings record that observer at creation.
+
+</Step>
+
+<Step title="Deploy Token App">
+
+Deploy Token App in your network against your participant, using the Helm chart or the same image run manually. [Deployment](/token-factory/deployment) is the procedure.
+
+PostgreSQL, the Docker Hub access token, and the ledger client are in the prerequisites. This step also needs the Registry URL and client from the previous step, and the configuration for your instrument. If you are posting markers, include the reward contracts from the prerequisites. Run one replica.
+
+`GET /healthz` returns success before you mint.
+
+</Step>
+
+<Step title="Prove the path">
+
+Do these in order. Each one fails for a different missing piece, so keep them separate.
+
+| Check                                                 | Pass                                                                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Mint a small amount to the treasury through Token App | The call returns your command id. The mint appears on `GET /data/admin/mints`                                |
+| Read the treasury balance                             | `GET /data/admin/holdings` shows the holding. `/status` shows supply once the monitor has completed a cycle  |
+| Transfer between two parties the way a wallet will    | The sender's wallet uses the public Registry, submits on its participant, and the receiver's balance updates |
+| Metrics                                               | Your scraper reads `GET /metrics`. The monitor timestamp is recent                                           |
+| Pause and unpause through Token App                   | The instrument stops and resumes. Do this on a test network or a test instrument                             |
+
+Pause and unpause are admin operations. Token App fetches the context from the Registry admin API and submits it with the ledger user from the prerequisites. The actions are in [Compliance](/token-factory/compliance).
+
+The instrument is live. A party you control authorized the mint, a wallet can move it, and you have stopped and resumed it through Token App.
+
+</Step>
+</Steps>
+
+## After launch
+
+| Event                                       | What you do                                                                                                   |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| A new suite release                         | Vet the new DAR on every submitting participant, then apply the configuration Cantor8 ships with that release |
+| A new instrument                            | Agree the record, sign the add, Cantor8 lists it on the Registry, add it to Token App                         |
+| A new holder who must be minted to directly | That holder signs a mint delegation. Transfer from the treasury does not need one                             |
+| A party you no longer want in circulation   | Freeze the party, or pause the instrument. [Compliance](/token-factory/compliance)                                    |

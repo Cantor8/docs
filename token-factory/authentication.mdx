@@ -1,0 +1,83 @@
+---
+title: "Authentication"
+sidebarTitle: "Authentication"
+description: "Map each credential to its API, identity provider, and ledger permissions."
+keywords: ["Token Factory", "Canton", "authentication"]
+icon: "key"
+---
+
+{/* Explicit page styles also work in the editor, where Tailwind utilities are not built. */}
+<style>{`
+  [data-tf-diagram="light"] { display: block; }
+  [data-tf-diagram="dark"] { display: none; }
+  [data-tf-diagram="light"]:is(.dark *) { display: none; }
+  [data-tf-diagram="dark"]:is(.dark *) { display: block; }
+`}</style>
+
+Each hop has its own credential. A credential authorizes that hop and no other. Identity providers are Keycloak-compatible OIDC: client credentials for services, and bearer tokens for callers of Token App. The token endpoint is `{base}/realms/{realm}/protocol/openid-connect/token`.
+
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/authentication-flow-light.svg" alt="Ten messages in order. 1. Your service to Your identity provider: Client credentials. 2. Your identity provider to Your service: Token for the Token App audience. 3. Your service to Token App: Mint, Authorization Bearer. 4. Token App to Registry identity provider: Client credentials. 5. Registry identity provider to Token App: Token for the Registry admin audience. 6. Token App to Registry: Choice context. 7. Registry to Token App: Context. 8. Token App to Your identity provider: Client credentials for the ledger user. 9. Your identity provider to Token App: Ledger token. 10. Token App to Your participant: Submit as your admin." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/authentication-flow-dark.svg" alt="Ten messages in order. 1. Your service to Your identity provider: Client credentials. 2. Your identity provider to Your service: Token for the Token App audience. 3. Your service to Token App: Mint, Authorization Bearer. 4. Token App to Registry identity provider: Client credentials. 5. Registry identity provider to Token App: Token for the Registry admin audience. 6. Token App to Registry: Choice context. 7. Registry to Token App: Context. 8. Token App to Your identity provider: Client credentials for the ledger user. 9. Your identity provider to Token App: Ledger token. 10. Token App to Your participant: Submit as your admin." />
+</div>
+
+Wallets take a different path. A wallet calls the Registry public API with no credential, receives a choice context, and submits on the holder's participant. The holder's party authorizes that submission. The public API discloses the contracts the wallet needs. It does not grant the admin, the issuer, or the validator.
+
+## Credentials in the default deployment
+
+| Hop                                | Provider  | Client                                                                                  | What the credential allows                                                                                   |
+| ---------------------------------- | --------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Your service to Token App          | Yours     | A client your callers use. Audience is the one you set for Token App, default `m2m-api` | Call Token App: mint, burn, pause, freeze, history, status, marker queries                                   |
+| Token App to your Ledger API       | Yours     | The ledger user Token App runs as                                                       | `CanActAs` and `CanReadAs` for your admin, issuer, and featured-app party. The participant then signs        |
+| Token App to Registry admin API    | Cantor8's | A client Cantor8 issues to you                                                          | Fetch admin choice contexts. The audience is the Registry's admin audience. This call does not submit        |
+| Registry to the Cantor8 Ledger API | Cantor8   | Cantor8's ledger user                                                                   | Read as the observer. Cantor8 holds this client                                                              |
+| Wallet to Registry public API      | None      | None                                                                                    | Read instruments and fetch transfer and allocation contexts                                                  |
+| Token App probes                   | None      | None                                                                                    | `GET /healthz` and `GET /metrics` are open on the service, so your scraper can reach them inside the cluster |
+
+`GET /status` uses the same bearer token as mint. History and marker queries do too.
+
+<Warning>
+Leave Token App authentication on. Turn it off only when the network path to the service is itself the trust boundary, and even then keep the service off the internet.
+</Warning>
+
+## What your ledger user must be able to do
+
+The ledger user is the identity the participant associates with Token App. It needs:
+
+| Right       | On                                                      | Why                                                                                                    |
+| ----------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `CanActAs`  | Each party you assign to admin, issuer, or featured-app | Token App submits mint, burn, pause, freeze, compliance actions, and activity markers as those parties |
+| `CanReadAs` | The same parties                                        | Read holdings, resolve a burn, and follow the ledger stream for markers                                |
+
+The user is scoped to those parties. It is not granted a right to act as any party on the participant. Operators call Token App. They do not submit ledger commands themselves.
+
+## What the Registry credential does, and what it does not
+
+The Registry checks the bearer token on `/api/{prefix}/admin/**`. A token whose audience is the configured admin audience is an admin caller. Token App presents that token and receives a choice context for the admin operation: mint, burn, pause, freeze, compliance burn, or seizure, wherever that operation needs a prepared context.
+
+The M2M token authorizes that fetch. Token App then submits the context on your participant, as the party you assigned, with the ledger user above. The Registry's own ledger user reads as the observer and is not granted act-as on your parties.
+
+Public routes under `/api/{prefix}/registry/**` accept unauthenticated calls. They return instrument metadata and the contexts wallets submit. Health and the metrics endpoint are open for the operator of the Registry.
+
+## Three providers
+
+| Provider                   | Default operator | Clients it issues                                                        |
+| -------------------------- | ---------------- | ------------------------------------------------------------------------ |
+| Your identity provider     | You              | Ledger user. Callers of Token App. These can be two clients in one realm |
+| Registry identity provider | Cantor8          | The client Token App uses for the admin API                              |
+| Cantor8 node provider      | Cantor8          | The Registry's own ledger client. Invisible to you                       |
+
+When a party you control is hosted on a Cantor8-operated participant, the ledger provider may be Cantor8's, and the client is still issued for your ledger user. You hold the key. Operating the node does not transfer it.
+
+## Keys
+
+| Key                 | Where it lives                                                                 | Who uses it                                                 |
+| ------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| Parties you control | Your custody. Your participant signs with them                                 | Mint, burn, pause, freeze, compliance, and activity markers |
+| Validator party     | Your custody, unless you have asked Cantor8 to operate the validator           | Factory creation, and proposing seizure of locked funds     |
+| Observer            | Cantor8's participant                                                          | The Registry reads as this party                            |
+| OIDC client secrets | Your cluster secrets, and Cantor8's secret store for Cantor8-operated services | The hops in the table above                                 |
+
+Your acting keys stay with you. Launch commands are handed to you to submit. A prepared command expires; sign the command you were sent for that step, and ask for a fresh one if the ledger has moved on.

@@ -1,6 +1,7 @@
 ---
 title: "Configuration"
-description: "Environment variables for bootstrap, authentication, Auto-Batch, and database."
+description: "Environment variables for bootstrap, authentication, Auto-Batch, database, and optional log shipping."
+icon: "sliders"
 ---
 
 The bootstrap logic is fully driven by environment variables. Group them as below.
@@ -148,3 +149,41 @@ The set of variables used to derive the JWKS URL depends on `AUTH_TYPE`.
 <ParamField path="DB_IDLE_TIMEOUT" default="600000" type="number (ms)">
   Milliseconds before an idle connection is evicted.
 </ParamField>
+
+## Log shipping
+
+Leave `LOKI_URL` unset to keep log shipping disabled. The wallet writes the same JSON to stdout either way, so `docker logs` is unaffected.
+
+<CardGroup cols={2}>
+  <Card title="Local logs" icon="terminal">
+    With `LOKI_URL` unset, the wallet does not ship logs to Cantor8. Logs stay in your infrastructure.
+  </Card>
+  <Card title="Share logs with Cantor8" icon="file-lines">
+    Enable log shipping so the C8 team can troubleshoot with you without asking for a log dump. The container reads the three variables below itself. Nothing is installed on your Docker host, and no AWS credentials are involved.
+  </Card>
+</CardGroup>
+
+<ParamField path="LOKI_URL" type="string">
+  The push endpoint provided by C8 for your environment, for example `https://logs.<env>.digik.cantor8.tech/loki/api/v1/push`. Use the endpoint supplied during integration; `<env>` is a placeholder.
+</ParamField>
+
+<ParamField path="LOKI_USER" type="string">
+  The client ID issued by C8. It is also your log tenant, which keeps your logs separate from other clients. Set it to the same value as `CLIENT_ID`.
+</ParamField>
+
+<ParamField path="LOKI_PASSWORD" type="string">
+  The matching secret provided by C8.
+</ParamField>
+
+### Log labels
+
+| Environment variable | Label on each log line |
+| --- | --- |
+| `CLIENT_ID` | `client` |
+| `WALLET_NETWORK` | `env` |
+
+Labels are attached when each line is written, rather than per request. They are also present on lines emitted by the HTTP layer, database layer, and SDK, so logs arrive already grouped.
+
+<Tip>
+  For the environment file and deployment steps, see [Enable log shipping](/enterprise-wallet/docker-compose-deployment#enable-log-shipping-optional).
+</Tip>

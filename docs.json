@@ -9,76 +9,83 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
+    "anchors": [
       {
-        "group": "Getting Started",
+        "anchor": "Getting Started",
+        "icon": "rocket",
         "pages": [
           "index",
-          "quickstart"
+          "quickstart",
+          "choose-your-path"
         ]
-      }
-    ],
-    "products": [
+      },
       {
-        "product": "C8 Products",
+        "anchor": "Wallet SDK",
+        "icon": "wallet",
         "pages": [
+          "wallet-sdk/introduction",
+          "wallet-sdk/common-use-cases",
+          "wallet-sdk/quick-start",
+          "wallet-sdk/core-concepts",
+          "wallet-sdk/installation",
+          "wallet-sdk/networks",
+          "wallet-sdk/api-reference",
+          "wallet-sdk/transfer-types",
+          "wallet-sdk/events",
+          "wallet-sdk/error-handling"
+        ]
+      },
+      {
+        "anchor": "Token Factory",
+        "icon": "hand-holding-dollar",
+        "pages": [
+          "token-factory/introduction",
           {
-            "group": "Getting Started",
+            "group": "Understand the design",
             "pages": [
-              "index",
-              "quickstart",
-              "choose-your-path"
+              "token-factory/roles",
+              "token-factory/architecture",
+              "token-factory/authentication"
             ]
           },
           {
-            "group": "Wallet SDK",
-            "icon": "wallet",
-            "expanded": false,
+            "group": "Launch",
             "pages": [
-              "wallet-sdk/introduction",
-              "wallet-sdk/common-use-cases",
-              "wallet-sdk/quick-start",
-              "wallet-sdk/core-concepts",
-              "wallet-sdk/installation",
-              "wallet-sdk/networks",
-              "wallet-sdk/api-reference",
-              "wallet-sdk/transfer-types",
-              "wallet-sdk/events",
-              "wallet-sdk/error-handling"
+              "token-factory/launch",
+              "token-factory/deployment",
+              "token-factory/evaluation"
             ]
           },
           {
-            "group": "Enterprise wallet",
-            "icon": "bank",
+            "group": "Operate",
             "pages": [
-              "enterprise-wallet/introduction",
-              "enterprise-wallet/common-use-cases",
-              "enterprise-wallet/authentication",
-              "enterprise-wallet/auto-batch",
-              "enterprise-wallet/configuration",
-              "enterprise-wallet/docker-compose-deployment"
-            ]
-          },
-          {
-            "group": "Token factory",
-            "icon": "hand-holding-dollar",
-            "pages": [
-              "token-factory/introduction",
-              "token-factory/common-use-cases",
-              "token-factory/integration",
-              "token-factory/api-reference"
-            ]
-          },
-          {
-            "group": "Validator as a Service",
-            "icon": "server",
-            "expanded": true,
-            "pages": [
-              "validator-as-a-service/introduction",
-              "validator-as-a-service/common-use-cases",
-              "validator-as-a-service/onboarding-and-operations"
+              "token-factory/operations",
+              "token-factory/rewards",
+              "token-factory/compliance",
+              "token-factory/observability"
             ]
           }
+        ]
+      },
+      {
+        "anchor": "Validator as a Service",
+        "icon": "server",
+        "pages": [
+          "validator-as-a-service/introduction",
+          "validator-as-a-service/common-use-cases",
+          "validator-as-a-service/onboarding-and-operations"
+        ]
+      },
+      {
+        "anchor": "Enterprise Wallet",
+        "icon": "bank",
+        "pages": [
+          "enterprise-wallet/introduction",
+          "enterprise-wallet/common-use-cases",
+          "enterprise-wallet/authentication",
+          "enterprise-wallet/auto-batch",
+          "enterprise-wallet/configuration",
+          "enterprise-wallet/docker-compose-deployment"
         ]
       }
     ]
@@ -86,7 +93,7 @@
   "logo": {
     "light": "/images/FullColor.png",
     "dark": "/images/FullColor.png",
-    "href": "https://www.cantor8.io/"
+    "href": "/"
   },
   "navbar": {
     "links": [
@@ -130,6 +137,26 @@
     {
       "source": "/choose-your-path-v1",
       "destination": "/choose-your-path",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory",
+      "destination": "/token-factory/introduction",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory/common-use-cases",
+      "destination": "/token-factory/evaluation",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory/integration",
+      "destination": "/token-factory/launch",
+      "permanent": true
+    },
+    {
+      "source": "/token-factory/api-reference",
+      "destination": "/token-factory/operations",
       "permanent": true
     }
   ]

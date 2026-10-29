@@ -1,0 +1,116 @@
+---
+title: "Architecture"
+sidebarTitle: "Architecture"
+description: "See how Token App, the Registry, participants, and the suite DAR fit together."
+keywords: ["Token Factory", "Canton", "architecture"]
+icon: "diagram-project"
+---
+
+{/* Explicit page styles also work in the editor, where Tailwind utilities are not built. */}
+<style>{`
+  [data-tf-diagram="light"] { display: block; }
+  [data-tf-diagram="dark"] { display: none; }
+  [data-tf-diagram="light"]:is(.dark *) { display: none; }
+  [data-tf-diagram="dark"]:is(.dark *) { display: block; }
+`}</style>
+
+Token Factory is three running pieces and one package on the ledger.
+
+| Piece            | Where it runs                                   | What it does                                                                            |
+| ---------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Suite DAR        | Vetted on each participant that submits         | The instrument, holdings, transfers, allocations, pause, and freeze                     |
+| Registry         | Cantor8                                         | Reads the ledger as the observer. Returns choice contexts. Does not submit              |
+| Token App        | Your private network                            | Submits every admin operation and the activity markers. Stores history. Exposes metrics |
+| Your participant | Your network, or a Cantor8-operated participant | Hosts the parties you control and accepts the transactions Token App submits            |
+
+A choice context is a preparation. The Registry returns it and stops there.
+
+| Caller    | Registry route            | Who submits                                               |
+| --------- | ------------------------- | --------------------------------------------------------- |
+| Wallet    | Public API, no credential | The holder's participant, as the holder                   |
+| Token App | Admin API, M2M credential | Token App, on your participant, as the party you assigned |
+
+The admin context is how mint, burn, pause, freeze, compliance burn, and seizure are prepared. Token App is the component that submits them.
+
+## Default deployment
+
+Three places. Your network runs Token App and the participant that hosts the parties you control. Cantor8 runs the Registry and the participant that reads as the observer. Wallets sit with the holders, apart from both: they take a public context from the Registry and submit the transfer on the holder's own participant. All three participants join the same synchronizer.
+
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/default-deployment-light.svg" alt="Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/default-deployment-dark.svg" alt="Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer." />
+</div>
+
+What crosses the internet:
+
+| Call                               | Exposure               | Credential                                                                                          |
+| ---------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------- |
+| Wallet to Registry public API      | Public                 | None. The call returns a choice context. The holder's participant submits, authorized by the holder |
+| Token App to Registry admin API    | Reachable by Token App | M2M credential. Authorizes fetching an admin choice context, not a submission                       |
+| Token App to your Ledger API       | Your network           | OIDC client credential for your ledger user                                                         |
+| Registry to the Cantor8 Ledger API | Cantor8's network      | Cantor8's own ledger credential. Your services do not use it                                        |
+| Callers to Token App               | Your private network   | OIDC token from your identity provider                                                              |
+
+<Info>
+Token App is a ClusterIP service. Publishing it on the internet is outside this design. The public surface is the Registry's instrument and transfer API.
+</Info>
+
+The organization prefix is part of the Registry URL, `/api/{prefix}/...`. Cantor8 assigns it. Wallets and Token App both use it.
+
+## How a mint moves
+
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/mint-flow-light.svg" alt="Six messages in order: Your service to Token App: Mint, with your OIDC token. Token App to Registry: Ask for the choice context. Registry to Token App: Context, read from the observer. Token App to Your participant: Submit as your admin. Your participant to Token App: Committed. Token App to Your service: Command id and status." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/mint-flow-dark.svg" alt="Six messages in order: Your service to Token App: Mint, with your OIDC token. Token App to Registry: Ask for the choice context. Registry to Token App: Context, read from the observer. Token App to Your participant: Submit as your admin. Your participant to Token App: Committed. Token App to Your service: Command id and status." />
+</div>
+
+The Registry sees the new holding because the observer was written onto it at creation. Its ledger user reads as that observer. The mint was submitted by Token App.
+
+Pause, freeze, compliance burn, and seizure use the same two steps. Token App fetches the admin context with its M2M credential, then submits on your participant as your admin. The Registry's ledger user reads as the observer.
+
+## Where the validator sits
+
+Token App stays in your network. Cantor8 runs the Registry.
+
+### Validator
+
+| Placement                  | Who signs the validator part                              | When to choose it                                                                                                                                             |
+| -------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Your validator             | You                                                       | You keep both ledger authorities. This is the control model the rest of these pages describe                                                                  |
+| Cantor8-operated validator | Cantor8                                                   | You want the participant operated for you. Cantor8 then holds the second signature on factory creation and on seizure of locked funds, and no other authority |
+| Private synchronizer       | Whoever operates the validator party on that synchronizer | The instrument must stay off the public synchronizer. See below                                                                                               |
+
+A Cantor8-operated validator is a participant Cantor8 runs and you connect to. The parties that mint, burn, pause, and freeze stay yours, and so do their keys. Hosting one of those parties on the Cantor8 participant is available. The participant operator is then Cantor8. The key is still yours.
+
+### Private synchronizer
+
+A private synchronizer is a domain you operate, Cantor8 operates, or you operate together. Participants join that synchronizer instead of, or as well as, the public one. Cantor8's observer participant joins it, so the Registry can read the instrument.
+
+| Arrangement | What you operate                      | What Cantor8 operates                                                                                |
+| ----------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Yours       | The synchronizer and your participant | The observer participant on that synchronizer                                                        |
+| Joint       | Your participant                      | The observer participant, and the validator when you ask Cantor8 to operate it                       |
+| Cantor8     | Your participant                      | The synchronizer and the observer participant. The validator, when you ask Cantor8 to operate it too |
+
+The token model is the same: factory, instruments, parties you control, and Token App. Activity-marker rewards are a program of the public Canton network. On a private synchronizer the instrument still issues, transfers, and settles. Markers and network rewards apply when the featured-app right lives on a network that pays them. [Rewards](/token-factory/rewards) covers that choice.
+
+## What has to be true for the picture to work
+
+- Your participant and the validator's participant both vet the same suite DAR. So does every participant that will submit a transfer of the instrument, including holders' participants.
+- The parties you control are hosted on your participant and are known to the validator's participant before bootstrap.
+- The synchronizer id is the same one in bootstrap, in the Registry, and in Token App.
+- The observer is named in the bootstrap transaction.
+- Token App runs as one process. The ledger poller and the marker batches assume a single writer.
+- The participant that submits has traffic available. Submissions consume it.
+
+## Lifecycle of a package
+
+Cantor8 delivers one suite DAR per release, with release notes. You vet that file. A later release is a new file, vetted the same way on every participant that submits.
+
+Holdings already on the ledger stay in place across that vetting. The factory and the instruments continue. You vet before you depend on the new package.
+
+Bootstrap, the Registry configuration, and Token App all refer to the release you vetted. An upgrade is coordinated: vet, then roll the configuration Cantor8 ships for that release.

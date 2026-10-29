@@ -1,29 +1,150 @@
 ---
-title: "Cantor8 Token Factory"
-sidebarTitle: "Introduction"
-description: "Multi-token platform for the Canton Network — issue, transfer, freeze, burn, migrate, and settle tokenized assets."
+title: "Token Factory"
+sidebarTitle: "Overview"
+description: "Issue and operate instruments on Canton, with your parties and keys in your control."
+keywords: ["Token Factory", "Canton", "introduction"]
+icon: "coins"
 ---
 
-Cantor8 Token Factory is a multi-token platform for the Canton Network. It provides typed DAML token packages, a token registry API, and operational tooling for issuing, transferring, freezing, burning, migrating, and settling tokenized assets.
+Token Factory issues and operates instruments on Canton. The rules of an instrument live on the ledger. Your services mint, burn, pause, freeze, and monitor through Token App, inside your network. Wallets discover the instrument and prepare transfers through the Registry. The Registry's public API is the internet-facing surface.
 
-It is designed for **regulated and operationally controlled asset workflows**: token ownership and lifecycle logic stay on ledger, while registry endpoints let wallets and backend services discover instruments and prepare Canton choice contexts.
+The Registry returns choice contexts and does not submit. Wallets submit holder transfers from a public context. Token App submits every admin operation from a context it fetches on the Registry's admin API, which requires M2M authentication. That submission lands on your participant, as a party you control.
 
-## What you'll find here
+You hold every party that can act. Mint, burn, freeze, pause, and activity rewards are authorized by parties you control, on a participant you control. You decide the arrangement: one party or several, and the signing policy behind each key, including a quorum or more than one approver. Cantor8's party is an observer. It can see the instrument. [Roles](/token-factory/roles) is that division of control.
 
-<CardGroup cols={2}>
-  <Card title="Common use cases" icon="list-check" href="/token-factory/common-use-cases">
-    How partners apply C8 Token Factory — what it is, who it's for, and the value it delivers.
-  </Card>
+<Columns cols={2}>
+<Card title="Understand the design" icon="diagram-project" href="/token-factory/architecture">
+Start with the components, the control model, and the roles you hold.
+</Card>
 
-  <Card title="Integration" icon="plug" href="/token-factory/integration">
-    How to scope and onboard a new tokenised asset with the C8 team.
-  </Card>
+<Card title="Launch an instrument" icon="rocket" href="/token-factory/launch">
+Prepare your parties and credentials, then follow the four launch steps.
+</Card>
 
-  <Card title="API reference" icon="code" href="/token-factory/api-reference">
-    REST API for admin operations, data queries, status, and health checks.
-  </Card>
+<Card title="Run day-to-day operations" icon="arrows-rotate" href="/token-factory/operations">
+Find issuance, wallet transfer, settlement, and API details.
+</Card>
 
-  <Card title="Talk to the C8 team" icon="envelope" href="mailto:integrations@cantor8.io">
-    Reach out at [**integrations@cantor8.io**](mailto:integrations@cantor8.io) to discuss your use case.
-  </Card>
-</CardGroup>
+<Card title="Evaluate the fit" icon="list-check" href="/token-factory/evaluation">
+Confirm responsibilities and the checks that define a successful launch.
+</Card>
+</Columns>
+
+## Where it fits
+
+<Columns cols={2}>
+<Card title="Issuing and burning a ledger balance" icon="coins">
+An instrument, a treasury mint delegation, and Token App mint and burn
+</Card>
+
+<Card title="Letting holders move that balance" icon="wallet">
+The public Registry and the Canton token standard, which wallets already implement
+</Card>
+
+<Card title="Settling only when both sides are ready" icon="handshake">
+An allocation: funds lock, the receiver accepts, an executor settles or cancels
+</Card>
+
+<Card title="Stopping activity the same day" icon="shield-halved">
+Pause one instrument, freeze one party, or freeze every instrument of the admin
+</Card>
+
+<Card title="Earning network rewards on third-party activity" icon="gift">
+A featured-app party, activity markers, and a beneficiary
+</Card>
+</Columns>
+
+## Who runs what
+
+Default deployment:
+
+| Piece                      | Operator                     | Authority                                                                                       |
+| -------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| Your participant           | You                          | Hosts the parties you control. Accepts the transactions Token App submits                       |
+| Token App and its database | You, on your private network | Fetches a choice context, then submits mint, burn, pause, freeze, and activity markers          |
+| Your identity provider     | You                          | Issues credentials for your Ledger API user and for callers of Token App                        |
+| Cantor8 participant        | Cantor8                      | Hosts the observer, a read-only party. Hosts a validator only if you ask Cantor8 to operate one |
+| Registry                   | Cantor8                      | Reads as the observer. Returns public contexts to wallets and M2M admin contexts to Token App   |
+| Registry identity provider | Cantor8                      | Issues the M2M credential Token App uses to fetch admin contexts                                |
+
+You operate the validator, or Cantor8 does if you ask. The parties that mint, burn, pause, and freeze stay yours either way. Those same parties can sit on a private synchronizer. [Architecture](/token-factory/architecture) is the map.
+
+## Terms
+
+<Accordion title="Glossary: ledger, parties, and services" icon="book-open">
+
+| Term               | Meaning                                                                                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Participant        | A Canton node. It hosts parties and submits transactions to a synchronizer.                                                                    |
+| Party              | An identity on the ledger. Whoever controls its key authorizes what it does.                                                                   |
+| Synchronizer       | The domain the participants share: the public Canton synchronizer, or a private one.                                                           |
+| Instrument         | One token, with a ticker, name, symbol, and decimal precision.                                                                                 |
+| Holding            | A balance of an instrument, owned by a party.                                                                                                  |
+| Factory            | The on-ledger contract for one admin. Instruments, transfers, and allocations are created from it.                                             |
+| Admin              | The party that creates instruments and controls pause, freeze, and compliance burn.                                                            |
+| Issuer             | The party that mints and burns.                                                                                                                |
+| Operator           | The party that submits day-to-day mint and burn when that role is separate from the issuer.                                                    |
+| Treasury           | The party that holds the standing mint delegation. Issuance to your own books lands here.                                                      |
+| Featured-app party | The party that holds the network featured-app right and posts activity markers.                                                                |
+| Validator party    | Co-signs the factory. Proposes seizure of funds locked in a pending transfer. The admin approves through Token App.                            |
+| Observer           | A party that can see the instrument's contracts and cannot exercise them.                                                                      |
+| Holder             | A party that owns a holding.                                                                                                                   |
+| DAR                | The compiled suite package. One file is uploaded and vetted.                                                                                   |
+| Vetting            | A participant accepts the DAR and will then process transactions that use it.                                                                  |
+| Registry           | The service that lists instruments and returns choice contexts. It does not submit transactions.                                               |
+| Choice context     | The disclosed contracts and arguments a submitter needs. The Registry returns it. Token App, or the holder's wallet, submits it.               |
+| Token App          | Your service that submits admin operations and activity markers, and that stores history, supply, and metrics.                                 |
+| Mint delegation    | A recipient's standing consent to receive mints.                                                                                               |
+| Activity marker    | A ledger record of qualifying third-party activity, posted by the featured-app party. The network pays beneficiaries from markers.             |
+| Beneficiary        | The party credited with an instrument's marker weight.                                                                                         |
+| Identity provider  | An OIDC provider. Each connection checks a token that provider issued. Token App and the Registry expect a Keycloak-compatible token endpoint. |
+
+</Accordion>
+
+## The pages
+
+Read them in order once. Afterwards, use the later pages as the deployment and operations reference.
+
+<Columns cols={2}>
+<Card title="Roles" icon="users" href="/token-factory/roles">
+who can act, why that is you, and why Cantor8's party only reads.
+</Card>
+
+<Card title="Architecture" icon="diagram-project" href="/token-factory/architecture">
+components, the default deployment, and where the validator sits.
+</Card>
+
+<Card title="Authentication" icon="key" href="/token-factory/authentication">
+every credential, which identity provider issues it, and what it authorizes.
+</Card>
+
+<Card title="Launch" icon="rocket" href="/token-factory/launch">
+prerequisites, then four steps to a live instrument.
+</Card>
+
+<Card title="Deployment" icon="server" href="/token-factory/deployment">
+Docker Hub access, the Helm chart, and the same image without Kubernetes.
+</Card>
+
+<Card title="Operations" icon="arrows-rotate" href="/token-factory/operations">
+mint, burn, transfer, settlement, and the APIs your developers call.
+</Card>
+
+<Card title="Rewards" icon="gift" href="/token-factory/rewards">
+how activity becomes markers, who is paid, and how you track it.
+</Card>
+
+<Card title="Compliance" icon="shield-halved" href="/token-factory/compliance">
+pause, freeze, burn, locked funds, and where your own approval policy sits.
+</Card>
+
+<Card title="Observability" icon="chart-line" href="/token-factory/observability">
+what to scrape, what healthy looks like, and the resources to give the service.
+</Card>
+
+<Card title="Evaluation" icon="list-check" href="/token-factory/evaluation">
+the checklist that confirms the design fits, and what each side brings to a launch.
+</Card>
+</Columns>
+
+After these pages you should be able to point at your design and name: which parties you control, what Cantor8 can see, which API is public, what you will deploy, and how you would pause the instrument on the day you need to.

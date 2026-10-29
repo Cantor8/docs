@@ -5,3 +5,10 @@
 # Draft content
 drafts/
 *.draft.mdx
+
+# Historical source snapshots; excluded from the published site and search
+archive/
+
+# Authoring context
+.mintlify/
+skills-lock.json

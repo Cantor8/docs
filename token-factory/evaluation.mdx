@@ -1,0 +1,82 @@
+---
+title: "Evaluation"
+sidebarTitle: "Evaluation"
+description: "Check the control model, deployment responsibilities, and launch acceptance criteria."
+keywords: ["Token Factory", "Canton", "evaluation"]
+icon: "list-check"
+---
+
+Use this page to decide whether the model fits, and as the list you and Cantor8 work through to launch. The behavior behind each line is in the page linked from it.
+
+## Confirm the model
+
+<Tip>
+You should be able to answer each line from your own design. A blank answer is the item to settle before build.
+</Tip>
+
+| Question                                                                                                         | Where it is settled                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Which participant hosts the parties that can mint, burn, pause, and freeze?                                      | Yours. [Roles](/token-factory/roles). You decide one party, several, or a multi-approver key                      |
+| Who holds those keys?                                                                                            | You. A Cantor8-operated participant can host a party. The key stays yours                                 |
+| Who is the validator, and are you content that this party co-signs factory creation and seizure of locked funds? | [Architecture](/token-factory/architecture)                                                                       |
+| Who runs the Registry, and which party does it read as?                                                          | Cantor8, reading as the observer                                                                          |
+| Is the instrument on the public synchronizer or a private one?                                                   | Private synchronizers do not pay featured-app rewards by themselves. [Rewards](/token-factory/rewards)            |
+| Which API is on the internet?                                                                                    | The Registry public API. Token App stays on your network. [Authentication](/token-factory/authentication)         |
+| What has to be true before a holder can receive a transfer?                                                      | Their participant has vetted the suite DAR. They need a mint delegation only if you mint to them directly |
+| How do you stop the instrument on the day you need to?                                                           | Pause or freeze through Token App. The Registry returns the context. [Compliance](/token-factory/compliance)      |
+| How do you know it is healthy?                                                                                   | Token App `/healthz`, the monitor timestamp, and the alerts in [Observability](/token-factory/observability)      |
+
+## What you deploy
+
+| Component                                                       | You                          | Cantor8, in the default                             |
+| --------------------------------------------------------------- | ---------------------------- | --------------------------------------------------- |
+| Participant for the parties you control                         | Yes                          | Only if you contract a Cantor8-operated participant |
+| Validator participant                                           | If you operate the validator | If you use Cantor8's                                |
+| Token App, PostgreSQL, private network, scraper                 | Yes                          |                                                     |
+| Identity provider for the ledger user and for Token App callers | Yes                          |                                                     |
+| Registry and its public URL                                     |                              | Yes                                                 |
+| Suite DAR                                                       | You vet it                   | Cantor8 sends the file and the release notes        |
+| Docker Hub access token, image, Helm chart                      | You install them             | Cantor8 publishes them                              |
+
+Token App's production profile is 2 CPU and 10 GiB requested, 4 CPU and 16 GiB limited, one replica, PostgreSQL 14 at a small size. [Deployment](/token-factory/deployment).
+
+## What "launched" means
+
+The sequence is [Launch](/token-factory/launch). It is done when all of these are true:
+
+- [ ] The factory, the freeze configuration, and the instrument exist, created by your acceptance.
+- [ ] The treasury mint delegation exists, so batch mint and mint-to-treasury have a standing consent.
+- [ ] The Registry's public metadata API lists the instrument.
+- [ ] The observer was named in that acceptance.
+- [ ] Token App is ready on `/healthz`, as one replica, with authentication on.
+- [ ] A mint to the treasury is visible in Token App's mint history and in the supply gauge.
+- [ ] A wallet-style transfer between two parties completes through the public Registry.
+- [ ] A pause and an unpause have gone through Token App, on a test network or a test instrument.
+- [ ] Alerts exist for the monitor timestamp, mint and burn errors, ledger errors, and, if markers are on, lag and failed batches.
+
+## Bring this to the first working session
+
+- the asset: what it represents, the ticker you want, and the decimals
+- the network: public mainnet, a test network first, or a private synchronizer, and who should operate the validator
+- who will hold the controlling party, and whether mint, pause, and rewards must be separate parties
+- whether holders transfer the instrument, or it moves only by mint and burn
+- whether you want featured-app rewards
+- the compliance actions you must be able to take, and who in your organization approves them
+- the target date, and whether a test-network rehearsal is in that date
+
+## What comes back
+
+| From Cantor8                                                     | From you                                                        |
+| ---------------------------------------------------------------- | --------------------------------------------------------------- |
+| The suite DAR and the release notes for the release you will vet | The instrument record, signed off                               |
+| The validator party id and the observer party id                 | The party ids you control, hosted, and visible to the validator |
+| The bootstrap offer for you to accept on your participant        | The acceptance, submitted by you                                |
+| The Registry base URL, organization prefix, and admin client     | Token App installed against that URL                            |
+| The Docker Hub access token and the chart version                | The ledger user, the database, and the private network          |
+| The featured-app contract fields, when you are posting markers   | The beneficiary and the list of venues to exclude               |
+
+The keys that can act stay with you. The offer is a command you submit.
+
+<Card title="Discuss your launch" icon="envelope" href="mailto:integrations@cantor8.io?subject=Token%20Factory%20launch">
+Share the items above with the Cantor8 team to prepare your first working session.
+</Card>

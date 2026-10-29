@@ -1,0 +1,78 @@
+---
+title: "Compliance"
+sidebarTitle: "Compliance"
+description: "Apply pause, freeze, burn, and seizure controls with the parties you control."
+keywords: ["Token Factory", "Canton", "compliance"]
+icon: "shield-halved"
+---
+
+The controls below are ledger transactions of your admin party. You invoke them through Token App. Token App fetches a choice context from the Registry admin API, using its M2M credential, and submits that context on your participant.
+
+The Registry prepares the context and does not submit it. Its ledger user is a reader. Prove pause and unpause through Token App once, on a test network or a test instrument. [Launch](/token-factory/launch) includes that check.
+
+## Controls
+
+| Control                              | Who authorizes                     | Effect                                                                                                          |
+| ------------------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Pause one instrument                 | Admin                              | Ordinary mint, burn, transfer, and settlement of that instrument stop. Your other instruments continue          |
+| Resume one instrument                | Admin                              | Ordinary actions resume                                                                                         |
+| Freeze every instrument of the admin | Admin                              | Ordinary mint, burn, transfer, and settlement stop across that admin's instruments                              |
+| Freeze one party                     | Admin                              | That party cannot send or receive. Applied to one instrument, or to every instrument of the admin               |
+| Non-transferable instrument          | Admin, set on the instrument       | Holders do not transfer or allocate. Supply moves by mint and burn                                              |
+| Retire an instrument                 | Admin, after it is paused          | The ticker stays reserved and leaves the active public list                                                     |
+| Issuer burn                          | Issuer                             | Burns a liquid holding. Refused while the instrument is paused or the party is frozen. This is an ordinary burn |
+| Compliance burn                      | Admin, with a reason               | Burns a liquid holding while pause or freeze is in effect                                                       |
+| Seize a liquid holding               | Admin, with a reason               | Moves the holding onto the admin. A later ordinary transfer moves it onward                                     |
+| Seize locked funds                   | Admin and validator, with a reason | Burns funds locked in a pending transfer or allocation                                                          |
+
+A reason is required on compliance burn and on both seizures. The reason is returned in the transaction result under the network field `splice.lfdecentralizedtrust.org/reason`, so an auditor can read it from the ledger.
+
+<Info>
+Pause and freeze are checked when the action executes, not only when it is created. Freezing a party after they have created an offer still stops the receiver from accepting it.
+</Info>
+
+## Funds in flight
+
+A pending transfer locks the sender's holding until the receiver accepts, the receiver rejects, or the sender withdraws.
+
+| Outcome                                                      | When it is allowed                                                                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Receiver accepts                                             | Sender and receiver are both unfrozen, and the instrument is not paused                                |
+| Receiver rejects, or the sender withdraws after the deadline | The sender is unfrozen. The amount returns to the sender                                               |
+| Sender withdraws before the deadline                         | Only after the admin has allowed that withdrawal for this offer. A frozen sender still cannot withdraw |
+| Compliance seizure                                           | Admin and validator together. The locked amount is burned, and the reason is recorded                  |
+
+The deadline is the one the sender set on the offer. A frozen sender cannot take the locked amount back by waiting out that deadline, and a reject or cancel that would return it to them is refused. The amount stays locked until the admin and the validator seize it.
+
+That seizure is the on-ledger dual control. The validator party proposes. Token App submits the admin's approval from the Registry context, and the validator can withdraw the proposal before that approval. Factory creation and factory removal use the same pair of parties, each signing their own part.
+
+## Where your own policy sits
+
+Identity stays in your process. You decide which parties you create, which parties you mint to, and which parties you freeze. The ledger enforces the freeze after you submit it. A typical arrangement:
+
+| Your policy                                                 | The ledger action that enforces it                                                                              |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| A customer must pass your checks before they hold a balance | Mint only to parties you have approved, or transfer from the treasury only to those parties                     |
+| Approval is withdrawn                                       | Freeze the party. Pause the instrument if the question is the asset, not the person                             |
+| A legal order to destroy a balance                          | Compliance burn, with the order recorded as the reason                                                          |
+| A balance stuck in an offer from a frozen party             | Admin and validator seize the locked funds                                                                      |
+| The asset must not circulate peer to peer                   | Create the instrument as non-transferable                                                                       |
+| Daily issuance and emergency stop are different duties      | Give the issuer and the admin their own parties, or require several approvers on one key. [Roles](/token-factory/roles) |
+
+## Several approvers
+
+A party is one authority on the ledger. When a role needs several people to approve, enforce that in the signing policy of the key: your HSM, a quorum, or your wallet's approval rules. The participant submits only after that policy has produced a signature.
+
+Use a separate party, rather than a shared key, when the approvers are different organizations. The issuer delegation is the on-ledger form of that split: the issuer signs once, and the operator submits day-to-day mint and burn under it. Pause and freeze stay on the admin key, which the operator does not hold.
+
+## What an auditor can reconstruct
+
+| Question                                                            | Where the answer is                                                                                     |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Who was minted to, and burned from, through Token App               | `GET /data/admin/mints` and `GET /data/admin/burns`, and the ledger updates they cite                   |
+| Current balances                                                    | `GET /data/admin/holdings`, or the ledger itself                                                        |
+| Why a compliance burn or seizure happened                           | The reason field on the transaction result                                                              |
+| Whether the instrument was paused or a party was frozen at a moment | The freeze configuration and the instrument are ledger contracts; their history is the ledger's history |
+| Which marker weight was posted, and to whom                         | [Rewards](/token-factory/rewards)                                                                               |
+
+Token App's history is the operational record of mints and burns it submitted. The ledger is the record of record, including actions submitted outside Token App.

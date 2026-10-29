@@ -1,0 +1,221 @@
+---
+title: "Deployment"
+sidebarTitle: "Deployment"
+description: "Deploy Token App with Helm or a container, configure secrets, and verify readiness."
+keywords: ["Token Factory", "Canton", "deployment"]
+icon: "server"
+---
+
+Token App runs in your Kubernetes cluster, or as one container if you do not run Kubernetes. The image and the Helm chart are published together to a private Docker Hub organization. Cantor8 gives you a read-only organization access token for both.
+
+The chart version and the image version are one release. Chart `1.2.3` runs `cantor8technologies/token-app:v1.2.3`. Install the version Cantor8 names. Set the image tag yourself only when Cantor8 asks you to.
+
+Cantor8 runs the Registry. You receive a base URL, an organization prefix, and a client credential for the admin API.
+
+## What you have before install
+
+| Prerequisite                                          | Notes                                                                                                                                                                                                                                       |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kubernetes and Helm 3.8 or later, or a container host | Helm 3.8 is the minimum that installs an OCI chart                                                                                                                                                                                          |
+| Your participant                                      | JSON Ledger API v2 over HTTPS, and a WebSocket URL for the same API                                                                                                                                                                         |
+| Ledger user                                           | `CanActAs` and `CanReadAs` for each party Token App submits as. [Authentication](/token-factory/authentication)                                                                                                                                     |
+| Identity provider                                     | Keycloak-compatible. One client for the ledger user, one audience for Token App callers                                                                                                                                                     |
+| Registry                                              | Base URL, organization prefix, and the admin client credential Cantor8 issues                                                                                                                                                               |
+| PostgreSQL                                            | You create the database. Token App creates the schemas `token_app_admin` and `fa_markers` and migrates them on startup. The database user must be allowed to create schemas. Cantor8 runs PostgreSQL 14 at 2 vCPU, 1 GiB memory, and 20 GiB |
+| Featured-app contracts                                | Required only when the `fa_markers` module is on. [Rewards](/token-factory/rewards)                                                                                                                                                                 |
+| Organization access token                             | Read access to the image and the chart                                                                                                                                                                                                      |
+
+## Pull access
+
+The Docker Hub user is the organization name `cantor8technologies`.
+
+```bash
+echo '<access-token>' | helm registry login registry-1.docker.io \
+  --username cantor8technologies --password-stdin
+
+kubectl create namespace token-app
+
+kubectl -n token-app create secret docker-registry cantor8-dockerhub \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=cantor8technologies \
+  --docker-password='<access-token>'
+```
+
+The chart expects a pull secret named `cantor8-dockerhub`. If you mirror the image into your own registry, set `image.repository` and `imagePullSecrets` to match that mirror.
+
+## Secrets
+
+```bash
+kubectl -n token-app create secret generic token-app-credentials \
+  --from-literal=LEDGER_KEYCLOAK_CLIENT_ID='<ledger-client-id>' \
+  --from-literal=LEDGER_KEYCLOAK_CLIENT_SECRET='<ledger-client-secret>' \
+  --from-literal=TOKEN_FACTORY_KEYCLOAK_CLIENT_ID='<registry-client-id>' \
+  --from-literal=TOKEN_FACTORY_KEYCLOAK_CLIENT_SECRET='<registry-client-secret>'
+
+kubectl -n token-app create secret generic token-app-db \
+  --from-literal=DSN_PGSQL='postgresql://<user>:<password>@<host>:5432/<database>'
+```
+
+External Secrets is fine; the secret names and keys must match `credentials.existingSecret`, `database.existingSecret`, and `database.dsnKey`.
+
+## Values
+
+Create `values.yaml`. The `config` block is the Token App configuration Cantor8 walks through with you at launch. You name the party for each role. The example below uses one id throughout; use a different id wherever your arrangement does.
+
+```yaml
+config:
+  appName: your-app
+  instruments:
+    - id: TOKEN
+      admin: "<your-party>"
+      issuer: "<your-party>"
+      beneficiaries:
+        default: "<your-party>"
+  featuredApp:
+    partyId: "<your-party>"
+    excludedVenues: []
+    featuredAppRight:
+      package: splice-amulet
+      contract:
+        template_id: "<from Cantor8>"
+        cid: "<from Cantor8>"
+        contract_blob: "<from Cantor8>"
+        created_template_id: "<from Cantor8>"
+    batchedMarkersProxy:
+      package: splice-util-batched-markers
+      contract:
+        template_id: "<from your participant>"
+        cid: "<from your participant>"
+        contract_blob: "<from your participant>"
+        created_template_id: "<from your participant>"
+
+modules:
+  - admin
+  - fa_markers
+
+network:
+  name: MainNet
+  profile: main
+
+ledger:
+  apiUrl: https://<your-participant>/api/json-api
+  asyncApiUrl: wss://<your-participant>/api/json-api
+  userId: <ledger-user-id>
+  auth:
+    url: https://<your-idp>
+    realm: <realm>
+
+apiAuth:
+  enabled: true
+  url: https://<your-idp>
+  realm: <realm>
+  audience: m2m-api
+
+tokenRegistry:
+  apiUrl: https://<registry-host>
+  orgPrefix: <prefix>
+  auth:
+    enabled: true
+    url: https://<registry-idp>
+    realm: <realm>
+
+credentials:
+  existingSecret: token-app-credentials
+
+database:
+  existingSecret: token-app-db
+
+faMarkers:
+  synchronizerId: "<synchronizer-id>"
+```
+
+<Tip>
+Leave `featuredApp` unset and set `modules: [admin]` when you are not posting activity markers.
+</Tip>
+
+`excludedVenues` lists participant ids whose own submissions earn no markers. An empty list excludes nobody. A submission from your own validator is third-party traffic unless you list it.
+
+`config.scanApiBaseUrls` overrides the Canton Scan endpoints used to price traffic. The chart's defaults are the public mainnet endpoints. Override them for a test network.
+
+## Install and upgrade
+
+<Tabs>
+<Tab title="Install and verify">
+
+```bash
+helm install token-app oci://registry-1.docker.io/cantor8technologies/token-app-helm \
+  --version <chart-version> \
+  --namespace token-app \
+  -f values.yaml
+
+kubectl -n token-app rollout status deploy/token-app
+kubectl -n token-app port-forward svc/token-app 8002:8002
+curl -sS http://localhost:8002/healthz
+```
+
+</Tab>
+<Tab title="Upgrade">
+
+```bash
+helm upgrade token-app oci://registry-1.docker.io/cantor8technologies/token-app-helm \
+  --version <new-chart-version> \
+  --namespace token-app \
+  -f values.yaml
+```
+
+</Tab>
+</Tabs>
+
+<Info>
+The chart creates a ClusterIP Service on port 8002. It does not create an Ingress. Add a private route only for callers inside your network, and leave `apiAuth.enabled` on.
+</Info>
+
+`helm uninstall` removes the workload. The database and the secrets remain.
+
+## How the process behaves
+
+| Behavior                   | Value                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Replicas                   | 1. The chart uses the Recreate strategy. A second pod double-posts markers and splits the ledger cursor |
+| Submission                 | Directly to your Ledger API. The participant signs for the parties you assigned                         |
+| Holdings and traffic price | Read from your Ledger API and from Canton Scan                                                          |
+| Probes                     | `GET /healthz` for startup, readiness, and liveness                                                     |
+| Logs                       | JSON lines on stdout                                                                                    |
+| Metrics                    | `GET /metrics`. Set `monitoring.serviceMonitor.enabled` to create a Prometheus Operator ServiceMonitor  |
+| Port                       | 8002                                                                                                    |
+
+The chart requests 2 CPU and 10 GiB of memory, and limits the pod to 4 CPU and 16 GiB. Those are the production figures for several instruments with activity markers, including catch-up over a long ledger history. Keep them when the process has to walk history. [Observability](/token-factory/observability) is what to alert on.
+
+## Manual install
+
+Use the same image, the same configuration, and one process. The chart is the supported packaging of the variables below; a manual run sets them in the environment.
+
+```bash
+echo '<access-token>' | docker login registry-1.docker.io \
+  --username cantor8technologies --password-stdin
+
+docker pull cantor8technologies/token-app:v<version>
+```
+
+Run one container, publish port 8002 on your private network, and set:
+
+| Variable                                                            | Value                                                            |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `ENABLED_MODULES`                                                   | `admin` or `admin,fa_markers`                                    |
+| `NETWORK`, `VALIDATOR_ID`                                           | `MainNet` and `main`, or the test-network pair Cantor8 gives you |
+| `TOKEN_APP_CONFIG_JSON`                                             | The `config` object from the values file, as JSON                |
+| `COMMAND_SUBMIT_BACKEND`                                            | `ledger`                                                         |
+| `TRAFFIC_PRICE_SOURCE`                                              | `scan`                                                           |
+| `HOLDINGS_ACS_MODE`                                                 | `ledger_only`                                                    |
+| `API_AUTH_ENABLED` and `API_AUTH_KEYCLOAK_*`                        | Your identity provider and audience                              |
+| `TOKEN_FACTORY_API_BASE_URL`, `TOKEN_FACTORY_ORG_PREFIX`            | The Registry                                                     |
+| `TOKEN_FACTORY_AUTH_ENABLED` and `TOKEN_FACTORY_KEYCLOAK_*`         | The Registry client. Secret values, not the config file          |
+| `LEDGER_API_BASE_URL`, `LEDGER_ASYNC_API_BASE_URL`, `ADMIN_USER_ID` | Your participant and ledger user                                 |
+| `LEDGER_KEYCLOAK_*`                                                 | The ledger client. Secret values                                 |
+| `DSN_PGSQL`                                                         | The database. Secret value                                       |
+| `FA_MARKERS_SYNCHRONIZER_ID`                                        | The synchronizer, when markers are on                            |
+| `MONITORING_ENABLED`                                                | `true`                                                           |
+
+Leave the marker batch sizes and poll intervals at the chart defaults unless Cantor8 gives you different ones. Do not run a second container against the same database.
+
+Point a private probe at `http://<container>:8002/healthz` and a private scraper at `/metrics`.

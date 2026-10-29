@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="746" viewBox="0 0 1200 746" data-header="clean" role="img" aria-labelledby="title desc">
+<title id="title">Default deployment</title><desc id="desc">Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="return" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="#A7B6E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect width="1200" height="746" rx="20" fill="#0B1124"/>
+<g transform="translate(0,-44)">
+<text x="36" y="93" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="30" font-weight="650" text-anchor="start" letter-spacing="0">Default deployment</text>
+<rect x="32" y="132" width="480" height="476" rx="14" fill="#111C35" stroke="#2A3D64"/>
+<text x="56" y="168" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="21" font-weight="650" text-anchor="start" letter-spacing="0">Your network</text>
+<text x="56" y="193" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" letter-spacing="0">Private services and acting parties</text>
+<rect x="544" y="132" width="288" height="476" rx="14" fill="#111C35" stroke="#2A3D64"/>
+<text x="568" y="168" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="21" font-weight="650" text-anchor="start" letter-spacing="0">Cantor8</text>
+<text x="568" y="193" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" letter-spacing="0">Registry and observer</text>
+<rect x="864" y="132" width="304" height="476" rx="14" fill="#111C35" stroke="#2A3D64"/>
+<text x="888" y="168" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="21" font-weight="650" text-anchor="start" letter-spacing="0">Holders</text>
+<text x="888" y="193" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" letter-spacing="0">Wallets and their participant</text>
+<g id="services-to-app">
+<path d="M172 292 V324" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="app-to-database">
+<path d="M172 396 V464" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="app-to-participant">
+<path d="M280 380 H396 V464" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="app-to-registry">
+<path d="M280 348 H568" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="registry-to-participant">
+<path d="M688 396 V464" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="wallets-to-registry">
+<path d="M888 256 H688 V324" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<g id="wallets-to-participant">
+<path d="M1016 292 V464" fill="none" stroke="#7F9AFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+</g>
+<text x="424" y="332" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" text-anchor="middle" letter-spacing="0">admin context</text>
+<text x="787" y="241" fill="#7F9AFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" text-anchor="middle" letter-spacing="0">public context</text>
+<g id="services">
+<rect x="64" y="220" width="216" height="72" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="172.0" y="262.0" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Your services</text>
+</g>
+<g id="token-app">
+<rect x="64" y="324" width="216" height="72" rx="10" fill="#1E40CC"/>
+<text x="172.0" y="366.0" fill="#FFFFFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Token App</text>
+</g>
+<g id="database">
+<rect x="64" y="464" width="216" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="172.0" y="508.0" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">PostgreSQL</text>
+</g>
+<g id="your-participant">
+<rect x="312" y="464" width="168" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="396.0" y="508.0" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Your participant</text>
+</g>
+<g id="registry">
+<rect x="568" y="324" width="240" height="72" rx="10" fill="#1E40CC"/>
+<text x="688.0" y="366.0" fill="#FFFFFF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Registry</text>
+</g>
+<g id="cantor8-participant">
+<rect x="568" y="464" width="240" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="688.0" y="502.0" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Participant</text>
+<text x="688.0" y="523.0" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" letter-spacing="0">Reads as the observer</text>
+</g>
+<g id="wallets">
+<rect x="888" y="220" width="256" height="72" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="1016.0" y="262.0" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Wallets</text>
+</g>
+<g id="holder-participant">
+<rect x="888" y="464" width="256" height="76" rx="10" fill="#182744" stroke="#2A3D64"/>
+<text x="1016.0" y="508.0" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Holder participant</text>
+</g>
+<path d="M396 540 V672" fill="none" stroke="#2A3D64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M688 540 V672" fill="none" stroke="#2A3D64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<path d="M1016 540 V672" fill="none" stroke="#2A3D64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 6"/>
+<rect x="312" y="672" width="832" height="64" rx="12" fill="#1B2D55" stroke="#2A3D64"/>
+<text x="728" y="699" fill="#F3F6FF" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Shared synchronizer</text>
+<text x="728" y="721" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" letter-spacing="0">All three participants join the same synchronizer</text>
+<text x="36" y="770" fill="#A8B7DA" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" letter-spacing="0">Registry prepares contexts. Token App and holders submit transactions.</text>
+</g>
+</svg>

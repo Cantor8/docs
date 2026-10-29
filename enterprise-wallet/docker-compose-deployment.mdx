@@ -2,6 +2,7 @@
 title: "Setup & deployment"
 description: "Everything you need to set up and run C8 Enterprise Wallet with Docker Compose."
 sidebarTitle: "Setup & deployment"
+icon: "server"
 ---
 
 This guide walks you through the technical onboarding for C8 Enterprise Wallet — what to share with the C8 team, what you'll receive in return, and how to bring the service up with Docker Compose.
@@ -17,9 +18,9 @@ The C8 team will then provide:
 - Access to the C8 DockerHub repository
 - Integration credentials:
   - `client_id`
-  - `access_key_id`
-  - `secret_access_key`
 - A coupon code for MainNet registration
+
+If you want to share wallet logs with Cantor8, also request the Loki push endpoint and matching secret for your environment. Your client ID is the Loki user and tenant. Log shipping does not require AWS credentials or anything installed on the Docker host.
 
 You will also need the following on the deployment host:
 
@@ -47,7 +48,7 @@ The full deployment is a five-step sequence. Each step is described in detail be
     Fill in the C8-provided image in `docker-compose-client.yml`.
   </Step>
   <Step title="Deploy">
-    Start the container with the CloudWatch logging parameters.
+    Start the wallet container with Docker Compose.
   </Step>
   <Step title="Verify the deployment">
     Open Swagger UI and confirm the API is reachable.
@@ -109,38 +110,19 @@ services:
       - .env
     ports:
       - "8080:8080"
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: ${AWS_REGION}
-        awslogs-group: ${CLOUDWATCH_LOG_GROUP}
-        awslogs-stream: ${CLOUDWATCH_LOG_STREAM}
-        awslogs-endpoint: ${CLOUDWATCH_ENDPOINT}
 ```
 
 ## 4. Deploy
 
-Run Docker Compose with the CloudWatch logging parameters provided during integration:
+Run Docker Compose:
 
 ```bash
-AWS_REGION=eu-west-1 \
-CLOUDWATCH_LOG_GROUP=enterprise-wallet \
-CLOUDWATCH_LOG_STREAM=<client_id> \
-CLOUDWATCH_ENDPOINT=https://logs.eu-west-1.amazonaws.com \
-AWS_ACCESS_KEY_ID=<access_key_id> \
-AWS_SECRET_ACCESS_KEY=<secret_access_key> \
 docker compose -f docker-compose-client.yml up --force-recreate
 ```
 
 To run the wallet in the background, add `-d`:
 
 ```bash
-AWS_REGION=eu-west-1 \
-CLOUDWATCH_LOG_GROUP=enterprise-wallet \
-CLOUDWATCH_LOG_STREAM=<client_id> \
-CLOUDWATCH_ENDPOINT=https://logs.eu-west-1.amazonaws.com \
-AWS_ACCESS_KEY_ID=<access_key_id> \
-AWS_SECRET_ACCESS_KEY=<secret_access_key> \
 docker compose -f docker-compose-client.yml up -d --force-recreate
 ```
 
@@ -157,6 +139,28 @@ The public API documentation is also available at:
 ```text
 https://cantor8.github.io/wallet-api/
 ```
+
+## Enable log shipping (optional)
+
+<Info>
+  Leave `LOKI_URL` unset to keep log shipping disabled. The wallet writes JSON to stdout either way, and `docker logs` continues to work.
+</Info>
+
+To share logs with the C8 team for troubleshooting, add the values supplied during integration to `.env`:
+
+```bash .env
+LOKI_URL=<push-endpoint-provided-by-C8>
+LOKI_USER=<client_id>
+LOKI_PASSWORD=<matching-secret>
+```
+
+`LOKI_USER` must match `CLIENT_ID`: it identifies the tenant that keeps your logs separate from other clients. Use the endpoint provided for your environment.
+
+Recreate the container with the [deployment command](#4-deploy) to apply the updated environment. The wallet ships logs directly from the container; no Docker logging driver or AWS credentials are needed.
+
+<Card title="Log shipping configuration" icon="file-lines" href="/enterprise-wallet/configuration#log-shipping">
+  See all three parameters and how `CLIENT_ID` and `WALLET_NETWORK` label log lines, including HTTP, database, and SDK output.
+</Card>
 
 ## API account creation
 
@@ -182,16 +186,14 @@ The exact value will be provided during integration.
 | `AUTH_TYPE` | API authentication mode. `noop` disables authentication |
 | `AUTO_BATCH_SWITCH` | Enables or disables auto-batching |
 | `AUTO_BATCH_DB_TYPE` | Auto-batching storage type, for example `in-memory` |
-| `AWS_REGION` | AWS region used for CloudWatch logs |
-| `CLOUDWATCH_LOG_GROUP` | CloudWatch log group name |
-| `CLOUDWATCH_LOG_STREAM` | CloudWatch log stream name, usually the client ID |
-| `CLOUDWATCH_ENDPOINT` | CloudWatch Logs endpoint |
-| `AWS_ACCESS_KEY_ID` | AWS access key ID provided during integration |
-| `AWS_SECRET_ACCESS_KEY` | AWS secret access key provided during integration |
+| `LOKI_URL` | Optional C8 log push endpoint; leave unset to disable log shipping |
+| `LOKI_USER` | C8-issued client ID and log tenant; must match `CLIENT_ID` |
+| `LOKI_PASSWORD` | Matching secret for log shipping |
+| `WALLET_NETWORK` | Value used for the `env` label on log lines |
 
 ## Security notes
 
-- Keep `.env`, mnemonic phrases, and AWS credentials out of source control.
+- Keep `.env`, mnemonic phrases, and log-shipping credentials out of source control.
 - Use `AUTH_TYPE=noop` only in controlled environments.
 - Prefer IdP-backed API authentication for production deployments.
 - Rotate integration credentials according to your organization security policy.

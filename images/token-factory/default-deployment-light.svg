@@ -1,14 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="790" viewBox="0 0 1200 790" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="746" viewBox="0 0 1200 746" data-header="clean" role="img" aria-labelledby="title desc">
 <title id="title">Default deployment</title><desc id="desc">Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer.</desc>
 <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="#1E40CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="return" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="#586C9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-<rect width="1200" height="790" rx="20" fill="#FFFFFF"/>
-<rect x="36" y="30" width="12" height="12" rx="0" fill="#1E40CC"/>
-<rect x="48" y="18" width="12" height="12" rx="0" fill="#1E40CC"/>
-<rect x="48" y="42" width="12" height="12" rx="0" fill="#1E40CC"/>
-<rect x="60" y="30" width="12" height="12" rx="0" fill="#1E40CC"/>
-<rect x="72" y="18" width="12" height="12" rx="0" fill="#1E40CC"/>
-<rect x="72" y="42" width="12" height="12" rx="0" fill="#1E40CC"/>
-<text x="100" y="40" fill="#536589" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="13" font-weight="650" text-anchor="start" letter-spacing="1.7">CANTOR8  /  TOKEN FACTORY</text>
+<rect width="1200" height="746" rx="20" fill="#FFFFFF"/>
+<g transform="translate(0,-44)">
 <text x="36" y="93" fill="#14264B" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="30" font-weight="650" text-anchor="start" letter-spacing="0">Default deployment</text>
 <rect x="32" y="132" width="480" height="476" rx="14" fill="#F5F7FE" stroke="#D9E1F4"/>
 <text x="56" y="168" fill="#14264B" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="21" font-weight="650" text-anchor="start" letter-spacing="0">Your network</text>
@@ -82,4 +76,5 @@
 <text x="728" y="699" fill="#14264B" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" letter-spacing="0">Shared synchronizer</text>
 <text x="728" y="721" fill="#536589" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" letter-spacing="0">All three participants join the same synchronizer</text>
 <text x="36" y="770" fill="#536589" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" letter-spacing="0">Registry prepares contexts. Token App and holders submit transactions.</text>
+</g>
 </svg>

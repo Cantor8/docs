@@ -105,23 +105,8 @@ A wallet integrates an instrument the way it integrates any other Canton token-s
 4. If the receiver has pre-approved incoming transfers, the transfer completes in that submission and the receiver's holding is created.
 5. Otherwise the sender's submission creates an offer. The receiver fetches an accept or reject context and submits it. The sender can withdraw the offer after the deadline they set on it.
 
-```mermaid
-sequenceDiagram
-  participant W as Sender wallet
-  participant R as Registry public API
-  participant S as Sender participant
-  participant H as Receiver participant
-  W->>R: Transfer context
-  R-->>W: Choice context
-  W->>S: Submit as sender
-  alt Receiver pre-approved
-    S-->>W: Receiver holding created
-  else Offer
-    S-->>W: Offer created
-    H->>R: Accept context
-    H->>H: Submit as receiver
-  end
-```
+<img className="block dark:hidden" src="/images/token-factory/operations-flow-light.svg" alt="Sender wallet requests Transfer context from Registry public API, which returns Choice context. Sender wallet submits as sender to Sender participant. If Receiver pre-approved, Sender participant returns Receiver holding created to Sender wallet. Otherwise, in the Offer branch, Sender participant returns Offer created to Sender wallet; Receiver participant requests Accept context from Registry public API, then submits as receiver on Receiver participant." />
+<img className="hidden dark:block" src="/images/token-factory/operations-flow-dark.svg" alt="Sender wallet requests Transfer context from Registry public API, which returns Choice context. Sender wallet submits as sender to Sender participant. If Receiver pre-approved, Sender participant returns Receiver holding created to Sender wallet. Otherwise, in the Offer branch, Sender participant returns Offer created to Sender wallet; Receiver participant requests Accept context from Registry public API, then submits as receiver on Receiver participant." />
 
 The Registry base URL and the organization prefix are what Cantor8 publishes at launch. Routes:
 

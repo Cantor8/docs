@@ -6,6 +6,14 @@ keywords: ["Token Factory", "Canton", "architecture"]
 icon: "diagram-project"
 ---
 
+{/* Explicit page styles also work in the editor, where Tailwind utilities are not built. */}
+<style>{`
+  [data-tf-diagram="light"] { display: block; }
+  [data-tf-diagram="dark"] { display: none; }
+  [data-tf-diagram="light"]:is(.dark *) { display: none; }
+  [data-tf-diagram="dark"]:is(.dark *) { display: block; }
+`}</style>
+
 Token Factory is three running pieces and one package on the ledger.
 
 | Piece            | Where it runs                                   | What it does                                                                            |
@@ -28,8 +36,12 @@ The admin context is how mint, burn, pause, freeze, compliance burn, and seizure
 
 Three places. Your network runs Token App and the participant that hosts the parties you control. Cantor8 runs the Registry and the participant that reads as the observer. Wallets sit with the holders, apart from both: they take a public context from the Registry and submit the transfer on the holder's own participant. All three participants join the same synchronizer.
 
-<img className="block dark:hidden" src="/images/token-factory/default-deployment-light.svg" alt="Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer." />
-<img className="hidden dark:block" src="/images/token-factory/default-deployment-dark.svg" alt="Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer." />
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/default-deployment-light.svg" alt="Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/default-deployment-dark.svg" alt="Three zones: Your network contains Your services, Token App, PostgreSQL, and Your participant. Your services call Token App; Token App connects to PostgreSQL and submits to Your participant. Token App requests admin context from the Registry in Cantor8. The Registry reads from the Cantor8 Participant. Holders contain Wallets and Holder participant: Wallets request public context from the Registry and submit to Holder participant. All three participants join the same synchronizer." />
+</div>
 
 What crosses the internet:
 
@@ -49,8 +61,12 @@ The organization prefix is part of the Registry URL, `/api/{prefix}/...`. Cantor
 
 ## How a mint moves
 
-<img className="block dark:hidden" src="/images/token-factory/mint-flow-light.svg" alt="Six messages in order: Your service to Token App: Mint, with your OIDC token. Token App to Registry: Ask for the choice context. Registry to Token App: Context, read from the observer. Token App to Your participant: Submit as your admin. Your participant to Token App: Committed. Token App to Your service: Command id and status." />
-<img className="hidden dark:block" src="/images/token-factory/mint-flow-dark.svg" alt="Six messages in order: Your service to Token App: Mint, with your OIDC token. Token App to Registry: Ask for the choice context. Registry to Token App: Context, read from the observer. Token App to Your participant: Submit as your admin. Your participant to Token App: Committed. Token App to Your service: Command id and status." />
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/mint-flow-light.svg" alt="Six messages in order: Your service to Token App: Mint, with your OIDC token. Token App to Registry: Ask for the choice context. Registry to Token App: Context, read from the observer. Token App to Your participant: Submit as your admin. Your participant to Token App: Committed. Token App to Your service: Command id and status." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/mint-flow-dark.svg" alt="Six messages in order: Your service to Token App: Mint, with your OIDC token. Token App to Registry: Ask for the choice context. Registry to Token App: Context, read from the observer. Token App to Your participant: Submit as your admin. Your participant to Token App: Committed. Token App to Your service: Command id and status." />
+</div>
 
 The Registry sees the new holding because the observer was written onto it at creation. Its ledger user reads as that observer. The mint was submitted by Token App.
 

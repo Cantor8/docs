@@ -6,6 +6,14 @@ keywords: ["Token Factory", "Canton", "operations"]
 icon: "arrows-rotate"
 ---
 
+{/* Explicit page styles also work in the editor, where Tailwind utilities are not built. */}
+<style>{`
+  [data-tf-diagram="light"] { display: block; }
+  [data-tf-diagram="dark"] { display: none; }
+  [data-tf-diagram="light"]:is(.dark *) { display: none; }
+  [data-tf-diagram="dark"]:is(.dark *) { display: block; }
+`}</style>
+
 Day to day you do three things. You mint, burn, pause, and freeze through Token App. Holders transfer through their wallets and the public Registry.
 
 A party you control authorizes each admin operation. Token App fetches the choice context from the Registry with its M2M credential, then submits on your participant. A holder's wallet fetches a public context and submits on the holder's participant. The Registry does not submit either one.
@@ -105,8 +113,12 @@ A wallet integrates an instrument the way it integrates any other Canton token-s
 4. If the receiver has pre-approved incoming transfers, the transfer completes in that submission and the receiver's holding is created.
 5. Otherwise the sender's submission creates an offer. The receiver fetches an accept or reject context and submits it. The sender can withdraw the offer after the deadline they set on it.
 
-<img className="block dark:hidden" src="/images/token-factory/operations-flow-light.svg" alt="Sender wallet requests Transfer context from Registry public API, which returns Choice context. Sender wallet submits as sender to Sender participant. If Receiver pre-approved, Sender participant returns Receiver holding created to Sender wallet. Otherwise, in the Offer branch, Sender participant returns Offer created to Sender wallet; Receiver participant requests Accept context from Registry public API, then submits as receiver on Receiver participant." />
-<img className="hidden dark:block" src="/images/token-factory/operations-flow-dark.svg" alt="Sender wallet requests Transfer context from Registry public API, which returns Choice context. Sender wallet submits as sender to Sender participant. If Receiver pre-approved, Sender participant returns Receiver holding created to Sender wallet. Otherwise, in the Offer branch, Sender participant returns Offer created to Sender wallet; Receiver participant requests Accept context from Registry public API, then submits as receiver on Receiver participant." />
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/operations-flow-light.svg" alt="Sender wallet requests Transfer context from Registry public API, which returns Choice context. Sender wallet submits as sender to Sender participant. If Receiver pre-approved, Sender participant returns Receiver holding created to Sender wallet. Otherwise, in the Offer branch, Sender participant returns Offer created to Sender wallet; Receiver participant requests Accept context from Registry public API, then submits as receiver on Receiver participant." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/operations-flow-dark.svg" alt="Sender wallet requests Transfer context from Registry public API, which returns Choice context. Sender wallet submits as sender to Sender participant. If Receiver pre-approved, Sender participant returns Receiver holding created to Sender wallet. Otherwise, in the Offer branch, Sender participant returns Offer created to Sender wallet; Receiver participant requests Accept context from Registry public API, then submits as receiver on Receiver participant." />
+</div>
 
 The Registry base URL and the organization prefix are what Cantor8 publishes at launch. Routes:
 

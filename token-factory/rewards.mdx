@@ -6,6 +6,14 @@ keywords: ["Token Factory", "Canton", "rewards"]
 icon: "gift"
 ---
 
+{/* Explicit page styles also work in the editor, where Tailwind utilities are not built. */}
+<style>{`
+  [data-tf-diagram="light"] { display: block; }
+  [data-tf-diagram="dark"] { display: none; }
+  [data-tf-diagram="light"]:is(.dark *) { display: none; }
+  [data-tf-diagram="dark"]:is(.dark *) { display: block; }
+`}</style>
+
 Activity rewards are the public Canton featured-app program. Holdings activity on your instrument is recorded as activity markers, except activity submitted by participants ("venues") you exclude. The network pays the beneficiaries named on the markers you post.
 
 This is separate from minting the instrument. You can launch and operate an instrument with rewards turned off. Turn them on by running Token App's `fa_markers` module and holding a featured-app right.
@@ -31,8 +39,12 @@ The ledger user needs `CanActAs` for the featured-app party, because that party 
 
 Token App watches the ledger as your admin and looks for holdings activity on your instruments: transfers, pre-approved transfers, and settlements. Each of those creates or archives a holding, so the watch is on holdings rather than on one transfer API.
 
-<img className="block dark:hidden" src="/images/token-factory/rewards-flow-light.svg" alt="Holder activity → Price the traffic → Skip excluded venues → Queue the weight → Post a marker batch → Network pays beneficiaries." />
-<img className="hidden dark:block" src="/images/token-factory/rewards-flow-dark.svg" alt="Holder activity → Price the traffic → Skip excluded venues → Queue the weight → Post a marker batch → Network pays beneficiaries." />
+<div data-tf-diagram="light">
+  <img src="/images/token-factory/rewards-flow-light.svg" alt="Holder activity → Price the traffic → Skip excluded venues → Queue the weight → Post a marker batch → Network pays beneficiaries." />
+</div>
+<div data-tf-diagram="dark">
+  <img src="/images/token-factory/rewards-flow-dark.svg" alt="Holder activity → Price the traffic → Skip excluded venues → Queue the weight → Post a marker batch → Network pays beneficiaries." />
+</div>
 
 | Stage     | What happens                                                                                                                                                                       |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

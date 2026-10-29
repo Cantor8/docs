@@ -20,8 +20,57 @@
     ],
     "products": [
       {
+        "product": "Getting Started",
+        "pages": [
+          "index",
+          "quickstart",
+          "choose-your-path"
+        ]
+      },
+      {
         "product": "C8 Products",
         "products": [
+          {
+            "product": "Token Factory",
+            "icon": "hand-holding-dollar",
+            "pages": [
+              "token-factory/introduction",
+              {
+                "group": "Understand the design",
+                "pages": [
+                  "token-factory/roles",
+                  "token-factory/architecture",
+                  "token-factory/authentication"
+                ]
+              },
+              {
+                "group": "Launch",
+                "pages": [
+                  "token-factory/launch",
+                  "token-factory/deployment",
+                  "token-factory/evaluation"
+                ]
+              },
+              {
+                "group": "Operate",
+                "pages": [
+                  "token-factory/operations",
+                  "token-factory/rewards",
+                  "token-factory/compliance",
+                  "token-factory/observability"
+                ]
+              }
+            ]
+          },
+          {
+            "product": "Validator as a Service",
+            "icon": "server",
+            "pages": [
+              "validator-as-a-service/introduction",
+              "validator-as-a-service/common-use-cases",
+              "validator-as-a-service/onboarding-and-operations"
+            ]
+          },
           {
             "product": "Getting Started",
             "pages": [
@@ -99,6 +148,34 @@
               "validator-as-a-service/onboarding-and-operations"
             ]
           }
+        ]
+      },
+      {
+        "product": "Wallet SDK",
+        "icon": "wallet",
+        "pages": [
+          "wallet-sdk/introduction",
+          "wallet-sdk/common-use-cases",
+          "wallet-sdk/quick-start",
+          "wallet-sdk/core-concepts",
+          "wallet-sdk/installation",
+          "wallet-sdk/networks",
+          "wallet-sdk/api-reference",
+          "wallet-sdk/transfer-types",
+          "wallet-sdk/events",
+          "wallet-sdk/error-handling"
+        ]
+      },
+      {
+        "product": "Enterprise wallet",
+        "icon": "bank",
+        "pages": [
+          "enterprise-wallet/introduction",
+          "enterprise-wallet/common-use-cases",
+          "enterprise-wallet/authentication",
+          "enterprise-wallet/auto-batch",
+          "enterprise-wallet/configuration",
+          "enterprise-wallet/docker-compose-deployment"
         ]
       }
     ]

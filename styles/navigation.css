@@ -1,0 +1,22 @@
+/* Important rules in the base layer override Mintlify's important hover utilities. */
+@layer base {
+  .nav-dropdown-products-selector-trigger {
+    background-color: #1e40cc !important;
+    color: #fff !important;
+    border: 1px solid #1e40cc !important;
+  }
+
+  .nav-dropdown-products-selector-trigger:hover {
+    background-color: #1734a8 !important;
+    border-color: #1734a8 !important;
+  }
+
+  .nav-dropdown-products-selector-trigger:focus-visible {
+    outline: 2px solid #1e40cc !important;
+    outline-offset: 3px !important;
+  }
+
+  .nav-dropdown-products-selector-trigger svg {
+    color: #fff !important;
+  }
+}

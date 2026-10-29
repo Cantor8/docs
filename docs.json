@@ -9,15 +9,6 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
     "products": [
       {
         "product": "Getting Started",
@@ -85,7 +76,7 @@
         ]
       },
       {
-        "product": "Enterprise wallet",
+        "product": "Enterprise Wallet",
         "icon": "bank",
         "pages": [
           "enterprise-wallet/introduction",
@@ -96,12 +87,36 @@
           "enterprise-wallet/docker-compose-deployment"
         ]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Wallet SDK",
+          "icon": "wallet",
+          "href": "/wallet-sdk/introduction"
+        },
+        {
+          "anchor": "Token Factory",
+          "icon": "hand-holding-dollar",
+          "href": "/token-factory/introduction"
+        },
+        {
+          "anchor": "Validator as a Service",
+          "icon": "server",
+          "href": "/validator-as-a-service/introduction"
+        },
+        {
+          "anchor": "Enterprise Wallet",
+          "icon": "bank",
+          "href": "/enterprise-wallet/introduction"
+        }
+      ]
+    }
   },
   "logo": {
     "light": "/images/FullColor.png",
     "dark": "/images/FullColor.png",
-    "href": "https://www.cantor8.io/"
+    "href": "/"
   },
   "navbar": {
     "links": [

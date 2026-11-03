@@ -53,7 +53,8 @@
             "pages": [
               "token-factory/launch",
               "token-factory/deployment",
-              "token-factory/evaluation"
+              "token-factory/evaluation",
+              "token-factory/listing-on-a-trading-venue"
             ]
           },
           {

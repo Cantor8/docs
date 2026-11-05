@@ -1,0 +1,55 @@
+---
+title: "List a Token Factory token"
+sidebarTitle: "List on a trading venue"
+description: "Integrate a token issued through Token Factory into your trading venue."
+---
+
+To list a token issued through Token Factory on your trading venue, complete the steps below.
+
+> **Before you start**
+>
+> Our team will provide the DAR package and configuration values for the specific instrument during integration. Replace all placeholders in angle brackets with the details provided.
+
+<Steps>
+<Step title="Upload and vet the DAR package">
+
+Upload the DAR package to your validator and vet it.
+
+Our team will send you the DAR file directly during integration.
+
+</Step>
+
+<Step title="Configure the token">
+
+Add the following instrument details to your trading venue's configuration:
+
+| Parameter | Description |
+| --- | --- |
+| `instrument_id` | The instrument identifier, such as `aSOL`. |
+| `instrument_admin_id` | The instrument's administrator identifier. |
+| `decimals` | The number of decimal places used by the token. |
+
+```yaml
+instrument_id: "<instrument_id>"
+instrument_admin_id: "<instrument_admin_id>"
+decimals: <number_of_decimals>
+```
+
+Configure the **token registry base URL** for Token Standard transfers and allocations:
+
+```text
+<token_registry_base_url>
+```
+
+Our team will provide these values for each instrument during integration. Use the values supplied for the token you are listing.
+
+</Step>
+
+<Step title="Optional: Set up one-step transfers">
+
+To enable one-step transfers, configure them for each user using the JSON template provided by our team. This is similar to DA's PreApproval mechanism.
+
+Our team will send you the JSON template directly during integration.
+
+</Step>
+</Steps>

@@ -1,0 +1,47 @@
+---
+title: "Other venues"
+sidebarTitle: "Other venues"
+description: "What you send to each venue that will transfer your instrument, and what that venue does."
+keywords: ["Token Factory", "Canton", "venues"]
+icon: "building"
+---
+
+Read this page after your instrument is live. It tells you what to send to each venue that will transfer the instrument.
+
+A venue is a participant that submits transactions of your instrument. That venue does not run Token App and does not mint.
+
+## What you send
+
+| Item                  | Value                                         |
+| --------------------- | --------------------------------------------- |
+| Suite DAR             | The file Cantor8 sent you for this release    |
+| Instrument id         | The ticker of the instrument                  |
+| Admin party           | Your admin party                              |
+| Decimals              | The decimals of the instrument                |
+| Registry base URL     | `https://<registry-host>/api/<org>`           |
+
+## What the venue does
+
+<Steps>
+<Step title="Upload and vet the suite DAR">
+
+The venue uploads the suite DAR and vets it on their validator. A participant that has not vetted the DAR cannot complete a transfer of the instrument.
+
+</Step>
+
+<Step title="Add the instrument to their config">
+
+The venue adds the instrument to their config with the four values you sent: the instrument id, the admin party, the decimals, and the Registry base URL.
+
+Transfers and allocations use the Registry URL. The Registry returns the choice context. Their participant submits it.
+
+</Step>
+
+<Step title="Optional: one-step incoming transfers">
+
+You give the venue a `CreateAutoAccept` template for this instrument. Each of their holders submits it. Incoming transfers to that holder then complete in one step.
+
+Without it, an incoming transfer stays a two-step accept: the sender offers, and the receiver accepts.
+
+</Step>
+</Steps>

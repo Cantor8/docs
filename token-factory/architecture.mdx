@@ -20,7 +20,7 @@ Token Factory is three running pieces and one package on the ledger.
 | ---------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------- |
 | Suite DAR        | Vetted on each participant that submits         | The instrument, holdings, transfers, allocations, pause, and freeze                     |
 | Registry         | Cantor8                                         | Reads the ledger as the observer. Returns choice contexts. Does not submit              |
-| Token App        | Your private network                            | Submits every admin operation and the activity markers. Stores history. Exposes metrics |
+| Token App        | Your private network                            | Submits every admin operation. Stores history. Exposes metrics                          |
 | Your participant | Your network, or a Cantor8-operated participant | Hosts the parties you control and accepts the transactions Token App submits            |
 
 A choice context is a preparation. The Registry returns it and stops there.
@@ -96,7 +96,7 @@ A private synchronizer is a domain you operate, Cantor8 operates, or you operate
 | Joint       | Your participant                      | The observer participant, and the validator when you ask Cantor8 to operate it                       |
 | Cantor8     | Your participant                      | The synchronizer and the observer participant. The validator, when you ask Cantor8 to operate it too |
 
-The token model is the same: factory, instruments, parties you control, and Token App. Activity-marker rewards are a program of the public Canton network. On a private synchronizer the instrument still issues, transfers, and settles. Markers and network rewards apply when the featured-app right lives on a network that pays them. [Rewards](/token-factory/rewards) covers that choice.
+The token model is the same: factory, instruments, parties you control, and Token App. Activity rewards are a program of the public Canton network. On a private synchronizer the instrument still issues, transfers, and settles. Network rewards apply when the featured-app right lives on a network that pays them. [Rewards](/token-factory/rewards) covers that choice.
 
 ## What has to be true for the picture to work
 
@@ -104,7 +104,7 @@ The token model is the same: factory, instruments, parties you control, and Toke
 - The parties you control are hosted on your participant and are known to the validator's participant before bootstrap.
 - The synchronizer id is the same one in bootstrap, in the Registry, and in Token App.
 - The observer is named in the bootstrap transaction.
-- Token App runs as one process. The ledger poller and the marker batches assume a single writer.
+- Token App runs as one process.
 - The participant that submits has traffic available. Submissions consume it.
 
 ## Lifecycle of a package

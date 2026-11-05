@@ -10,7 +10,7 @@ Token Factory issues and operates instruments on Canton. The rules of an instrum
 
 The Registry returns choice contexts and does not submit. Wallets submit holder transfers from a public context. Token App submits every admin operation from a context it fetches on the Registry's admin API, which requires M2M authentication. That submission lands on your participant, as a party you control.
 
-You hold every party that can act. Mint, burn, freeze, pause, and activity rewards are authorized by parties you control, on a participant you control. You decide the arrangement: one party or several, and the signing policy behind each key, including a quorum or more than one approver. Cantor8's party is an observer. It can see the instrument. [Roles](/token-factory/roles) is that division of control.
+You hold every party that can act. Mint, burn, freeze, and pause are authorized by parties you control, on a participant you control. Cantor8 handles activity rewards after your featured-app party creates the delegation. You decide the arrangement: one party or several, and the signing policy behind each key, including a quorum or more than one approver. Cantor8's party is an observer. It can see the instrument. [Roles](/token-factory/roles) is that division of control.
 
 <Columns cols={2}>
 <Card title="Understand the design" icon="diagram-project" href="/token-factory/architecture">
@@ -50,7 +50,7 @@ Pause one instrument, freeze one party, or freeze every instrument of the admin
 </Card>
 
 <Card title="Earning network rewards on third-party activity" icon="gift">
-A featured-app party, activity markers, and a beneficiary
+A featured-app party and one delegation. Cantor8 pays you and your partner venues
 </Card>
 </Columns>
 
@@ -61,11 +61,12 @@ Default deployment:
 | Piece                      | Operator                     | Authority                                                                                       |
 | -------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
 | Your participant           | You                          | Hosts the parties you control. Accepts the transactions Token App submits                       |
-| Token App and its database | You, on your private network | Fetches a choice context, then submits mint, burn, pause, freeze, and activity markers          |
+| Token App and its database | You, on your private network | Fetches a choice context, then submits mint, burn, pause, and freeze                            |
 | Your identity provider     | You                          | Issues credentials for your Ledger API user and for callers of Token App                        |
 | Cantor8 participant        | Cantor8                      | Hosts the observer, a read-only party. Hosts a validator only if you ask Cantor8 to operate one |
 | Registry                   | Cantor8                      | Reads as the observer. Returns public contexts to wallets and M2M admin contexts to Token App   |
 | Registry identity provider | Cantor8                      | Issues the M2M credential Token App uses to fetch admin contexts                                |
+| Activity rewards           | Cantor8                      | Posts rewards for your instrument. Pays you and your partner venues on the agreed schedule      |
 
 You operate the validator, or Cantor8 does if you ask. The parties that mint, burn, pause, and freeze stay yours either way. Those same parties can sit on a private synchronizer. [Architecture](/token-factory/architecture) is the map.
 
@@ -85,7 +86,7 @@ You operate the validator, or Cantor8 does if you ask. The parties that mint, bu
 | Issuer             | The party that mints and burns.                                                                                                                |
 | Operator           | The party that submits day-to-day mint and burn when that role is separate from the issuer.                                                    |
 | Treasury           | The party that holds the standing mint delegation. Issuance to your own books lands here.                                                      |
-| Featured-app party | The party that holds the network featured-app right and posts activity markers.                                                                |
+| Featured-app party | The party that holds the network featured-app right. It creates the delegation that lets Cantor8 post rewards.                                 |
 | Validator party    | Co-signs the factory. Proposes seizure of funds locked in a pending transfer. The admin approves through Token App.                            |
 | Observer           | A party that can see the instrument's contracts and cannot exercise them.                                                                      |
 | Holder             | A party that owns a holding.                                                                                                                   |
@@ -93,10 +94,9 @@ You operate the validator, or Cantor8 does if you ask. The parties that mint, bu
 | Vetting            | A participant accepts the DAR and will then process transactions that use it.                                                                  |
 | Registry           | The service that lists instruments and returns choice contexts. It does not submit transactions.                                               |
 | Choice context     | The disclosed contracts and arguments a submitter needs. The Registry returns it. Token App, or the holder's wallet, submits it.               |
-| Token App          | Your service that submits admin operations and activity markers, and that stores history, supply, and metrics.                                 |
+| Token App          | Your service that submits admin operations, and that stores history, supply, and metrics.                                                      |
 | Mint delegation    | A recipient's standing consent to receive mints.                                                                                               |
-| Activity marker    | A ledger record of qualifying third-party activity, posted by the featured-app party. The network pays beneficiaries from markers.             |
-| Beneficiary        | The party credited with an instrument's marker weight.                                                                                         |
+| Venue              | A participant that submits transactions of your instrument. A partner venue receives a share of the rewards.                                   |
 | Identity provider  | An OIDC provider. Each connection checks a token that provider issued. Token App and the Registry expect a Keycloak-compatible token endpoint. |
 
 </Accordion>
@@ -131,7 +131,11 @@ mint, burn, transfer, settlement, and the APIs your developers call.
 </Card>
 
 <Card title="Rewards" icon="gift" href="/token-factory/rewards">
-how activity becomes markers, who is paid, and how you track it.
+what Cantor8 does, who is paid, and the delegation you create.
+</Card>
+
+<Card title="Other venues" icon="building" href="/token-factory/venue-partners">
+what you send to each venue that will transfer the instrument.
 </Card>
 
 <Card title="Compliance" icon="shield-halved" href="/token-factory/compliance">

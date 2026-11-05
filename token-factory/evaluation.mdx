@@ -52,15 +52,14 @@ The sequence is [Launch](/token-factory/launch). It is done when all of these ar
 - [ ] A mint to the treasury is visible in Token App's mint history and in the supply gauge.
 - [ ] A wallet-style transfer between two parties completes through the public Registry.
 - [ ] A pause and an unpause have gone through Token App, on a test network or a test instrument.
-- [ ] Alerts exist for the monitor timestamp, mint and burn errors, ledger errors, and, if markers are on, lag and failed batches.
 
 ## Bring this to the first working session
 
 - the asset: what it represents, the ticker you want, and the decimals
 - the network: public mainnet, a test network first, or a private synchronizer, and who should operate the validator
-- who will hold the controlling party, and whether mint, pause, and rewards must be separate parties
+- who will hold the controlling party, and whether mint, pause, and the featured-app right must be separate parties
 - whether holders transfer the instrument, or it moves only by mint and burn
-- whether you want featured-app rewards
+- whether you want featured-app rewards, and which partner venues get a share
 - the compliance actions you must be able to take, and who in your organization approves them
 - the target date, and whether a test-network rehearsal is in that date
 
@@ -73,7 +72,7 @@ The sequence is [Launch](/token-factory/launch). It is done when all of these ar
 | The bootstrap offer for you to accept on your participant        | The acceptance, submitted by you                                |
 | The Registry base URL, organization prefix, and admin client     | Token App installed against that URL                            |
 | The Docker Hub access token and the chart version                | The ledger user, the database, and the private network          |
-| The featured-app contract fields, when you are posting markers   | The beneficiary and the list of venues to exclude               |
+| The `FaMarkerDelegation` DAR and the create command, for rewards | The BatchedMarkersProxy details, and the share each venue gets  |
 
 The keys that can act stay with you. The offer is a command you submit.
 

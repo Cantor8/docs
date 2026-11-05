@@ -50,10 +50,10 @@ On your identity provider:
 
 | Client                          | Used by                                                                  |
 | ------------------------------- | ------------------------------------------------------------------------ |
-| Ledger user, client credentials | Token App, which submits mint, burn, pause, freeze, and activity markers |
+| Ledger user, client credentials | Token App, which submits mint, burn, pause, and freeze                   |
 | Token App audience              | Your services that call Token App                                        |
 
-Grant the ledger user `CanActAs` and `CanReadAs` for every party Token App will submit as: admin, issuer, and featured-app. That may be one party or several.
+Grant the ledger user `CanActAs` and `CanReadAs` for every party Token App will submit as: admin and issuer. That may be one party or two.
 
 Cantor8 issues the Registry admin client to you. You store it as a cluster secret. You do not put it in the values file.
 
@@ -73,7 +73,13 @@ Keep the file and the release notes. The next release is vetted the same way, on
 
 ### Rewards, if you want them
 
-Skip this to launch issuance and transfer only. For rewards, have the featured-app right, the batched-marker proxy, the beneficiary for the instrument, and the synchronizer id. [Rewards](/token-factory/rewards) explains them. They go into the Token App configuration when you deploy.
+Skip this to launch issuance and transfer only. Token App does not post rewards. Cantor8 does, after your featured-app party creates the delegation:
+
+1. Send Cantor8 the `BatchedMarkersProxy` of your featured-app party: `templateId`, `contractId`, and `createdEventBlob`.
+2. Upload and vet the `FaMarkerDelegation` DAR that Cantor8 sends, on the participant that hosts your featured-app party.
+3. Fill in `userId` and `batchedMarkersProxyCid` in the create command that Cantor8 sends, and submit it as the featured-app party.
+
+[Rewards](/token-factory/rewards) explains who is paid. Nothing about rewards goes into the Token App configuration.
 
 ## The steps
 
@@ -137,7 +143,7 @@ The observer named at bootstrap is the party the Registry reads as. Holdings rec
 
 Deploy Token App in your network against your participant, using the Helm chart or the same image run manually. [Deployment](/token-factory/deployment) is the procedure.
 
-PostgreSQL, the Docker Hub access token, and the ledger client are in the prerequisites. This step also needs the Registry URL and client from the previous step, and the configuration for your instrument. If you are posting markers, include the reward contracts from the prerequisites. Run one replica.
+PostgreSQL, the Docker Hub access token, and the ledger client are in the prerequisites. This step also needs the Registry URL and client from the previous step, and the configuration for your instrument. Run one replica.
 
 `GET /healthz` returns success before you mint.
 

@@ -29,14 +29,14 @@ Wallets take a different path. A wallet calls the Registry public API with no cr
 
 | Hop                                | Provider  | Client                                                                                  | What the credential allows                                                                                   |
 | ---------------------------------- | --------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Your service to Token App          | Yours     | A client your callers use. Audience is the one you set for Token App, default `m2m-api` | Call Token App: mint, burn, pause, freeze, history, status, marker queries                                   |
-| Token App to your Ledger API       | Yours     | The ledger user Token App runs as                                                       | `CanActAs` and `CanReadAs` for your admin, issuer, and featured-app party. The participant then signs        |
+| Your service to Token App          | Yours     | A client your callers use. Audience is the one you set for Token App, default `m2m-api` | Call Token App: mint, burn, pause, freeze, history, status                                                   |
+| Token App to your Ledger API       | Yours     | The ledger user Token App runs as                                                       | `CanActAs` and `CanReadAs` for your admin and issuer party. The participant then signs                       |
 | Token App to Registry admin API    | Cantor8's | A client Cantor8 issues to you                                                          | Fetch admin choice contexts. The audience is the Registry's admin audience. This call does not submit        |
 | Registry to the Cantor8 Ledger API | Cantor8   | Cantor8's ledger user                                                                   | Read as the observer. Cantor8 holds this client                                                              |
 | Wallet to Registry public API      | None      | None                                                                                    | Read instruments and fetch transfer and allocation contexts                                                  |
 | Token App probes                   | None      | None                                                                                    | `GET /healthz` and `GET /metrics` are open on the service, so your scraper can reach them inside the cluster |
 
-`GET /status` uses the same bearer token as mint. History and marker queries do too.
+`GET /status` uses the same bearer token as mint. History queries do too.
 
 <Warning>
 Leave Token App authentication on. Turn it off only when the network path to the service is itself the trust boundary, and even then keep the service off the internet.
@@ -48,8 +48,8 @@ The ledger user is the identity the participant associates with Token App. It ne
 
 | Right       | On                                                      | Why                                                                                                    |
 | ----------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `CanActAs`  | Each party you assign to admin, issuer, or featured-app | Token App submits mint, burn, pause, freeze, compliance actions, and activity markers as those parties |
-| `CanReadAs` | The same parties                                        | Read holdings, resolve a burn, and follow the ledger stream for markers                                |
+| `CanActAs`  | Each party you assign to admin or issuer                | Token App submits mint, burn, pause, freeze, and compliance actions as those parties                   |
+| `CanReadAs` | The same parties                                        | Read holdings and resolve a burn                                                                       |
 
 The user is scoped to those parties. It is not granted a right to act as any party on the participant. Operators call Token App. They do not submit ledger commands themselves.
 
@@ -75,7 +75,7 @@ When a party you control is hosted on a Cantor8-operated participant, the ledger
 
 | Key                 | Where it lives                                                                 | Who uses it                                                 |
 | ------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| Parties you control | Your custody. Your participant signs with them                                 | Mint, burn, pause, freeze, compliance, and activity markers |
+| Parties you control | Your custody. Your participant signs with them                                 | Mint, burn, pause, freeze, compliance, and the delegation   |
 | Validator party     | Your custody, unless you have asked Cantor8 to operate the validator           | Factory creation, and proposing seizure of locked funds     |
 | Observer            | Cantor8's participant                                                          | The Registry reads as this party                            |
 | OIDC client secrets | Your cluster secrets, and Cantor8's secret store for Cantor8-operated services | The hops in the table above                                 |

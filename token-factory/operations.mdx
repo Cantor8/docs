@@ -99,7 +99,7 @@ A holding:
 | `amount`        | Decimal string                                                         |
 | `locked`        | True while a live lock, such as an in-flight transfer, blocks spending |
 
-`/status` is the monitor's last cycle. Per instrument it reports `total_supply` (spendable plus locked), `total_locked_supply`, `unique_holders`, `top_holder_share` (0 to 1), and `supply_concentration_hhi` (1.0 when one holder has the whole supply). `operational.monitor` reports the last success, its age, and the poll interval. An empty `tokens` object means monitoring is off. The field list and the reward fields are in [Observability](/token-factory/observability) and [Rewards](/token-factory/rewards).
+`/status` is the monitor's last cycle. Per instrument it reports `total_supply` (spendable plus locked), `total_locked_supply`, `unique_holders`, `top_holder_share` (0 to 1), and `supply_concentration_hhi` (1.0 when one holder has the whole supply). `operational.monitor` reports the last success, its age, and the poll interval. An empty `tokens` object means monitoring is off. The field list is in [Observability](/token-factory/observability).
 
 Batch calls take `command_id`, `instrument_id`, and `entries` of `{ "party_id", "amount" }`. The response adds `entry_count`. A batch is one ledger transaction.
 

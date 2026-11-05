@@ -61,6 +61,7 @@
             "pages": [
               "token-factory/operations",
               "token-factory/rewards",
+              "token-factory/venue-partners",
               "token-factory/compliance",
               "token-factory/observability"
             ]

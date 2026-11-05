@@ -9,7 +9,7 @@ icon: "users"
 Every action on an instrument is authorized by a party. A party is an identity on the ledger. You control an action by holding that party's key.
 
 <Note>
-You hold every party that can mint, burn, pause, freeze, seize, or post activity markers. Cantor8's party is an observer. It can see the instrument, and it has no authority to do any of those things.
+You hold every party that can mint, burn, pause, freeze, or seize. Cantor8's party is an observer. It can see the instrument, and it has no authority to do any of those things. Cantor8 posts rewards only after your featured-app party creates the delegation.
 </Note>
 
 How you arrange your parties is your decision. The roles below can sit on one party or on several. A key can require one approver or many: an HSM, a quorum, or your own wallet policy. The ledger sees the party. Your signing policy decides who may use it.
@@ -24,7 +24,7 @@ Token App submits. A party you control authorizes that submission. The Registry 
 | Issuer             | Mints and burns. Mint and burn amounts must match the instrument's decimal precision.                                                                                             | You                                                          |
 | Operator           | Submits day-to-day mint and burn when you give that duty its own party, separate from the issuer.                                                                                 | You                                                          |
 | Treasury           | Holds the standing mint delegation, so the issuer can mint to your own books without a fresh signature each time. Can also pre-approve incoming transfers.                        | You                                                          |
-| Featured-app party | Co-signs the factory when rewards are in scope. Holds the network featured-app right and posts activity markers.                                                                  | You                                                          |
+| Featured-app party | Co-signs the factory when rewards are in scope. Holds the network featured-app right. Creates the delegation that lets Cantor8 post rewards, and can revoke it.                  | You                                                          |
 | Validator party    | Co-signs creation of the factory. Proposes seizure of funds locked in a pending transfer or allocation. The admin approves.                                                       | You. Optionally Cantor8, and then only for this co-signature |
 | Observer           | Sees the factory, instruments, holdings, and activity. Has no choices on them.                                                                                                    | Cantor8. Read only                                           |
 | Holder             | Owns a holding. Authorizes a transfer of that holding. Accepts or rejects an offer.                                                                                               | Your users, and the party you designate as treasury          |
@@ -38,7 +38,7 @@ Parties you hold authorize:
 - creating and updating the instrument
 - every mint and every burn
 - pause, freeze, compliance burn, and seizure
-- activity markers, and which party is paid
+- the delegation that lets Cantor8 post rewards
 
 During launch, Cantor8 sends you the command. You submit it on your participant. The keys stay in your custody. [Launch](/token-factory/launch) is that sequence.
 
@@ -46,7 +46,7 @@ You choose the shape:
 
 | Arrangement                          | What you get                                                                                                 |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| One party for every role you control | One key covers mint, pause, freeze, and markers                                                              |
+| One party for every role you control | One key covers mint, pause, freeze, and the delegation                                                      |
 | A party per duty                     | Issuance, emergency stop, treasury, and rewards can each have their own key                                  |
 | Several approvers on a party         | The ledger still sees one party. Your HSM, quorum, or wallet requires more than one approval before it signs |
 
@@ -81,7 +81,7 @@ Give a role its own party when a policy requires a separate key. Each party is h
 | Issuer separate from admin             | Issuance is a daily operation. Pause and freeze stay with a different key.                                                                |
 | Operator separate from issuer          | The issuer signs an issuer delegation. The operator then submits mint and burn under that delegation, and the issuer key stays offline.   |
 | Treasury separate from issuer          | The balance you issue into is a different party from the party that mints. The treasury's mint delegation is the consent that joins them. |
-| Featured-app party separate from admin | Reward rights and marker posting sit with the party that holds the featured-app right, which may already exist for another application.   |
+| Featured-app party separate from admin | The featured-app right and the delegation sit with the party that holds that right, which may already exist for another application.      |
 
 When the featured-app party is a different party from the admin, both of them authorize factory creation.
 
@@ -100,3 +100,4 @@ The validator stays a distinct party in every setup. Collapsing the validator in
 | Suite DAR and release notes                                             | You vet the file on every participant that will submit | Cantor8 publishes the file                                           |
 | Token App, its database, and its identity provider                      | Yes                                                    | Cantor8 publishes the image and the Helm chart                       |
 | Public Registry URL                                                     |                                                        | Cantor8                                                              |
+| Activity rewards, and payment to you and your partner venues            | You tell Cantor8 the share each venue gets             | Cantor8                                                              |
